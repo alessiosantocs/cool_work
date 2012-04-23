@@ -1,0 +1,2 @@
+module DraftCompaniesHelper
+end

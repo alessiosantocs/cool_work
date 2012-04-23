@@ -1,0 +1,13 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+
+one:
+  company: 
+  accepted: false
+  processed: false
+  email_tracker: 
+
+two:
+  company: 
+  accepted: false
+  processed: false
+  email_tracker: 

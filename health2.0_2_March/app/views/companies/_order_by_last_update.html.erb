@@ -1,0 +1,25 @@
+<%= javascript_include_tag "inform.js" %>
+<%= include_tiny_mce_if_needed %>
+
+<br>
+<br>
+
+<input type="button" onclick="show_email_template();" value="send email" />
+<br>
+<br>
+
+<div id="get_all_company">
+ <% @companies.each do |company| %>
+  <div class="span-4" style="min-height:60px;">
+    <div style="float:left;width:20px;">
+      <input type="checkbox" class="checkbox" style="top:0px;" name="company_ids[]" id="<%=company.id%>" value="<%=company.id%>" />
+
+
+    </div>
+    <div style="float:left;width:125px;margin-left:5px;">
+      <%= link_to  company.name, {:action => "show", :controller =>"companies", :id => company.id } %><br>
+        Last modified Date : <%=company.updated_at%>
+    </div>
+  </div>
+ <% end %>
+</div>

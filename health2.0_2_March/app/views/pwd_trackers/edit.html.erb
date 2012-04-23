@@ -1,0 +1,20 @@
+<h1>Editing pwd_tracker</h1>
+
+<% form_for(@pwd_tracker) do |f| %>
+  <%= f.error_messages %>
+
+  <p>
+    <%= f.label :email %><br />
+    <%= f.text_field :email %>
+  </p>
+  <p>
+    <%= f.label :urlKey %><br />
+    <%= f.text_field :urlKey %>
+  </p>
+  <p>
+    <%= f.submit 'Update' %>
+  </p>
+<% end %>
+
+<%= link_to 'Show', @pwd_tracker %> |
+<%= link_to 'Back', pwd_trackers_path %>

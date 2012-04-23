@@ -1,0 +1,13 @@
+<p>
+  <b>Keywords:</b>
+  <%=h @keyword_store.keywords %>
+</p>
+
+<p>
+  <b>Company:</b>
+  <%=h @keyword_store.company %>
+</p>
+
+
+<%= link_to 'Edit', edit_keyword_store_path(@keyword_store) %> |
+<%= link_to 'Back', keyword_stores_path %>

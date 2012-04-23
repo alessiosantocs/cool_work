@@ -1,0 +1,53 @@
+<p>
+  <b>First name:</b>
+  <%=h @personnel.first_name %>
+</p>
+
+<p>
+  <b>Last name:</b>
+  <%=h @personnel.last_name %>
+</p>
+
+<p>
+  <b>Current title:</b>
+  <%=h @personnel.current_title %>
+</p>
+
+<p>
+  <b>Previous title:</b>
+  <%=h @personnel.previous_title %>
+</p>
+
+<p>
+  <b>Founder:</b>
+  <%=h @personnel.founder %>
+</p>
+
+<p>
+  <b>Grad edu:</b>
+  <%=h @personnel.grad_edu %>
+</p>
+
+<p>
+  <b>Undergrad edu:</b>
+  <%=h @personnel.undergrad_edu %>
+</p>
+
+<p>
+  <b>Other edu:</b>
+  <%=h @personnel.other_edu %>
+</p>
+
+<p>
+  <b>Private notes:</b>
+  <%=h @personnel.private_notes %>
+</p>
+
+<p>
+  <b>Company:</b>
+  <%=h @personnel.company %>
+</p>
+
+
+<%= link_to 'Edit', edit_personnel_path(@personnel) %> |
+<%= link_to 'Back', personnels_path %>

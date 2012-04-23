@@ -1,0 +1,8 @@
+<% @investments.each do|investment| %>
+<dl>
+<dt><%= investment.funding_type%></dt>
+<dd><%= label_tag(:investors, "Investors: ") %><%= investment.agency%><br/></dd>
+<dd><%= label_tag(:funding_date, "Funding Date: ") %><%= investment.funding_date%><br/></dd>
+<dd><%= label_tag(:funding_amount, "Funding Amount: ") %>$<%= investment.funding_amount%> thousand</dd>
+</dl>
+<%end%>

@@ -1,0 +1,20 @@
+
+
+development:
+  adapter: mysql
+  encoding: utf8
+  database: new_health20
+  user: ravi
+  password: manager 
+#  password: 2HAvi8
+  socket: /var/run/mysqld/mysqld.sock 
+
+
+production:
+  adapter: mysql
+  encoding: utf8
+  database: new_health20
+  user: ravi 
+  password: manager
+#  password: 2HAvi8
+  socket: /var/run/mysqld/mysqld.sock 

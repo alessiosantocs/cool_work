@@ -1,0 +1,97 @@
+
+<% content_for :head do %>
+  <title>Subscription Paget</title>
+  <%= javascript_include_tag "listCompanies.js" %>
+  
+  <script type="text/javascript">
+	
+	
+	
+	function submitCardInfo(){
+
+	//        showCompanyView();
+        var fi = new Array();
+        fi["firstName"] = $("#firstName").val();
+        fi["lastName"] = $("#lastName").val();
+        fi["cardNumber"] = $("#cardNumber").val();
+        fi["month"] = $("#month").val();
+        fi["year"] = $("#year").val();
+        fi["cvcnumber"] = $("#cvcnumber").val();
+        
+$.ajax({
+   type: "POST",
+   url: "/payment/processPayment",
+   data: returnStringArray(fi),
+   datatype: "xml",
+   success: function(xml){
+    //alert(xml);
+    var bSuccess =  outputString($("bSuccess",xml).text());
+    if (bSuccess == "true"){
+		  $("#subscribedInfo").html("Welcome to Health 2.0 Subscribed!");	
+	}
+	else {
+	  $("#status").html("<font color='red'>Please recheck your credit card information and try to submit again.</font>");	
+	}
+//    info["company"]["description"] =  outputString($("description",xml).html());
+
+}
+   });
+
+
+}
+		
+  </script>
+<% end %>
+
+<div id="subscribedInfo"> 
+<% if @subscribed.to_s == "" %>
+
+<div id="status"></div>
+<table>
+<tr><td align=right><label>First Name:</label></td><td align=left><input type="text" id="firstName"></td></tr>
+<tr><td align=right><label>Last Name:</label></td><td align=left><input type="text" id="lastName"></td></tr> 
+<tr><td align=right><label>Card Number:</label></td><td align=left><input type="text" id="cardNumber"></td></tr> 
+<tr><td align=right><label>Month:</label></td><td align=left><select name="month" id="month"><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option>
+<option value="8">8</option>
+<option value="9">9</option>
+<option value="10">10</option>
+<option value="11">11</option>
+<option value="12">12</option>
+</select>
+</td></tr> 
+<tr><td align=right><label>Year:</label></td><td align=left>
+<select name="year" id="year">
+<option value="2010">2010</option>
+<option value="2011">2011</option>
+<option value="2012">2012</option>
+<option value="2013">2013</option>
+<option value="2014">2014</option>
+<option value="2015">2015</option>
+<option value="2016">2016</option>
+<option value="2017">2017</option>
+<option value="2018">2018</option>
+<option value="2019">2019</option>
+<option value="2020">2020</option>
+<option value="2021">2021</option>
+</select>
+</td></tr> 
+<tr><td align=right><label>CVC Number:</label></td><td align=left><input type="text" id="cvcnumber"></td></tr> 
+<tr><td colspan=2 align="center"><button onClick="submitCardInfo();">Purchase</button></td></tr>
+</table>
+
+
+
+
+
+<br/>
+
+
+
+<% else %>
+You already have an active subscription. 
+
+<% end %>
+</div>
+
+
+

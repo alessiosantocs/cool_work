@@ -1,0 +1,21 @@
+<% form_for(@reference) do |f| %>
+
+    <%= f.hidden_field :company_id,:value=>params[:id]%>
+    <p>
+        <%= f.label :URL %><br />
+        <%= f.text_area :url %>
+    </p>
+    <p>
+        <%= f.label :Article_Field_Name %><br />
+        <%= f.text_field :article_field_name %>
+    </p>
+
+    <p>    
+        <%= f.label :Date %><br />
+        <%= f.date_select :dateEntered %>
+    </p>
+    <button type="submit" class="positive" id="investmentSubmit">
+    Save
+    </button>
+  
+<%end%>

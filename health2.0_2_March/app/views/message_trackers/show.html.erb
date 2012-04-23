@@ -1,0 +1,28 @@
+<p>
+  <b>Email tracker:</b>
+  <%=h @message_tracker.email_tracker %>
+</p>
+
+<p>
+  <b>Company:</b>
+  <%=h @message_tracker.company %>
+</p>
+
+<p>
+  <b>Answered:</b>
+  <%=h @message_tracker.answered %>
+</p>
+
+<p>
+  <b>Url key:</b>
+  <%=h @message_tracker.url_key %>
+</p>
+
+<p>
+  <b>Send success:</b>
+  <%=h @message_tracker.send_success %>
+</p>
+
+
+<%= link_to 'Edit', edit_message_tracker_path(@message_tracker) %> |
+<%= link_to 'Back', message_trackers_path %>

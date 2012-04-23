@@ -1,0 +1,20 @@
+<h1>Editing email_tracker</h1>
+
+<% form_for(@email_tracker) do |f| %>
+  <%= f.error_messages %>
+
+  <p>
+    <%= f.label :message %><br />
+    <%= f.text_field :message %>
+  </p>
+  <p>
+    <%= f.label :return_email %><br />
+    <%= f.text_field :return_email %>
+  </p>
+  <p>
+    <%= f.submit 'Update' %>
+  </p>
+<% end %>
+
+<%= link_to 'Show', @email_tracker %> |
+<%= link_to 'Back', email_trackers_path %>

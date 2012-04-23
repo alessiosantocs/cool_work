@@ -1,0 +1,40 @@
+<h1>Editing video</h1>
+
+<% form_for(@video) do |f| %>
+  <%= f.error_messages %>
+
+  <p>
+    <%= f.label :swf %><br />
+    <%= f.text_field :swf %>
+  </p>
+  <p>
+    <%= f.label :height %><br />
+    <%= f.text_field :height %>
+  </p>
+  <p>
+    <%= f.label :width %><br />
+    <%= f.text_field :width %>
+  </p>
+  <p>
+    <%= f.label :videoID %><br />
+    <%= f.text_field :videoID %>
+  </p>
+  <p>
+    <%= f.label :thumbnail %><br />
+    <%= f.text_field :thumbnail %>
+  </p>
+  <p>
+    <%= f.label :type %><br />
+    <%= f.text_field :type %>
+  </p>
+  <p>
+    <%= f.label :company %><br />
+    <%= f.text_field :company %>
+  </p>
+  <p>
+    <%= f.submit 'Update' %>
+  </p>
+<% end %>
+
+<%= link_to 'Show', @video %> |
+<%= link_to 'Back', videos_path %>

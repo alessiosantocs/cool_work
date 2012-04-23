@@ -1,0 +1,9 @@
+<% form_for :keyword_store, :url => { :action => "updateByCompany" } do |f| %>
+    <%= f.hidden_field :company_id,:value=>params[:id]%>
+     <p>
+        <%= f.text_area :keywords %>
+    </p>
+     <button  class="positive" value="submit" id="companySubmit">
+          Save
+     </button>
+<% end %>

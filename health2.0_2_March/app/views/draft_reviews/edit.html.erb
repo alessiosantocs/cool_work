@@ -1,0 +1,28 @@
+<h1>Editing draft_review</h1>
+
+<% form_for(@draft_review) do |f| %>
+  <%= f.error_messages %>
+
+  <p>
+    <%= f.label :company %><br />
+    <%= f.text_field :company %>
+  </p>
+  <p>
+    <%= f.label :accepted %><br />
+    <%= f.check_box :accepted %>
+  </p>
+  <p>
+    <%= f.label :processed %><br />
+    <%= f.check_box :processed %>
+  </p>
+  <p>
+    <%= f.label :email_tracker %><br />
+    <%= f.text_field :email_tracker %>
+  </p>
+  <p>
+    <%= f.submit 'Update' %>
+  </p>
+<% end %>
+
+<%= link_to 'Show', @draft_review %> |
+<%= link_to 'Back', draft_reviews_path %>

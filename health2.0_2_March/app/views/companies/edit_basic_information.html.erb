@@ -1,0 +1,43 @@
+<% form_for(@company,:method => "put")  do |f| %>
+<div id="basic_form">
+ <%= hidden_field_tag 'key' ,params[:key]%>
+   <p>
+        <%= f.label :Company_Name %><br />
+         <%= f.text_field :name %>
+    </p>
+    <p>
+        <%= f.label :Company_Description %><br />
+        <%= f.text_area :description %>
+    </p>
+    <p>
+
+         <%= f.label :Employee_Number %><br />
+         <%= f.text_field :employee_number%>
+    </p>
+    <p>
+   
+         <%= f.label :URL %><br />
+         <%= f.text_field :url %>
+    
+    </p>
+
+    <input type="hidden" name="companyId" id="companyId">
+
+    <p>
+
+    <%= f.label :Founding_Date %><br />
+         <%= f.text_field :founded %>
+
+    <% if @notKey == "true" %>
+        <p><label><font color="red">Public Display</font></label><br>
+            <input type="radio" name="pdisplay" id="pdisplay" value="true"><font color="red"> Enabled</font><br>
+            <input type="radio" name="pdisplay" id="pdisplay" value="false"> <font color="red">Disabled</font><br>
+        </p>
+    <% end %>
+    <div class="buttons">
+        <button  class="positive" value="submit" id="companySubmit">
+                                Save
+        </button>
+    </div>
+</div>
+<% end %>

@@ -1,0 +1,105 @@
+<html>
+  <head>
+<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7" />
+
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Health 2.0 Advisors</title>
+
+    <!-- Framework CSS -->
+    <%= stylesheet_link_tag "blueprint/screen.css" %>
+     <%= stylesheet_link_tag "custom.css" %>
+         <%= stylesheet_link_tag "blueprint/plugins/buttons/screen.css" %>
+   
+         <%= stylesheet_link_tag "ui-lightness/jquery-ui-1.7.2.custom.css" %>
+
+    <%= javascript_include_tag "jquery.min.js" %>
+    <%= javascript_include_tag "jquery-ui.min.js" %>
+    <%= javascript_include_tag "custom.js" %>   
+    <%= javascript_include_tag "widgetcontrols.js" %>
+    <%= javascript_include_tag "company.js" %>  
+    <%= javascript_include_tag "partnerships.js" %>
+    <%= javascript_include_tag "people.js" %>
+    <%= javascript_include_tag "products.js" %>
+    <%= javascript_include_tag "investments.js" %>
+    <%= javascript_include_tag "categories.js" %>
+    <%= javascript_include_tag "companyCategory.js" %>
+    <%= javascript_include_tag "search.js" %>
+    <%= javascript_include_tag "singleVideo.js" %>
+    <%= javascript_include_tag "cbrowse.js" %>
+    <%= javascript_include_tag "keywordStore.js" %>
+    <%= javascript_include_tag "reference.js" %>
+    <%= javascript_include_tag "send_mail.js" %>
+    <%= javascript_include_tag "template.js","ModalPopups"%>
+    
+    
+<script language="JavaScript" type="text/javascript" src="http://admin.brightcove.com/js/BrightcoveExperiences.js"></script> 
+<script language="JavaScript" type="text/javascript" src="http://admin.brightcove.com/js/APIModules_all.js"></script> 
+       
+    <%= javascript_include_tag "jquery.nyromodal.js" %>
+  <%= yield :head %>
+<SCRIPT language="JavaScript">
+      function center_align(){
+      var content_width = document.getElementById('mainpage').style.width;
+      content_width = content_width.replace('px','');
+      var left_margin = (parseInt(screen.width) - parseInt(content_width))/2;
+      document.getElementById('mainpage').style.left = left_margin + 'px';
+}
+</script>  
+</head>
+  <body class="showbg">
+
+
+
+    <div class="container showmain" id="mainpage" style="position:relative;width:950px;">
+      <div class="span-24"><%= image_tag "h20600.gif" %><br><br><hr></div>
+
+
+	   <div class="span-6" id="left-col">
+
+
+<% if !current_user or @sChanging == true %>
+  <%= link_to "Register", new_account_path %> <br>
+  <%= link_to "Log In", new_user_session_path %><br>
+<% else %>
+  <%= link_to "My Account", account_path %> <br>
+<% end %>
+<%= link_to "Company List", :controller => "companies", :action => "listCompanies" %><br>
+<% if current_user and @sChanging != true %>
+
+  <%= link_to "Basic Company Search", :controller => "search", :action => "basicSearch" %><br>
+  <%= link_to "Global Company Search", :controller => "search", :action => "globalSearch" %><br> 
+  <%= link_to "Logout", user_session_path, :method => :delete, :confirm => "Are you sure you want to logout?" %> <br>
+
+
+<% end %>
+
+	   </div>
+
+
+
+<div class="span-18 last" id="maincontent">
+
+<p style="color: green"></p>
+        <%= yield :content %>
+<%= yield  %>
+<br><br>
+
+
+</div>
+ 
+    
+    <br><br><br>
+      <hr>
+
+<div class="colspan-4 prepend-10"> &copy; Health 2.0 Advisors, 2010</div>
+      
+    </div>
+    </div>
+  </body>
+
+<script type="text/javascript">
+ center_align();
+</script>
+
+</html>
+

@@ -1,0 +1,13 @@
+<p>
+  <b>Message:</b>
+  <%=h @email_tracker.message %>
+</p>
+
+<p>
+  <b>Return email:</b>
+  <%=h @email_tracker.return_email %>
+</p>
+
+
+<%= link_to 'Edit', edit_email_tracker_path(@email_tracker) %> |
+<%= link_to 'Back', email_trackers_path %>

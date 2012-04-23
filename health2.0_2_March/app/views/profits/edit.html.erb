@@ -1,0 +1,32 @@
+<h1>Editing profit</h1>
+
+<% form_for(@profit) do |f| %>
+  <%= f.error_messages %>
+
+  <p>
+    <%= f.label :year %><br />
+    <%= f.text_field :year %>
+  </p>
+  <p>
+    <%= f.label :date_launched %><br />
+    <%= f.date_select :date_launched %>
+  </p>
+  <p>
+    <%= f.label :belongs_to %><br />
+    <%= f.text_field :belongs_to %>
+  </p>
+  <p>
+    <%= f.label :amount %><br />
+    <%= f.text_field :amount %>
+  </p>
+  <p>
+    <%= f.label :company %><br />
+    <%= f.text_field :company %>
+  </p>
+  <p>
+    <%= f.submit 'Update' %>
+  </p>
+<% end %>
+
+<%= link_to 'Show', @profit %> |
+<%= link_to 'Back', profits_path %>

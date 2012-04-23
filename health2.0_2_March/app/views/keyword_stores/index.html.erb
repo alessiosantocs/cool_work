@@ -1,0 +1,22 @@
+<h1>Listing keyword_stores</h1>
+
+<table>
+  <tr>
+    <th>Keywords</th>
+    <th>Company</th>
+  </tr>
+
+<% @keyword_stores.each do |keyword_store| %>
+  <tr>
+    <td><%=h keyword_store.keywords %></td>
+    <td><%=h keyword_store.company %></td>
+    <td><%= link_to 'Show', keyword_store %></td>
+    <td><%= link_to 'Edit', edit_keyword_store_path(keyword_store) %></td>
+    <td><%= link_to 'Destroy', keyword_store, :confirm => 'Are you sure?', :method => :delete %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New keyword_store', new_keyword_store_path %>

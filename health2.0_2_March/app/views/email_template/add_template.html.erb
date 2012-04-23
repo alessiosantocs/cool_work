@@ -1,0 +1,14 @@
+<% form_for :all_template, :url => { :action => "template_data_take" } do |f| %>
+ <%= f.hidden_field :company_id,:value=>params[:id]%>
+  <p>
+    <%= f.label :Template_Name %><br />
+    <%= f.text_field :template_name %>
+  </p>
+  <p>
+    <%= f.label :Mail_Template %><br />
+    <%= f.text_area :template_data %>
+  </p>
+     <button  class="positive" value="submit" id="companySubmit">
+          Save
+     </button>
+<% end %>

@@ -1,0 +1,15 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+
+one:
+  email_tracker: 
+  company: 
+  answered: false
+  url_key: MyString
+  send_success: false
+
+two:
+  email_tracker: 
+  company: 
+  answered: false
+  url_key: MyString
+  send_success: false

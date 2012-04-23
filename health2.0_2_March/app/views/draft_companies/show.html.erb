@@ -1,0 +1,48 @@
+<p>
+  <b>Name:</b>
+  <%=h @draft_company.name %>
+</p>
+
+<p>
+  <b>Url:</b>
+  <%=h @draft_company.url %>
+</p>
+
+<p>
+  <b>Founded:</b>
+  <%=h @draft_company.founded %>
+</p>
+
+<p>
+  <b>Employee number:</b>
+  <%=h @draft_company.employee_number %>
+</p>
+
+<p>
+  <b>Market segment:</b>
+  <%=h @draft_company.market_segment %>
+</p>
+
+<p>
+  <b>Description:</b>
+  <%=h @draft_company.description %>
+</p>
+
+<p>
+  <b>Private notes:</b>
+  <%=h @draft_company.private_notes %>
+</p>
+
+<p>
+  <b>Enabled:</b>
+  <%=h @draft_company.enabled %>
+</p>
+
+<p>
+  <b>Draft review:</b>
+  <%=h @draft_company.draft_review %>
+</p>
+
+
+<%= link_to 'Edit', edit_draft_company_path(@draft_company) %> |
+<%= link_to 'Back', draft_companies_path %>

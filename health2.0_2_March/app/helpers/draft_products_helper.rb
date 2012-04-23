@@ -1,0 +1,2 @@
+module DraftProductsHelper
+end

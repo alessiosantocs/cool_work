@@ -1,0 +1,24 @@
+<%= javascript_include_tag "inform.js" %>
+<%= include_tiny_mce_if_needed %>
+<h1>Update Template</h1>
+Note the following fields to personalize your messages with the Personnels database:<br>
+[[first_name]] First Name<br>
+[[last_name]] Last Name<br>
+[[company_name]] Company Name<br>
+[[return_email]] Return Email<br>
+[[link_company_profile]] Link to the company profile<br>
+<br>
+<%= form_tag(template_update_email_template_path,:method => "post")%>
+<%= hidden_field_tag("id",@edit_template.id)%>      
+    <p>
+       <div class="text1"> <%= label_tag(:template_name, "Template Name ") %><br>
+        <%= text_field_tag :template_name,@edit_template.template_name,:class=>'title'%></div> 
+    </p>
+                    
+    <p> <div class="textarea1">
+        <%= label_tag(:template_data, "Email Template Language ") %><br>
+        <%= text_area_tag :template_data,@edit_template.template_data,:class => "mceEditor"  %> <div>
+    </p>
+
+<%= submit_tag("Update Template") %><br><br>
+<%=link_to 'Back',give_all_template_email_template_path %>

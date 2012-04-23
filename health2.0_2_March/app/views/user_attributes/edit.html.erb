@@ -1,0 +1,20 @@
+<h1>Editing user_attribute</h1>
+
+<% form_for(@user_attribute) do |f| %>
+  <%= f.error_messages %>
+
+  <p>
+    <%= f.label :name %><br />
+    <%= f.text_field :name %>
+  </p>
+  <p>
+    <%= f.label :User %><br />
+    <%= f.text_field (:User).login %>
+  </p>
+  <p>
+    <%= f.submit 'Update' %>
+  </p>
+<% end %>
+
+<%= link_to 'Show', @user_attribute %> |
+<%= link_to 'Back', user_attributes_path %>

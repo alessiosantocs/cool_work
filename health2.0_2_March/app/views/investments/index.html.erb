@@ -1,0 +1,28 @@
+<h1>Listing investments</h1>
+
+<table>
+  <tr>
+    <th>Company</th>
+    <th>Agency</th>
+    <th>Funding amount</th>
+    <th>Funding date</th>
+    <th>Funding type</th>
+  </tr>
+
+<% @investments.each do |investment| %>
+  <tr>
+    <td><%=h investment.company %></td>
+    <td><%=h investment.agency %></td>
+    <td><%=h investment.funding_amount %></td>
+    <td><%=h investment.funding_date %></td>
+    <td><%=h investment.funding_type %></td>
+    <td><%= link_to 'Show', investment %></td>
+    <td><%= link_to 'Edit', edit_investment_path(investment) %></td>
+    <td><%= link_to 'Destroy', investment, :confirm => 'Are you sure?', :method => :delete %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New investment', new_investment_path %>

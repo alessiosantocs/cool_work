@@ -1,0 +1,6 @@
+<% @partnerships.each do|partnership| %>
+<p>
+<%= label_tag(:description, "Description: ") %><%= partnership.description%><br/>
+<%= label_tag(:date, "Date: ") %><%= partnership.date%>
+</p>
+<%end%>

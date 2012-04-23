@@ -1,0 +1,12 @@
+<% if params[:send_mail]=="true" %>
+    <% form_for(:email_tracker,:url=>email_trackers_path)  do |f| %>
+        <%= hidden_field_tag("message_body",params[:message_body])%>
+        <%= hidden_field_tag("message_subject",params[:message_subject])%>
+        <%= hidden_field_tag("message_return",params[:return_mail])%>
+       <input type="hidden" name="tracker_id" value="">
+        <%= render :partial=>"send_company_email_template", :locals=>{:sent_to=>@sent_to, :body_message=>@body_message}%>
+       <center> <%= submit_tag("Send Mail") %></center>
+    <%end%>
+<% else %>
+ <%=render :partial=>"send_company_email_template", :locals=>{:sent_to=>@sent_to, :body_message=>@body_message}%>
+<% end %>

@@ -1,0 +1,7 @@
+<%i=0%>
+<p><% @company_categories.each do|company_category| %>
+<%unless i==0%>,<%end%>
+<%i=i+1%>
+<%= company_category.category.name%>
+
+<%end%></p>

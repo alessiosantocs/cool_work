@@ -1,0 +1,28 @@
+<p>
+  <b>Year:</b>
+  <%=h @profit.year %>
+</p>
+
+<p>
+  <b>Date launched:</b>
+  <%=h @profit.date_launched %>
+</p>
+
+<p>
+  <b>Belongs to:</b>
+  <%=h @profit.belongs_to %>
+</p>
+
+<p>
+  <b>Amount:</b>
+  <%=h @profit.amount %>
+</p>
+
+<p>
+  <b>Company:</b>
+  <%=h @profit.company %>
+</p>
+
+
+<%= link_to 'Edit', edit_profit_path(@profit) %> |
+<%= link_to 'Back', profits_path %>

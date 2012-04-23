@@ -1,0 +1,38 @@
+<p>
+  <b>Swf:</b>
+  <%=h @video.swf %>
+</p>
+
+<p>
+  <b>Height:</b>
+  <%=h @video.height %>
+</p>
+
+<p>
+  <b>Width:</b>
+  <%=h @video.width %>
+</p>
+
+<p>
+  <b>Videoid:</b>
+  <%=h @video.videoID %>
+</p>
+
+<p>
+  <b>Thumbnail:</b>
+  <%=h @video.thumbnail %>
+</p>
+
+<p>
+  <b>Type:</b>
+  <%=h @video.type %>
+</p>
+
+<p>
+  <b>Company:</b>
+  <%=h @video.company %>
+</p>
+
+
+<%= link_to 'Edit', edit_video_path(@video) %> |
+<%= link_to 'Back', videos_path %>

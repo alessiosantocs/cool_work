@@ -1,0 +1,23 @@
+<% @personnels.each do|personnel| %>
+<p>
+<%= label_tag(:name, "Name: ") %><%= personnel.first_name%> <%= personnel.last_name%><br/>
+<%= label_tag(:position, "Position: ") %><%= personnel.current_title%><br/>
+<% unless personnel.founder%>
+<%= label_tag(:founder, "Founder: ") %>No<br/>
+<%else%>
+<%= label_tag(:founder, "Founder: ") %>Yes<br/>
+<%end%>
+<% unless personnel.previous_title.blank? %>
+<%= label_tag(:founder, "Previous Companies: ") %><%=personnel.previous_title%><br/>
+<%end%>
+<% unless personnel.grad_edu.blank?%>
+<%= label_tag(:founder, "Graduate Education: ") %><%=personnel.grad_edu%><br/>
+<%end%>
+<% unless personnel.undergrad_edu.blank?%>
+<%= label_tag(:founder, "Undergraduate Education: ") %><%=personnel.undergrad_edu%><br/>
+<%end%>
+<% unless personnel.other_edu.blank?%>
+<%= label_tag(:founder, "Other Education: ") %><%=personnel.other_edu%><br/>
+<%end%>
+</p>
+<%end%>

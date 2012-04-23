@@ -1,0 +1,62 @@
+
+<% form_for(@personnel)  do |f| %>
+
+<p>
+<label for="dummy0">First Name</label><br>
+<input type="text" class="title" name="personnelFirstName" id="personnelFirstName">
+</p>
+
+<p>
+<label for="dummy0">Last Name</label><br>
+<input type="text" class="title" name="personnelLastName" id="personnelLastName">
+</p>
+
+
+<p>
+<label for="dummy0">Title</label><br>
+<input type="text" class="title" name="personnelCurrentTitle" id="personnelCurrentTitle">
+</p>
+
+
+<p>
+<label for="dummy0">Previous Companies</label><br>
+<input type="text" class="title" name="personnelPreviousTitle" id="personnelPreviousTitle">
+</p>
+
+
+
+<p>
+<label for="dummy0">Graduate Education</label><br>
+<input type="text" class="title" name="personnelGradEdu" id="personnelGradEdu">
+</p>
+
+<p>
+<label for="dummy0">Undergraduate Education</label><br>
+<input type="text" class="title" name="personnelUndergraduateEdu" id="personnelUndergraduateEdu">
+</p>
+
+<p>
+<label for="dummy0">Other Education</label><br>
+<input type="text" class="title" name="personnelOtherEdu" id="personnelOtherEdu">
+</p>
+
+<p>
+<label for="dummy0">Email</label><br>
+<input type="text" class="title" name="personnelEmail" id="personnelEmail">
+</p>
+
+<p><label>Founder</label><br>
+<input type="radio" name="ftype" id="ftype" value="true"> Yes<br>
+<input type="radio" name="ftype" id="ftype" value="false"> No<br>
+</p>
+
+<button type="submit" class="positive" onclick="people_form_save();" id="peopleSubmit">
+<img src="/images/icons/tick.png" alt=""/>
+Save
+</button>
+<button type="submit" class="negative" onclick="people_form_cancel();">
+<img src="/images/icons/cross.png" alt=""/>
+Cancel
+
+</button>
+<%end%>

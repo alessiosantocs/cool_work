@@ -1,0 +1,5 @@
+<%   @fileList.each do |file|   %>
+
+<%= link_to file, :controller => "csv_file", :action => "download", :filename => file %><br> 
+
+<% end %>

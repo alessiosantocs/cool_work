@@ -1,0 +1,26 @@
+<% form_for(@video) do |f| %>
+<%= f.hidden_field :company_id,:value=>params[:id]%>
+  <p>
+    <%= f.label :Video_URL %><br />
+    <%= f.text_area :swf %>
+  </p>
+  <p>
+     <%= f.label :Video_Height %><br />
+     <%= f.text_field :height %>          
+  </p>
+  <p>
+    <%= f.label :Video_width %><br />
+    <%= f.text_field :width %>
+  </p>
+  <p>
+        <label for="itype">Video Source</label><br>
+        <input type="radio" name="vtype" id="vtype" value="youtube">YouTube<br>
+        <input type="radio" name="vtype" id="vtype" value="vimeo">Vimeo<br>
+        <input type="radio" name="vtype" id="vtype" value="brightcove">BrightCove<br>
+  </p>
+    <button type="submit" class="positive" onclick="singleVideos_form_save();" id="partnershipSubmit">
+        <img src="/images/icons/tick.png" alt=""/>
+        Save
+    </button>
+    
+<%end%>

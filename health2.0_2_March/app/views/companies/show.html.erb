@@ -1,0 +1,848 @@
+<% content_for :head do %>
+
+<% if @a_str== "true" %>
+    <%= javascript_include_tag "inform.js" %>
+    <%= include_tiny_mce_if_needed %>
+    
+  
+<% end %>
+
+<script type="text/javascript">
+    var dID = "<%= @dID %>";
+    function post_accepted(){
+        var fi = new Array();
+        fi["id"] = dID;  
+        $.ajax({
+            url: "/draft_reviews/post_accepted",
+            data: returnStringArray(fi),
+            type: "POST",
+            datatype: "xml",
+            success: function(xml){
+                alert("Thank you for the information. Your feedback has been saved for review by our analysts. You will now be redirected to the homepage.");
+        window.location = "/";
+            }});
+    }
+
+    function sendAccepted(){
+        post_accepted();
+    }
+    $(document).ready(function() {
+          $('#companyFoundeddate').datepicker({
+              changeMonth: true,
+              changeYear: true
+          });
+          $('#investmentDate').datepicker({
+              changeMonth: true,
+              changeYear: true
+          });
+          $('#partnershipDate').datepicker({
+              changeMonth: true,
+              changeYear: true
+          });
+          $('#productDate').datepicker({
+                  changeMonth: true,
+                  changeYear: true
+          });
+
+          $('#referencesDate').datepicker({
+                  changeMonth: true,
+                  changeYear: true
+          });
+          $("#companySubmit").click(function() { return false; });
+
+          $("#ivestmentSubmit").click(function() { return false; });
+
+          $("#partnershipSubmit").click(function() { return false; });
+
+          $("#peopleSubmit").click(function() { return false; });
+
+          $("#productSubmit").click(function() { return false; });
+
+          $("#keywordStoreSubmit").click(function() { return false; });
+
+          $("#referencesStoreSubmit").click(function() { return false; });
+
+     
+
+          <% if @notKey == "false" %>
+                notUrlKey = false;
+          <% end %>
+
+          <% if @create != "true" %>
+                <% if @a_str== "true" %>
+                    admin = true;
+                <% else %>
+                    admin = false;
+                <% end %>
+                info["company"]["commit"] = "Update";
+                companyID = <%=h  @company.id %>;
+                <% if @a_str == "true" %>
+                    basic_info_get();
+                    showCompanyView();
+                <% end %>
+        <% end %>
+
+        <% if @create == "true" %>
+            createCompanyView();
+            info["company"]["commit"] = "Create";
+            admin = true;  
+        <% end %>
+        $.nyroModalSettings({
+            processHandler: function(settings) {
+            var href  = settings.from.href;
+            var id = href.substr(7,href.length - 8)
+            
+                $.nyroModalSettings({
+                type: 'swf',
+                height: info['video'][id]["height"],
+                width: info['video'][id]["width"],
+                url: info['video'][id]["swf"]
+                    });    
+                 }
+            });
+
+
+
+
+ // hides the slickbox as soon as the DOM is ready (a little sooner that page load)
+    });
+
+
+
+
+
+
+</script>
+
+
+<% end %>
+
+<% if @admin.to_s != "" and @create != "true" %>
+    <% if @a_str != "true" %>
+        <p align="center">
+            Your user account has administrative access rights. <%= link_to  "Click here to see the administrative view of the page.", {:action => "show", :controller =>
+            "companies", :id => @company.id, :a_str => "true" } %>
+        </p>
+
+     <% else %>
+        <% if @notKey == "true" %>
+            <p align="center">
+                <%= link_to  "Click here to exit the administrative view of this page.", {:action => "show", :controller =>
+                "companies", :id => @company.id, :a_str => "false" } %>
+            </p>
+
+        <% else %>
+            <p align="center">Please use the control panel and icons below to manage information on the page. </p>
+            <div class="span-7 prepend-12"><button onClick="sendAccepted();"> Please Click Here When Done Editing </button></div>
+        <% end %>
+
+    <% end %>
+
+<% end %>
+<hr>
+
+<%unless @company_information.blank? %>
+    <h1><span id="companyNameI" name="companyNameI"><%=@company_information.name%></span></h1>
+<%end%>
+<hr>
+
+<% if @a_str == "true" %>
+<div class="span-25 last" id="control_div">
+<fieldset class="control-but">
+    <legend>    
+        <font color="red">Control Panel</font>
+    </legend>
+ 
+<button type="button" onclick="basic_form_expand('<%=params[:key]%>');"> <img src="/images/icons/briefcase.png" alt=""/>
+     Edit Basic Information 
+</button>  
+                
+   
+
+    <% if @notKey != "true" %>
+    <% else %>
+        <button type="submit" onclick="keywords_form_expand();">
+           <img src="/images/icons/key.png" alt=""/>
+            Edit Segments
+        </button>
+    <% end %>
+
+    <button type="submit" onclick="people_form_new('<%=params[:key]%>');">
+           <img src="/images/icons/businessman.png" alt=""/>
+            Add People
+    </button>
+
+    <button type="submit" onclick="partnerships_form_new();">
+             <img src="/images/icons/shakinghands.png" alt=""/>
+           Add Partnerships
+    </button>
+
+    <button type="submit" onclick="investments_form_new();">
+          <img src="/images/icons/coins.png" align="left" alt=""/>
+            Add Investments
+    </button>
+
+    <button type="submit" onclick="products_form_new();">
+           <img src="/images/icons/tag.png" alt=""/>
+            Add Products
+    </button>
+
+    <button type="submit" onclick="references_form_new();">
+           <img src="/images/icons/tag.png" alt=""/>
+            Add References
+    </button>
+
+    <button type="submit" onclick="keywordStore_form_new();">
+        <img src="/images/icons/tag.png" alt=""/>
+              Modify Keywords
+    </button>
+
+    <% if @notKey == "true" %>
+        <button type="submit" onclick="internal_form_expand();">
+           <img src="/images/icons/safe.png" alt=""/> 
+           Manage Internal Only
+        </button>
+    <% end %>
+    
+    <button type="submit" onclick="send_mail_form_new();">
+        <img src="/images/icons/edit_f2.png" alt=""/>  
+              Send Mail        
+    </button>
+
+    <button type="submit" onclick="singleVideos_form_new();">
+        <img src="/images/icons/safe.png" alt=""/>
+         Manage Videos
+    </button>
+
+    <button type="submit" onclick="template_form_new();">	
+      <img src="/images/icons/safe.png" alt=""/>
+            Manage Template
+    </button>
+
+  </fieldset>
+ </div>
+
+<% end %>
+
+
+
+<% if @a_str == "true"&& @create!="true" %>
+    <div class="span-9" id="updatingResults"><p align="center"><img src="/images/29.gif"/><br>Updating...</p></div>
+<%end%>
+
+
+<div class="span-9" id="mid-col">
+
+    <div class="span-9">
+        <fieldset>
+            <legend>Basic Information</legend>
+                <% unless @a_str == "true" %>
+                    <%=render :partial=>"show_companies_basic_information", :locals=>{:company_information=>@company_information}%>
+                <%else%>
+                    <p>
+                        <div id="basic_info">
+                            <p>
+                               <label for="companyDescriptionI">Company Description</label><br>
+                                <div id="companyDescriptionI"></div>
+                             </p>
+                            <p><label for="dummy0">Founded</label><br><div id="companyFoundedI"></div></p>
+
+
+                            <p>
+                                <label for="dummy0">Employee Number</label><br>
+                                <div id="companyEmployeeNumberI"></div>
+                            </p>
+
+                            <p>
+                                <label for="dummy0">URL</label><br>
+                                <div id="companyURLI"></div>
+                            </p>
+                            <% if @a_str == "true" %>
+                                <p>
+                                    <font color="red">     <label for="dummy0">Public Display</label><br>
+                                    <div id="companyEnabledI"></div></font>
+                                </p>
+
+<%= link_to "Edit Company Information", "javascript:void(0);", :onclick=>"basic_form_expand('#{params[:key]}');"%>
+                            <% end %>
+                        </div>
+                         <div id="basic_form">
+
+
+                        <p>
+                            <label for="companyName">Company Name</label><br>
+                            <input type="text" class="title" name="companyName" id="companyName">
+                        </p>
+
+                        <p>
+                            <label for="companyDescription">Company Description</label><br>
+                            <textarea name="companyDescription" id="companyDescription"></textarea>
+                        </p>
+                        <p>
+                            <label for="companyEmployeeNumber">Employee Number</label><br>
+                            <input type="text" class="title" name="companyEmployeeNumber" id="companyEmployeeNumber">
+                        </p>
+                        <p>
+                            <label for="companyEmployeeNumber">URL</label><br>
+                            <input type="text" class="title" name="companyURL" id="companyURL">
+                        </p>
+
+                        <input type="hidden" name="companyId" id="companyId">
+
+                        <p><label for="companyFoundeddate">Founding Date</label><br><input type="text" class="title" id="companyFoundeddate" name="companyFoundeddate"></p>
+
+                        <% if @notKey == "true" %>
+                            <p><label><font color="red">Public Display</font></label><br>
+                                <input type="radio" name="pdisplay" id="pdisplay" value="true"><font color="red"> Enabled</font><br>
+                                <input type="radio" name="pdisplay" id="pdisplay" value="false"> <font color="red">Disabled</font><br>
+                            </p>
+                        <% end %>
+                        <div class="buttons">
+                            <button  class="positive" onclick="basic_form_save();" id="companySubmit">
+                                Save
+                            </button>
+                            <button  class="negative" onclick="basic_form_cancel();">
+
+                                 Cancel
+                            
+                            </button>
+                        </div>
+                  </div>
+             </p>
+        
+    
+
+        <%end%>
+    </fieldset>
+
+
+</div>
+
+<% if @a_str == "true" %>
+<% if @notKey == "true" %>
+<div class="span-9" id="internal_div">
+<fieldset>
+    <legend><font color="red">Internal Only</font></legend>
+    <font color="red">
+        <div id="internal_info">
+            <div name="companyPrivateNotesI" id="companyPrivateNotesI"></div><br>
+            <%= link_to "Edit Internal", "javascript:void(0);", :onclick=>"internal_form_expand();"%>
+        </div>
+    </font>
+    <div id="internal_form">
+        <p>
+            <label for="dummy2">Private Notes</label><br>
+            <textarea name="dummy2" id="companyPrivateNotes" name="companyPrivateNotes"></textarea>
+        </p>
+        <button type="submit" class="positive" onclick="internal_form_save();" id="internalSubmit">Save</button>
+        <button type="submit" class="negative" onclick="internal_form_cancel();">Cancel
+        </button>
+    </div>
+
+</fieldset>
+</div>
+<% end %>
+<% end %>
+<% if @subscribed.to_s == "" %>
+<div class="span-9" id="subscribed_div">
+<fieldset>
+<legend>Subscribed</legend>
+<%= link_to  "Subscribe to see information about investments, products, people, and parternerships.", {:action => "SubscriptionPage", :controller => "payment" } %>
+</div>
+
+<%  else %>
+<div class="span-9" id="investments_div">
+<fieldset>
+<legend>Investments</legend>
+<% unless @a_str == "true" %>
+<%=render :partial=>"show_companies_investment_information", :locals=>{:investments=>@investments}%>
+
+<%else%><p>
+<div id="investments_info">
+
+</div>
+<%= link_to "Add Investments", "javascript:void(0);", :onclick=>"investments_form_new();"%>
+<div id="investments_form">
+<p><label for="investmentDate">Investment Date</label><br><input type="text" class="title" id="investmentDate" name="investmentDate">
+
+<p>
+<label for="dummy0">Investors</label><br>
+<input type="text" class="title" name="investmentAgency" id="investmentAgency">
+</p>
+
+<p>
+<label for="dummy0">Investment Amount (in thousands)</label><br>
+<input type="text" class="title" name="investmentFundingAmount" id="investmentFundingAmount">
+</p>
+
+<p><label for="itype">Investment Type</label><br>
+<input type="radio" name="itype" id="itype" value="angel"> Angel<br>
+<input type="radio" name="itype" id="itype" value="seed"> Seed<br>
+<input type="radio" name="itype" id="itype" value="seriesa"> Series A<br>
+<input type="radio" name="itype" id="itype" value="seriesb"> Series B<br>
+<input type="radio" name="itype" id="itype" value="seriesc"> Series C<br>
+<input type="radio" name="itype" id="itype" value="seriesd"> Series D<br>
+<input type="radio" name="itype" id="itype" value="seriese"> Series E<br>
+<input type="radio" name="itype" id="itype" value="seriesf"> Series F<br>
+<input type="radio" name="itype" id="itype" value="seriesg"> Series G<br>
+<input type="radio" name="itype" id="itype" value="purchased"> Purchased<br>
+<input type="radio" name="itype" id="itype" value="ipo"> IPO<br>
+
+
+</p>
+<button type="submit" class="positive" onclick="investment_form_save();" id="investmentSubmit">
+Save
+</button>
+<button type="submit" class="negative" onclick="investments_form_cancel();">
+Cancel
+
+</button>
+
+</div>
+</p><%end%>
+</fieldset>
+</div>
+
+<div class="span-9 last" id="partnerships_div">
+<fieldset>
+<legend>Partnerships</legend>
+<% unless @a_str == "true" %>
+<%=render :partial=>"show_companies_partnerships_information", :locals=>{:partnerships=>@partnerships}%>
+
+
+<%else%>
+    <p>
+        <div id="partnerships_info">
+        
+        </div><%= link_to "Add Partnerships", "javascript:void(0);", :onclick=>"partnerships_form_new();"%>
+        <div id="partnerships_form">
+            <p>
+            <label for="dummy0">Description</label><br>
+            <textarea name="partnershipDescription" id="partnershipDescription"></textarea>
+            </p>
+            <p><label for="partnershipDate">Partnership Date</label><br><input type="text" class="title" name="partnershipDate" id="partnershipDate"></p>
+            <button type="submit" class="positive" onclick="partnerships_form_save();" id="partnershipSubmit">Save</button>
+            <button type="submit" class="negative" onclick="partnerships_form_cancel();">Cancel</button>
+        </s>
+    </p>
+<%end%>
+</fieldset>
+</div>
+
+
+
+<div class="span-9 last" id="references_div">
+<fieldset>
+<legend>References</legend>
+<% unless @a_str == "true" %>
+
+<%=render :partial=>"show_companies_references_information", :locals=>{:references=>@references}%>
+
+<%else%><p>
+
+<div id="references_info">
+
+</div>
+<%= link_to "Add References", "javascript:void(0);", :onclick=>"references_form_new();"%>
+<div id="references_form">
+
+<p>
+<label for="dummy0">URL</label><br>
+<textarea name="dummy2" id="referencesURL" name="referencesURL"></textarea>
+
+</p>
+
+<p>
+<label for="dummy0">Article Field Name</label><br>
+<input type="text" class="title" name="article_field_name" id="article_field_name">
+</p>
+
+
+<p><label for="referencesDate">Date</label><br><input type="text" class="title" name="referencesDate" id="referencesDate"></p>
+
+<button type="submit" class="positive" onclick="references_form_save();" id="referencesSubmit">
+<img src="/images/icons/tick.png" alt=""/>
+Save
+</button>
+<button type="submit" class="negative" onclick="references_form_cancel();">
+<img src="/images/icons/cross.png" alt=""/>
+Cancel
+
+</button>
+</div></p><%end%>
+</fieldset>
+
+
+
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="span-9 last" id="right-col">
+
+<% if @notKey != "true" %>
+
+<% else %>
+
+
+
+<div class="span-9" id="keywords_div">
+<fieldset>
+<legend>Segments</legend>
+<% unless @a_str == "true" %>
+<%=render :partial=>"show_companies_segments_information", :locals=>{:company_categories=>@company_categories}%>
+
+<%else%><p>
+    <div id="keywords_info"></div><%= link_to "Add Segments", "javascript:void(0);", :onclick=>"keywords_form_expand();"%>
+        <div id="keywords_form">
+            <div id="category_form">Updating information...</div>
+               <button type="submit" class="positive" onclick="keywords_form_save();" id="keywordSubmit">
+                    <img src="/images/icons/tick.png" alt=""/>Save
+                </button>
+                <button type="submit" class="negative" onclick="keywords_form_cancel();">
+                    <img src="/images/icons/cross.png" alt=""/>Cancel
+
+                </button>
+             </div>
+        </p>
+<%end%>
+</fieldset>
+</div>
+
+
+
+
+
+<% end %>
+
+
+<div class="span-9 last" id="keywordStore_div">
+
+<fieldset>
+    <legend>Keywords</legend>
+    <% unless @a_str == "true" %>
+        <p>
+            <%unless @keyword.blank? %>
+            <%=@keyword.keywords%>
+            <%end%>
+        </p>
+
+    <%else%>
+        <p>
+            <div id="keywordStore_info">
+           <br>
+            </div> 
+            <%= link_to "Modify Keywords", "javascript:void(0);", :onclick=>"keywordStore_form_new();"%>
+            <div id="keywordStore_form">
+                <p>
+                    <textarea  id="keywordStoreWords" name="keywordStoreWords"></textarea>
+                </p>
+                <button type="submit" class="positive" onclick="keywordStore_form_save();" id="productSubmit">
+                    <img src="/images/icons/tick.png" alt=""/>Save
+                </button>
+                <button type="submit" class="negative" onclick="keywordStore_form_cancel();">
+                    <img src="/images/icons/cross.png" alt=""/>Cancel
+                </button>
+            </div>
+        </p>
+    <%end%>
+</fieldset>
+
+</span>
+
+
+
+
+
+
+<div class="span-9 last" id="singleVideo_div">
+	<fieldset>
+	 <legend>Video</legend>
+            <% unless @a_str == "true" %>
+           <p> <%=render :partial=>"show_companies_video_information", :locals=>{:videos=>@videos}%></p>
+         
+            <%else%><p>
+	 <div id="singleVideo_info">
+
+       </div>
+<%= link_to "Add Video", "javascript:void(0);", :onclick=>"singleVideos_form_new();"%>
+	 <div id="singleVideo_form">
+            <p>
+              <label for="dummy0">Video URL</label><br>
+             <!-- <input type="text" class="title" name="videoSWF" id="videoSWF">-->
+           <textarea name="dummy2" id="videoSWF" name="videoSWF"></textarea>
+            </p>
+            <p>
+              <label for="dummy0">Video Height</label><br>
+              <input type="text" class="title" name="videoHeight" id="videoHeight">
+            </p>
+            <p>
+              <label for="dummy0">Video Width</label><br>
+              <input type="text" class="title" name="videoWidth" id="videoWidth">
+            </p>
+
+          <p><label for="itype">Video Source</label><br>
+            <input type="radio" name="vtype" id="vtype" value="youtube">YouTube<br>
+            <input type="radio" name="vtype" id="vtype" value="vimeo">Vimeo<br>
+            <input type="radio" name="vtype" id="vtype" value="brightcove">BrightCove<br>
+         </p>
+
+
+
+    <button type="submit" class="positive" onclick="singleVideos_form_save();" id="partnershipSubmit">
+        <img src="/images/icons/tick.png" alt=""/>
+        Save
+    </button>
+    <button type="submit" class="negative" onclick="singleVideos_form_cancel();">
+        <img src="/images/icons/cross.png" alt=""/>
+        Cancel
+    </a>
+      </button>
+</div></p><%end%>
+    </fieldset>
+   </div>
+
+
+
+
+
+<div class="span-9 last" id="template_div">
+    <fieldset>
+	 <legend>Template</legend>
+         <% unless @a_str == "true" %>
+           <p>
+              <%=render :partial=>"show_companies_template_information", :locals=>{:videos=>@videos}%>
+           </p>
+         <%else%>
+            <p>
+	            <%= link_to "Add Template", "javascript:void(0);", :onclick=>"template_form_new();"%>
+	       <div id="template_form">
+
+                    <p>
+                        <label for="dummy0">Template Name</label><br>
+                        <input type="text" class="title" name="templateName" id="templateName">
+                    </p>
+                    <p>
+                        <label for="dummy0">Mail Template</label><br>
+                        <textarea name="dummy2" id="templateData" name="templateData"></textarea>
+                    </p>
+
+                    <button type="submit" class="positive" onclick="template_form_save();" id="templateSubmit">
+                        <img src="/images/icons/tick.png" alt=""/>
+                        Save
+                    </button>
+                    <button type="submit" class="negative" onclick="template_form_cancel();">
+                    <img src="/images/icons/cross.png" alt=""/>
+                        Cancel
+                        </a>
+                    </button>
+              </div>
+            </p>
+          <%end%>
+        </fieldset>
+</div>
+
+
+
+
+
+
+
+
+
+
+<div class="span-9" id="people_div">
+<fieldset>
+<legend>People</legend>
+<% unless @a_str == "true" %>
+<%=render :partial=>"show_companies_people_information", :locals=>{:personnels=>@personnels}%>
+
+
+
+<%else%><p>
+
+<div id="people_info">
+
+</div>
+<%= link_to "Add People", "javascript:void(0);", :onclick=>"people_form_new(#{params[:key]});"%>
+<div id="people_form">
+<p>
+<label for="dummy0">First Name</label><br>
+<input type="text" class="title" name="personnelFirstName" id="personnelFirstName">
+</p>
+
+<p>
+<label for="dummy0">Last Name</label><br>
+<input type="text" class="title" name="personnelLastName" id="personnelLastName">
+</p>
+
+
+<p>
+<label for="dummy0">Title</label><br>
+<input type="text" class="title" name="personnelCurrentTitle" id="personnelCurrentTitle">
+</p>
+
+
+<p>
+<label for="dummy0">Previous Companies</label><br>
+<input type="text" class="title" name="personnelPreviousTitle" id="personnelPreviousTitle">
+</p>
+
+
+
+<p>
+<label for="dummy0">Graduate Education</label><br>
+<input type="text" class="title" name="personnelGradEdu" id="personnelGradEdu">
+</p>
+
+<p>
+<label for="dummy0">Undergraduate Education</label><br>
+<input type="text" class="title" name="personnelUndergraduateEdu" id="personnelUndergraduateEdu">
+</p>
+
+<p>
+<label for="dummy0">Other Education</label><br>
+<input type="text" class="title" name="personnelOtherEdu" id="personnelOtherEdu">
+</p>
+
+<p>
+<label for="dummy0">Email</label><br>
+<input type="text" class="title" name="personnelEmail" id="personnelEmail">
+</p>
+
+<p><label>Founder</label><br>
+<input type="radio" name="ftype" id="ftype" value="true"> Yes<br>
+<input type="radio" name="ftype" id="ftype" value="false"> No<br>
+</p>
+
+<button type="submit" class="positive" onclick="people_form_save();" id="peopleSubmit">
+<img src="/images/icons/tick.png" alt=""/>
+Save
+</button>
+<button type="submit" class="negative" onclick="people_form_cancel();">
+<img src="/images/icons/cross.png" alt=""/>
+Cancel
+
+</button>
+</div><%end%>
+</fieldset>
+</div>
+
+
+
+
+<div class="span-9 last" id="products_div">
+<fieldset>
+<legend>Products</legend>
+<% unless @a_str == "true" %>
+
+<%=render :partial=>"show_companies_product_information", :locals=>{:products=>@products}%>
+
+
+<%else%><p>
+<div id="products_info">
+<br>
+</div> 
+<%= link_to "Add Products", "javascript:void(0);", :onclick=>"products_form_new();"%>
+<div id="products_form">
+<p>
+<label for="dummy0">Name</label><br>
+<input type="text" class="title" name="productName" id="productName">
+</p>
+<p>
+<label for="dummy0">Description</label><br>
+<textarea name="dummy2" id="productDescription" name="productDescription"></textarea>
+
+</p>
+
+
+<p><label for="productDate">Launch Date</label><br><input type="text" class="title" name="productDate" id="productDate"></p>
+
+<button type="submit" class="positive" onclick="product_form_save();" id="productSubmit">
+<img src="/images/icons/tick.png" alt=""/>
+Save
+</button>
+<button type="submit" class="negative" onclick="products_form_cancel();">
+<img src="/images/icons/cross.png" alt=""/>
+Cancel
+
+</button>
+</div></p>
+<%end%>
+</fieldset>
+
+
+
+
+
+</div>
+
+
+
+
+
+
+
+
+
+<div class="span-9 last" id="send_mail_div">
+<% if @a_str == "true" %>
+    <fieldset>
+        <legend>Send Mail</legend>
+
+        <div id="send_mail_info"><%= link_to "Send Mail", "javascript:void(0);", :onclick=>"send_mail_form_new();"%></div>
+        <div id="send_mail_form">
+    
+            <p>
+            <label for="dummy0">Subject</label><br>
+            <input type="text" class="title" name="email_subject" id="email_subject">
+            </p>
+    <%  @all_template = Array.new if @all_template == nil%>
+            <%= collection_select(:email_tracker, :id, @all_template,:id,:template_name,{:prompt => "-Select a Template"} ,{:onchange=>"  give_template_body($('#email_tracker_id'));"}) %>
+
+
+            <p id="email">
+            <label for="dummy0">Messsage</label><br>
+            <textarea name="email_message" id="email_message" class="mceEditor" name="email_message"></textarea>
+
+            </p>
+    
+            <p>
+            <label for="dummy0">Return email</label><br>
+            <input type="text" class="title" name="email_return" id="email_return" name="email_return">
+            
+            </p>
+    
+            <button type="submit" class="positive" onclick="send_mail_form_save('<%=send_mail_to_all_person_of_company_email_trackers_path %>');" id="send_mail_Submit">
+                <img src="/images/icons/tick.png" alt=""/>Save
+            </button>
+            <button type="submit" class="negative" onclick="send_mail_form_cancel();">
+                <img src="/images/icons/cross.png" alt=""/>Cancel
+            </button>
+
+            <button type="Preview" class="negative" onclick="preview_email_for_send_mail();">Preview</button>
+        </div>
+    </fieldset>
+<%end%>
+</div>
+
+
+<% end %>
+
+</div>

@@ -1,0 +1,15 @@
+
+<% form_for(:category, :url => { :action => "updateCategoryForCompany" }) do |f| %>
+
+    <%= f.hidden_field :company_id,:value=>params[:id]%>
+    <p>
+       <%@category.each do |cat|%>
+        <%= check_box_tag 'category[id][]',cat.id,cat.company_categories.find_by_company_id(params[:id]).blank? ? false : true%><%=cat.name%><br />
+        <%end%>
+    </p>
+     <button type="submit" class="positive" id="investmentSubmit">
+    Save
+    </button>
+<%end%>
+
+ 

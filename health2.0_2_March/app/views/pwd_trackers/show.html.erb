@@ -1,0 +1,13 @@
+<p>
+  <b>Email:</b>
+  <%=h @pwd_tracker.email %>
+</p>
+
+<p>
+  <b>Urlkey:</b>
+  <%=h @pwd_tracker.urlKey %>
+</p>
+
+
+<%= link_to 'Edit', edit_pwd_tracker_path(@pwd_tracker) %> |
+<%= link_to 'Back', pwd_trackers_path %>

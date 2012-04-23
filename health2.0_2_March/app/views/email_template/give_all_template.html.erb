@@ -1,0 +1,8 @@
+<%= javascript_include_tag "inform.js" %>
+<% @all_template.each do |f| %>
+    <div>
+        <%= f.template_name%>
+        <a href="javascript:template_delete_from_view(<%=f.id%>);"><img src="/images/icons/deleteitem.png" /></a><%= link_to image_submit_tag("/images/icons/pencil.png"), edit_template_email_template_path(f.id) %><button type="Preview" class="negative" onclick="preview_email_template(<%=f.id%>)">Preview</button>
+    </div><br>
+<% end %>
+<%=link_to 'Create New Template',new_email_template_path %>

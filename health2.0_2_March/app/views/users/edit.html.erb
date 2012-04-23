@@ -1,0 +1,24 @@
+<h1>Change Password</h1>
+
+<% form_for @user, :url => account_path do |f| %>
+  <%= f.error_messages %>
+  <label for="user_login">Login</label><br />
+<%=h current_user.login %>
+
+<br /><br/ >
+
+<input id="user_login" name="user[login]" size="30" type="hidden" value="saumyagarg@gmail.com" />
+
+
+<label for="user_password">Change password</label><br />
+<input id="user_password" name="user[password]" size="30" type="password" /><br />
+<br />
+<label for="user_password_confirmation">Password confirmation</label><br />
+<input id="user_password_confirmation" name="user[password_confirmation]" size="30" type="password" /><br />
+  <input id="user_submit" name="commit" type="submit" value="Update" />
+
+<% end %>
+
+<% if @sChanging != true %>
+<br /><%= link_to "My Profile", account_path %>
+<% end %>

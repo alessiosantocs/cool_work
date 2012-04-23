@@ -1,0 +1,32 @@
+<h1>Editing investment</h1>
+
+<% form_for(@investment) do |f| %>
+  <%= f.error_messages %>
+
+  <p>
+    <%= f.label :company %><br />
+    <%= f.text_field :company %>
+  </p>
+  <p>
+    <%= f.label :agency %><br />
+    <%= f.text_field :agency %>
+  </p>
+  <p>
+    <%= f.label :funding_amount %><br />
+    <%= f.text_field :funding_amount %>
+  </p>
+  <p>
+    <%= f.label :funding_date %><br />
+    <%= f.date_select :funding_date %>
+  </p>
+  <p>
+    <%= f.label :funding_type %><br />
+    <%= f.text_field :funding_type %>
+  </p>
+  <p>
+    <%= f.submit 'Update' %>
+  </p>
+<% end %>
+
+<%= link_to 'Show', @investment %> |
+<%= link_to 'Back', investments_path %>

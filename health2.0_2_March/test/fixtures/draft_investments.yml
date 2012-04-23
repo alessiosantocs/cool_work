@@ -1,0 +1,13 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+
+one:
+  agency: MyString
+  funding_amount: 1
+  funding_type: MyString
+  company: 
+
+two:
+  agency: MyString
+  funding_amount: 1
+  funding_type: MyString
+  company: 

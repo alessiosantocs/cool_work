@@ -1,0 +1,28 @@
+<%= javascript_include_tag "inform.js" %>
+<%= include_tiny_mce_if_needed %>
+
+<form method="post" action="/companies/send_email_to_company">
+ <p>  
+      <label for="email_tracker_subject">Subject</label><br>
+      <input type="text" size="30" name="email_tracker[subject]" id="email_tracker_subject"><br>
+      <input type="hidden" size="30" name="email_tracker[company_ids]" id="email_tracker_company_id">
+
+    </p>
+    <%= collection_select(:email_tracker, :id, @all_template,:id,:template_name,{:prompt => "-Select a Template"} ,{:onchange=>"give_template_body(this.value);"}) %>
+    <p>
+       <label for="email_tracker_message">Message</label><br />
+       <textarea rows="20" name="email_tracker[message]" id="email_tracker_message" class="mceEditor" cols="40"></textarea>
+     </p>
+
+    <p>
+      <label for="email_tracker_return_email">Return Mail</label><br>
+      <input type="text" size="30" name="email_tracker[return_email]" id="email_tracker_return_email">
+    </p>
+        
+    <button type="submit" class="positive" id="send_mail_Submit">
+        <img src="/images/icons/tick.png" alt=""/>Save
+    </button>
+ <button type="button" class="positive" id="send_mail_Submit" onclick="preview_email();">
+        <img src="/images/icons/tick.png" alt=""/>Preview
+    </button>
+</form>

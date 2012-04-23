@@ -1,0 +1,21 @@
+<% form_for(@product) do |f| %>
+<%= f.hidden_field :company_id,:value=>params[:id]%>
+
+  <p>
+    <%= f.label :name %><br />
+    <%= f.text_field :name %>
+  </p>
+  <p>
+    <%= f.label :Description %><br />
+    <%= f.text_area :description %>
+
+  </p>
+  <p>
+    <%= f.label :Launch_Date %><br />
+    <%= f.date_select :date_launched %>
+  </p>
+<button type="submit" value="submit" class="positive" id="peopleSubmit" align="center">
+<img src="/images/icons/tick.png" alt=""/>
+Save
+</button>
+<% end %>

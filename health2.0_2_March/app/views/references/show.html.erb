@@ -1,0 +1,18 @@
+<p>
+  <b>Url:</b>
+  <%=h @reference.url %>
+</p>
+
+<p>
+  <b>Company:</b>
+  <%=h @reference.company %>
+</p>
+
+<p>
+  <b>Dateentered:</b>
+  <%=h @reference.dateEntered %>
+</p>
+
+
+<%= link_to 'Edit', edit_reference_path(@reference) %> |
+<%= link_to 'Back', references_path %>

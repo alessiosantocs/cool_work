@@ -1,0 +1,18 @@
+<table>
+    <tr>
+        <td>
+            <%= link_to "Asc by Last Update", :controller => "companies", :action => "asc_order_by_last_update" %>
+        </td>
+        <td>
+            <%= link_to "Desc by Last Update", :controller => "companies", :action => "desc_order_by_last_update" %>
+        </td>
+        <td>
+            <%= link_to "Asc by Name", :controller => "companies", :action => "asc_order_by_name" %>
+        </td>
+        <td>
+            <%= link_to "Desc by Name", :controller => "companies", :action => "desc_order_by_name" %>
+        </td>
+    </tr>
+</table>
+
+<%=render :partial =>"order_by_last_update"%>

@@ -1,0 +1,22 @@
+<h1>Listing single_videos</h1>
+
+<table>
+  <tr>
+    <th>Code</th>
+    <th>Company</th>
+  </tr>
+
+<% @single_videos.each do |single_video| %>
+  <tr>
+    <td><%=h single_video.code %></td>
+    <td><%=h single_video.company %></td>
+    <td><%= link_to 'Show', single_video %></td>
+    <td><%= link_to 'Edit', edit_single_video_path(single_video) %></td>
+    <td><%= link_to 'Destroy', single_video, :confirm => 'Are you sure?', :method => :delete %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New single_video', new_single_video_path %>

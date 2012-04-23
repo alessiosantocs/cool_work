@@ -1,0 +1,36 @@
+<p>
+  <b>Login:</b>
+  <%=h @user.login %>
+</p>
+
+
+
+
+<%= link_to 'Change Password', edit_account_path %>
+
+<p><br>
+     <table class="company_summary">
+        <TR>
+            <TD width="18%" ><b>Total Companies</b> </TD><td width="38%" ><%=@count%></td>
+            <TD width="20%" ><b>Enabled companies</b></TD><td width="40%" ><%=@count_company%></td>
+        </TR>
+     </table>
+
+</p>
+
+
+
+
+<% if @admin.to_s != "" %>
+<font color="red"> Admin Menu </font><br/>
+
+<%= link_to "Create Company", :controller => "companies", :action => "show", :create => "true" %><br> 
+<%= link_to "Manage Segments", :controller => "categories", :action => "index" %><br> 
+<%= link_to "Add User Permission", :controller => "user_attributes", :action => "new" %><br>  
+<%= link_to "User Permissions List", :controller => "user_attributes", :action => "index" %><br>  
+<%= link_to "Track Emails Sent", :controller => "email_trackers", :action => "index" %><br> 
+<%= link_to "New Email To Company List", :controller => "email_trackers", :action => "new" %><br> 
+<%= link_to "List of Companies by Date Created", :controller => "companies", :action => "dateCompaniesCreated" %><br> 
+<%= link_to "List of Companies by Last Modified Page", :controller => "companies", :action => "asc_order_by_last_update" %><br>
+<%= link_to "Manage Templates",:controller => "email_template",:action=>"give_all_template"%>
+<% end %>

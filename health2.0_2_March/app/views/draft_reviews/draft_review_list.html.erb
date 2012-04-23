@@ -1,0 +1,22 @@
+<h1>Listing Draft Reviews</h1>
+
+<table>
+  <tr>
+    <th>Company</th>
+    <th>Accepted</th>
+    <th>Processed</th>
+    <th>Email tracker</th>
+  </tr>
+
+<% @draft_reviews.each do |draft_review| %>
+  <tr>
+    <td><%=h draft_review.company.name %></td>
+    <td><%=h draft_review.accepted %></td>
+    <td><%=h draft_review.processed %></td>
+
+    <td><%= link_to 'Review', draft_review %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />

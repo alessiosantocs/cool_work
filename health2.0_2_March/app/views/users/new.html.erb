@@ -1,0 +1,20 @@
+<h1>Register</h1>
+
+
+<p style="color: red"><%= flash[:notice] %></p>
+
+<p>Registration gives you access to our company lists and basic profile information. </p>
+
+<form action="/account" class="new_user" id="new_user" method="post">
+<label for="user_login">Email</label><br />
+<input id="user_login" name="user[login]" size="30" type="text" /><br />
+<br />
+<label for="user_password">Password</label><br />
+
+<input id="user_password" name="user[password]" size="30" type="password" /><br />
+<br />
+<label for="user_password_confirmation">Password confirmation</label><br />
+<input id="user_password_confirmation" name="user[password_confirmation]" size="30" type="password" /><br />
+
+  <input id="user_submit" name="commit" type="submit" value="Register" />
+</form>

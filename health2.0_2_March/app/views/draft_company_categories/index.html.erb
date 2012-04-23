@@ -1,0 +1,22 @@
+<h1>Listing company_categories</h1>
+
+<table>
+  <tr>
+    <th>Category</th>
+    <th>Company</th>
+  </tr>
+
+<% @company_categories.each do |company_category| %>
+  <tr>
+    <td><%=h company_category.category %></td>
+    <td><%=h company_category.company %></td>
+    <td><%= link_to 'Show', company_category %></td>
+    <td><%= link_to 'Edit', edit_company_category_path(company_category) %></td>
+    <td><%= link_to 'Destroy', company_category, :confirm => 'Are you sure?', :method => :delete %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New company_category', new_company_category_path %>

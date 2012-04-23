@@ -1,0 +1,28 @@
+<p>
+  <b>Company:</b>
+  <%=h @investment.company %>
+</p>
+
+<p>
+  <b>Agency:</b>
+  <%=h @investment.agency %>
+</p>
+
+<p>
+  <b>Funding amount:</b>
+  <%=h @investment.funding_amount %>
+</p>
+
+<p>
+  <b>Funding date:</b>
+  <%=h @investment.funding_date %>
+</p>
+
+<p>
+  <b>Funding type:</b>
+  <%=h @investment.funding_type %>
+</p>
+
+
+<%= link_to 'Edit', edit_investment_path(@investment) %> |
+<%= link_to 'Back', investments_path %>

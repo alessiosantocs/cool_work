@@ -1,0 +1,28 @@
+<h1>Listing message_trackers</h1>
+
+<table>
+  <tr>
+    <th>Email tracker</th>
+    <th>Company</th>
+    <th>Answered</th>
+    <th>Url key</th>
+    <th>Send success</th>
+  </tr>
+
+<% @message_trackers.each do |message_tracker| %>
+  <tr>
+    <td><%=h message_tracker.email_tracker %></td>
+    <td><%=h message_tracker.company %></td>
+    <td><%=h message_tracker.answered %></td>
+    <td><%=h message_tracker.url_key %></td>
+    <td><%=h message_tracker.send_success %></td>
+    <td><%= link_to 'Show', message_tracker %></td>
+    <td><%= link_to 'Edit', edit_message_tracker_path(message_tracker) %></td>
+    <td><%= link_to 'Destroy', message_tracker, :confirm => 'Are you sure?', :method => :delete %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New message_tracker', new_message_tracker_path %>

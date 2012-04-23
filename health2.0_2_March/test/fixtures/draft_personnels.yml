@@ -1,0 +1,27 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+
+one:
+  first_name: MyString
+  last_name: MyString
+  curent_title: MyString
+  previous_title: MyString
+  founder: false
+  grad_edu: MyString
+  undergrad_edu: MyString
+  other_edu: MyString
+  private_notes: MyText
+  company: 
+  email: MyString
+
+two:
+  first_name: MyString
+  last_name: MyString
+  curent_title: MyString
+  previous_title: MyString
+  founder: false
+  grad_edu: MyString
+  undergrad_edu: MyString
+  other_edu: MyString
+  private_notes: MyText
+  company: 
+  email: MyString

@@ -1,0 +1,114 @@
+<% content_for :head do %>
+  <title>Company List</title>
+  <%= javascript_include_tag "listCompanies.js" %>
+  
+  <script type="text/javascript">
+  
+  $(document).ready(function() {
+<% if current_user  %>
+
+<% if @a_str== "true" %>
+admin = true;
+<% else %>
+admin = false; 
+<% end %>
+
+
+searchCategory_info_get();
+part = "<%=h params[:part] %>";
+if(part == ""){
+getPart('A'); 
+}
+else{
+getPart(part); 
+}
+
+
+<% end %>
+  });
+  </script>
+<% end %>
+
+
+
+
+<% if current_user  %>
+
+<% if @admin.to_s != "" %>
+<% if @a_str != "true" %>
+<p align="center">Your user account has administrative access rights. <%= link_to  "Click here to see the administrative view of the page.", {:action => "show", :controller =>
+"companies", :action => "listCompanies", :a_str => "true" } %></p>
+<% else %>
+<p align="center"> <%= link_to  "Click here to exit the administrative view of this page.", {:action => "show", :controller =>
+"companies", :action => "listCompanies", :a_str => "false" } %> </p>
+<% end %>
+
+<hr>
+
+<% end %>
+
+
+
+
+<div class="span-18"><fieldset><legend>Pick a Letter</legend><div class="span-12 prepend-3">
+
+
+<a href="/companies/listCompanies?part=A&a_str=<%=h @a_str %>">A</a>&nbsp;
+<a href="/companies/listCompanies?part=B&a_str=<%=h @a_str %>">B</a>&nbsp;
+<a href="/companies/listCompanies?part=C&a_str=<%=h @a_str %>">C</a>&nbsp;
+<a href="/companies/listCompanies?part=D&a_str=<%=h @a_str %>">D</a>&nbsp;
+<a href="/companies/listCompanies?part=E&a_str=<%=h @a_str %>">E</a>&nbsp;
+<a href="/companies/listCompanies?part=F&a_str=<%=h @a_str %>">F</a>&nbsp;
+<a href="/companies/listCompanies?part=G&a_str=<%=h @a_str %>">G</a>&nbsp;
+<a href="/companies/listCompanies?part=H&a_str=<%=h @a_str %>">H</a>&nbsp;
+<a href="/companies/listCompanies?part=I&a_str=<%=h @a_str %>">I</a>&nbsp;
+<a href="/companies/listCompanies?part=J&a_str=<%=h @a_str %>">J</a>&nbsp;
+<a href="/companies/listCompanies?part=K&a_str=<%=h @a_str %>">K</a>&nbsp;
+<a href="/companies/listCompanies?part=L&a_str=<%=h @a_str %>">L</a>&nbsp;
+<a href="/companies/listCompanies?part=M&a_str=<%=h @a_str %>">M</a>&nbsp;
+<a href="/companies/listCompanies?part=N&a_str=<%=h @a_str %>">N</a>&nbsp;
+<a href="/companies/listCompanies?part=O&a_str=<%=h @a_str %>">O</a>&nbsp;
+<a href="/companies/listCompanies?part=P&a_str=<%=h @a_str %>">P</a>&nbsp;
+<a href="/companies/listCompanies?part=Q&a_str=<%=h @a_str %>">Q</a>&nbsp;
+<a href="/companies/listCompanies?part=R&a_str=<%=h @a_str %>">R</a>&nbsp;
+<a href="/companies/listCompanies?part=S&a_str=<%=h @a_str %>">S</a>&nbsp;
+<a href="/companies/listCompanies?part=T&a_str=<%=h @a_str %>">T</a>&nbsp;
+<a href="/companies/listCompanies?part=U&a_str=<%=h @a_str %>">U</a>&nbsp;
+<a href="/companies/listCompanies?part=V&a_str=<%=h @a_str %>">V</a>&nbsp;
+<a href="/companies/listCompanies?part=W&a_str=<%=h @a_str %>">W</a>&nbsp;
+<a href="/companies/listCompanies?part=X&a_str=<%=h @a_str %>">X</a>&nbsp;
+<a href="/companies/listCompanies?part=Y&a_str=<%=h @a_str %>">Y</a>&nbsp;
+<a href="/companies/listCompanies?part=Z&a_str=<%=h @a_str %>">Z</a>&nbsp;
+<a href="/companies/listCompanies?part=other&a_str=<%=h @a_str %>">Other</a>&nbsp;
+<a href="/companies/listCompanies?part=all&a_str=<%=h @a_str %>">All</a>&nbsp;
+
+
+</div></fieldset>
+</div>
+
+<div class="span-18" id="updatingResults"><p align="center"><img src="/images/29.gif"/><br>Updating...</p></div>
+<div class="span-5" id="catSec">
+<% if @subscribed.to_s != "" %>
+<span id="activeCats"></span><span id="availCats"></span>
+<% else %>
+<%= link_to  "Subscribe to filter by segment.", {:action => "SubscriptionPage", :controller => "payment" } %>
+
+<% end %>
+</div>
+
+<div class="span-13 last lefttopsearch" id="resultsInfo">
+
+</div>
+<div class="span-18"><br></div>
+
+
+<% else %>
+
+<% @companies.each do |company| %>
+  <div class="span-4">
+   <%= link_to  company[1], {:action => "new", :controller =>
+"account" } %>
+    
+   </div>
+<% end %>
+<% end %>

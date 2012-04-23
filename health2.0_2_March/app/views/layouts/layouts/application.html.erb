@@ -1,0 +1,66 @@
+<html>
+  <head>
+
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Health 2.0 Advisors</title></title>
+
+    <!-- Framework CSS -->
+    <%= stylesheet_link_tag "blueprint/screen.css" %>
+     <%= stylesheet_link_tag "custom.css" %>
+         <%= stylesheet_link_tag "blueprint/plugins/buttons/screen.css" %>
+     
+         <%= stylesheet_link_tag "ui-lightness/jquery-ui-1.7.2.custom.css" %>
+
+
+    <script type="text/javascript" src="javascripts/js/jquery.min.js"></script>
+    <script type="text/javascript" src="stylesheets/js/jquery-ui.min.js"></script>
+	<script type="text/javascript" src="pub/js/custom.js"></script>
+	<script type="text/javascript" src="public/js/jquery.nyromodal.js"></script>
+
+
+     <%= yield :stylesheets %>
+
+  </head>
+  <body class="showbg">
+
+
+
+    <div class="container showmain">
+      <div class="span-24"><%= image_tag "h20600.gif" %><br><br><hr></div>
+
+
+	   <div class="span-6" id="left-col">
+
+
+<% if !current_user %>
+  <%= link_to "Register", new_account_path %> <br>
+  <%= link_to "Log In", new_user_session_path %><br.
+<% else %>
+  <%= link_to "My Account", account_path %> <br>
+  <%= link_to "Logout", user_session_path, :method => :delete, :confirm => "Are you sure you want to logout?" %> <br>
+<% end %>
+	   </div>
+
+
+
+<div class="span-18 last" id="maincontent">
+
+<p style="color: green"><%= flash[:notice] %></p>
+      <%= yield :content %>
+<%= yield  %>
+<br><br>
+
+
+</div>
+ 
+    
+    <br><br><br>
+      <hr>
+
+
+      
+    </div>
+  </body>
+
+</html>
+

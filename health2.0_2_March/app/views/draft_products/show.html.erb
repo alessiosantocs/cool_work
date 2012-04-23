@@ -1,0 +1,18 @@
+<p>
+  <b>Name:</b>
+  <%=h @product.name %>
+</p>
+
+<p>
+  <b>Date launched:</b>
+  <%=h @product.date_launched %>
+</p>
+
+<p>
+  <b>Company:</b>
+  <%=h @product.company %>
+</p>
+
+
+<%= link_to 'Edit', edit_product_path(@product) %> |
+<%= link_to 'Back', products_path %>

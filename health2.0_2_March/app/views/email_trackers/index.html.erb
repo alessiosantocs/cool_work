@@ -1,0 +1,26 @@
+<%= javascript_include_tag "inform.js" %>
+<h1>Listing email_trackers</h1>
+
+<table>
+  
+
+<% @email_trackers.each do |email_tracker| %>
+ 
+   <%=h email_tracker.return_email %> &nbsp;&nbsp;
+    <%=h email_tracker.created_at %>&nbsp;&nbsp;     
+    <%= link_to 'Show', email_tracker %>  &nbsp;&nbsp;  
+    <%= link_to 'View Drafts', :controller=> "draft_reviews", :action => "draft_review_list", :email_tracker_id => email_tracker.id  %>&nbsp;&nbsp;
+  <%= link_to 'Send Unanswered', :controller => "email_trackers", :action => "new", :tracker_id => email_tracker.id %>&nbsp;&nbsp;
+<%= submit_tag 'Show',:type=>'button', :name => 'preview_button', :onclick=>"preview_email_message('#{email_tracker.id}');"%> <br>
+     
+<div id="<%=email_tracker.id%>">
+
+       <%=h email_tracker.message %><br><br><br>
+ </div> 
+ 
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New email_tracker', new_email_tracker_path %>

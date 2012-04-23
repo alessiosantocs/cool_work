@@ -1,0 +1,61 @@
+.modded {
+width: 200px;
+
+}
+
+.largeTop {font-size:1.6em;line-height:1em;margin-bottom:0em;}
+.mediumTop {font-size:1.28em;line-height:0em;margin-bottom:0em;}
+.slightbottommargin {line-height:0em;margin-bottom:.5em; margin-top:0em;}
+.nobottommargin {line-height:0em;margin-bottom:0em; margin-top:0em;}
+.lefttopsearch {margin-top:.0em;}
+
+
+
+
+.bluemenu
+{
+
+ 	
+    padding: 1px 8px 5px 18px;
+
+display: inline; /*For ignore double margin in IE6*/
+	list-style: none;
+	background-color: #fff;
+	
+	background: url(images/blue.png) no-repeat top right;
+ 	color: #0d5f83;
+position: relative; /*To fix IE6 problem (not displaying)*/	clear: left;
+        
+    text-decoration: none;
+	float:left;
+	cursor: pointer;
+	font: 900 14px/22px "Arial", Helvetica, sans-serif;
+    	margin: 0 10px 0 -10px;
+}
+    
+
+			#wrap {
+				width: 710px;
+				margin: auto;
+			}
+			#homecenter {
+				width: 710px;
+				float: left;
+			}
+			.floatedR {
+				width: 345px;
+				padding-left: 10px;
+				float: right;
+			}
+			.floatedL {
+				width: 345px;
+				padding-right: 10px;
+				float: left;
+			}
+			.meta {
+				text-align: right;
+			}
+			.date {
+				color: #777;
+			}
+		

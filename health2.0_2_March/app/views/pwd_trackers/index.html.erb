@@ -1,0 +1,22 @@
+<h1>Listing pwd_trackers</h1>
+
+<table>
+  <tr>
+    <th>Email</th>
+    <th>Urlkey</th>
+  </tr>
+
+<% @pwd_trackers.each do |pwd_tracker| %>
+  <tr>
+    <td><%=h pwd_tracker.email %></td>
+    <td><%=h pwd_tracker.urlKey %></td>
+    <td><%= link_to 'Show', pwd_tracker %></td>
+    <td><%= link_to 'Edit', edit_pwd_tracker_path(pwd_tracker) %></td>
+    <td><%= link_to 'Destroy', pwd_tracker, :confirm => 'Are you sure?', :method => :delete %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New pwd_tracker', new_pwd_tracker_path %>

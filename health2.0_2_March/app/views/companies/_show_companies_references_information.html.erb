@@ -1,0 +1,6 @@
+<% @references.each do|reference| %>
+<p>
+<%= label_tag(:date, "Date Entered: ") %><%= reference.dateEntered%><br/>
+<%= label_tag(:description, "Article: ") %><a target='_blank' href="<%= reference.url%>"><%= reference.article_field_name%></a><br/>
+</p>
+<%end%>

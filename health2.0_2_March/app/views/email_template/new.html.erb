@@ -1,0 +1,14 @@
+<%= javascript_include_tag "inform.js" %>
+<%= include_tiny_mce_if_needed %>
+<%= form_tag(template_data_take_email_template_path,:method => "post")%>
+    <p>
+        <%= label_tag(:template_name, "Template Name ") %><br>
+        <%= text_field_tag :template_name,"",:class=>'title'%> 
+    </p>
+    <p> 
+        <%= label_tag(:template_data, "EMail Template ") %><br>
+        <%= text_area_tag :template_data,"",:class => "mceEditor"%> 
+    </p>
+
+<%= submit_tag("Create Template") %></center><br><br>
+<%=link_to 'Back',give_all_template_email_template_path %>

@@ -1,0 +1,77 @@
+
+<% content_for :head do %>
+  <title>Company List</title>
+
+  
+  <script type="text/javascript">
+  
+  $(document).ready(function() {
+<% if current_user  %>
+
+
+
+searchUrl = "/search/globalSearchDo";
+searchCategory_info_get();
+
+  });
+  </script>
+<% end %>
+<% end %>
+<table>
+<tr>
+<td valign="top">
+ 
+ 
+ 
+
+ 
+	<div class="span-18"> 
+	<% if @subscribed.to_s != "" %>
+	<fieldset> 
+		<legend>Global Company Search</legend> 
+		<div class="span-5 prepend-4"><input type=text class="title" name="search" id="search"></div><div class="span-5 last prepend-3"><button type="submit" class="positive" onclick="searchPress();" id="internalSubmit"> 
+        <img src="/images/icons/tick.png" alt=""/> 
+        Search 
+    </button></div> 
+ 
+
+ 
+	</fieldset> 
+	</div> 
+	<div class="span-18" id="updatingResults"><p align="center"><img src="/images/29.gif"/><br>Updating...</p></div> 
+	
+	
+	<div class="span-5" id="catSec"><span id="activeCats"></span><span id="availCats"></span> 
+    
+ 
+ 
+ 
+        </div> 
+ 
+	<div class="span-13 last lefttopsearch" id="resultsInfo"> 
+
+	</div> 
+	<div class="span-18"><br></div> 
+ 
+
+ 
+ 
+ 
+ 
+<div class="span-18"><br></div>
+ 
+ 
+
+
+
+
+ <% else %>
+
+ You must subscribed to do global search. <%= link_to  "Click here to subscribe.", {:action => "SubscriptionPage", :controller => "payment" } %>
+
+<% end %>
+
+</div>
+</td>
+</tr>
+</table>

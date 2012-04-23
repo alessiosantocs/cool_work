@@ -1,0 +1,61 @@
+
+<% form_for(@personnel) do |f| %>
+<%= f.hidden_field :company_id,:value=>params[:id]%>
+ <%= hidden_field_tag 'key' ,params[:key]%>
+<p>
+
+ <%= f.label :First_Name %><br />
+ <%= f.text_field :first_name %>
+
+</p>
+
+<p>
+ <%= f.label :Last_Name %><br />
+  <%= f.text_field :last_name %>
+</p>
+
+
+<p>
+ <%= f.label :Title %><br />
+ <%= f.text_field :current_title %>
+</p>
+
+
+<p>
+ <%= f.label :previous_title %><br />
+      <%= f.text_field :previous_title %>
+</p>
+
+
+<p>
+ <%= f.label :Graduate_Education %><br />
+         <%= f.text_field :grad_edu %>
+</p>
+
+<p>
+ <%= f.label :Undergraduate_Education %><br />
+         <%= f.text_field :undergrad_edu %>
+</p>
+
+<p>
+ <%= f.label :Other_Education %><br />
+         <%= f.text_field :other_edu %>
+</p>
+
+<p>
+ <%= f.label :Email %><br />
+         <%= f.text_field :email %>
+</p>
+
+<p><label>Founder</label><br>
+<input type="radio" name="ftype" id="ftype" value="true"> Yes<br>
+<input type="radio" name="ftype" id="ftype" value="false"> No<br>
+</p>
+
+<button type="submit" value="submit" class="positive" id="peopleSubmit">
+<img src="/images/icons/tick.png" alt=""/>
+Save
+</button>
+
+<%end%>
+

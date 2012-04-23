@@ -1,0 +1,18 @@
+<p>
+  <b>Person:</b>
+  <%=h @email_address.person %>
+</p>
+
+<p>
+  <b>Email:</b>
+  <%=h @email_address.email %>
+</p>
+
+<p>
+  <b>Type:</b>
+  <%=h @email_address.type %>
+</p>
+
+
+<%= link_to 'Edit', edit_email_address_path(@email_address) %> |
+<%= link_to 'Back', email_addresses_path %>

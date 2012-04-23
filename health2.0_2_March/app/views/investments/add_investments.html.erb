@@ -1,0 +1,38 @@
+<% form_for(@investment) do |f| %>
+
+    <%= f.hidden_field :company_id,:value=>params[:id]%>
+    <p>
+        <%= f.label :Investment_Date %><br />
+        <%= f.date_select :funding_date %>
+    </p>
+    <p>
+        <%= f.label :Investors %><br />
+        <%= f.text_field :agency %>
+    </p>
+
+    <p>    
+        <%= f.label :Investment_Amount %><br />
+        <%= f.text_field :funding_amount %>
+    </p>
+
+
+    <p>
+        <label for="itype">Investment Type</label><br>
+        <input type="radio" name="investment[funding_type]" id="itype" value="angel"> Angel<br>
+        <input type="radio" name="investment[funding_type]" id="itype" value="seed"> Seed<br>
+        <input type="radio" name="investment[funding_type]" id="itype" value="seriesa"> Series A<br>
+        <input type="radio" name="investment[funding_type]" id="itype" value="seriesb"> Series B<br>
+        <input type="radio" name="investment[funding_type]" id="itype" value="seriesc"> Series C<br>
+        <input type="radio" name="investment[funding_type]" id="itype" value="seriesd"> Series D<br>
+        <input type="radio" name="investment[funding_type]" id="itype" value="seriese"> Series E<br>
+        <input type="radio" name="investment[funding_type]" id="itype" value="seriesf"> Series F<br>
+        <input type="radio" name="investment[funding_type]" id="itype" value="seriesg"> Series G<br>
+        <input type="radio" name="investment[funding_type]" id="itype" value="purchased"> Purchased<br>
+        <input type="radio" name="investment[funding_type]" id="itype" value="ipo"> IPO<br>
+    </p>
+    <button type="submit" class="positive" id="investmentSubmit">
+    Save
+    </button>
+  
+<%end%>
+

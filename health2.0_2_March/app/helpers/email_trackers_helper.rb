@@ -1,0 +1,2 @@
+module EmailTrackersHelper
+end

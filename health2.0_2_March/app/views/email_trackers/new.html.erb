@@ -1,0 +1,45 @@
+<h1>New Email to Company List</h1>
+<%= javascript_include_tag "inform.js" %>
+<%= include_tiny_mce_if_needed %>
+Note the following fields to personalize your messages with the Personnels database: <br/>
+
+[[first_name]] First Name <br/>
+[[last_name]] Last Name <br/>
+[[company_name]] Company Name <br/>
+[[return_email]] Return Email <br/>
+[[link_company_profile]] Link to the company profile <br/><br/>
+
+
+<% form_for(@email_tracker,:html => {:onsubmit=>"return echeck($(email_tracker_return_email).val());" })  do |f| %>
+  <%= f.error_messages %>
+  <input type="hidden" name="tracker_id" value="<%=h @tracker_id %>">
+
+  <p class="text1">
+    <%= f.label :subject %><br />
+    <%= f.text_field :subject %>
+  </p>
+
+
+<p>
+
+
+<%= collection_select(:email_tracker, :id, @all_template,:id,:template_name,{:prompt => "-Select a Template"} ,{:onchange=>"  check_alert(this.value);"}) %>
+		
+
+</p>
+  <p>
+    <%= f.label :message %><br />
+    <%= f.text_area :message,:class => "mceEditor" %>
+  </p>
+  <p>
+    <%= f.label :return_email %><br />
+    <%= f.text_field :return_email %>
+  </p>
+ 
+<%= submit_tag 'Preview',:type=>'button', :name => 'preview_button', :onclick=>"preview_email_for_sending_mail()"%> 
+ </p>
+
+<% end %>
+
+
+<%= link_to 'Back', email_trackers_path %>

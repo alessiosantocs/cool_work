@@ -1,0 +1,13 @@
+
+<% form_for :company, :url => { :action => "update_internal_only" } do |f| %>
+    <%= f.hidden_field :company_id,:value=>params[:id]%>
+    <p>
+        <%= f.label :Private_Notes %><br />
+         <%= f.text_area :private_notes %>
+    </p>
+
+    <button type="submit" class="positive" id="investmentSubmit">
+    Save
+    </button>
+  
+<%end%>

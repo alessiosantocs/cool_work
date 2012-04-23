@@ -1,0 +1,14 @@
+
+
+<% if current_user  %>
+
+
+<% @companies.each do |company| %>
+  <div class="span-4">
+   <%= link_to  company[1], {:action => "show", :controller =>
+"companies", :id => company[0] } %>  <br> <%= company[2] %><br><br>
+    
+   </div>
+<% end %>
+<% end %>
+

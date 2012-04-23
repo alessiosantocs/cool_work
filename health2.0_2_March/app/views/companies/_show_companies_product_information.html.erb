@@ -1,0 +1,7 @@
+<% @products.each do|product| %>
+<p>
+<%= label_tag(:name, "Name: ") %><%= product.name%><br/>
+<%= label_tag(:description, "Description: ") %><%= product.description%><br/>
+<%= label_tag(:date, "Date Launched: ") %><%=product.date_launched%><br/>
+</p>
+<%end%>

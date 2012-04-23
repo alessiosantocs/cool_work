@@ -1,0 +1,17 @@
+<% form_for(@partnership) do |f| %>
+<%= f.hidden_field :company_id,:value=>params[:id]%>
+ <p>
+    <%= f.label :description %><br />
+    <%= f.text_area :description %>
+  </p>
+
+  <p>
+    <%= f.label :date %><br />
+    <%= f.date_select :date %>
+  </p>
+
+
+         <button type="submit" class="positive" id="partnershipSubmit">Save</button>
+            <button type="submit" class="negative" onclick="partnerships_form_cancel();">Cancel</button>
+<%end%>
+

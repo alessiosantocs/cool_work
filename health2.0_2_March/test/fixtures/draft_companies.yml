@@ -1,0 +1,23 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+
+one:
+  name: MyString
+  url: MyString
+  founded: 2010-08-30
+  employee_number: 1
+  market_segment: MyString
+  description: MyText
+  private_notes: MyText
+  enabled: false
+  draft_review: 
+
+two:
+  name: MyString
+  url: MyString
+  founded: 2010-08-30
+  employee_number: 1
+  market_segment: MyString
+  description: MyText
+  private_notes: MyText
+  enabled: false
+  draft_review: 

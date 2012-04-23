@@ -1,0 +1,27 @@
+
+<% @videos.each do|video| %>
+    <% if video.video_type=="youtube"  %>
+      
+        <embed src="<%= video.swf%>" type="application/x-shockwave-flash" allowfullscreen="true" allowScriptAccess="always" width="300" height="200"></embed>
+   
+    <%end%>
+    <% if video.video_type=="vimeo"%>  
+        <iframe src="http://player.vimeo.com/video/<%= video.videoID%>" width="300" height="200" frameborder="0">
+        </iframe><a href="<%= video.swf%>"></a>
+        <a href="http://vimeo.com/user4638047"></a>
+        <a href="http://vimeo.com"></a>
+    <%end%>
+
+    <% if video.video_type=="brightcove"%>  
+        <script type="text/javascript" src="http://admin.brightcove.com/js/BrightcoveExperiences.js"></script>
+            <object id="myExperience<%= video.videoID%>" class="BrightcoveExperience">
+                <param name="bgcolor" value="#FFFFFF" />
+                <param name="width" value="300" />
+                <param name="height" value="200" />
+                <param name="playerID" value="753771389001" />
+                <param name="isVid" value="true" />
+                <param name="@videoPlayer" value="<%= video.videoID%>" />
+            </object>
+    <%end%>
+
+<%end%>

@@ -1,0 +1,51 @@
+<h1>New personnel</h1>
+
+<% form_for(@personnel) do |f| %>
+  <%= f.error_messages %>
+
+  <p>
+    <%= f.label :first_name %><br />
+    <%= f.text_field :first_name %>
+  </p>
+  <p>
+    <%= f.label :last_name %><br />
+    <%= f.text_field :last_name %>
+  </p>
+  <p>
+    <%= f.label :current_title %><br />
+    <%= f.text_field :current_title %>
+  </p>
+  <p>
+    <%= f.label :previous_title %><br />
+    <%= f.text_field :previous_title %>
+  </p>
+  <p>
+    <%= f.label :founder %><br />
+    <%= f.check_box :founder %>
+  </p>
+  <p>
+    <%= f.label :grad_edu %><br />
+    <%= f.text_field :grad_edu %>
+  </p>
+  <p>
+    <%= f.label :undergrad_edu %><br />
+    <%= f.text_field :undergrad_edu %>
+  </p>
+  <p>
+    <%= f.label :other_edu %><br />
+    <%= f.text_field :other_edu %>
+  </p>
+  <p>
+    <%= f.label :private_notes %><br />
+    <%= f.text_area :private_notes %>
+  </p>
+  <p>
+    <%= f.label :company %><br />
+    <%= f.text_field :company %>
+  </p>
+  <p>
+    <%= f.submit 'Create' %>
+  </p>
+<% end %>
+
+<%= link_to 'Back', personnels_path %>

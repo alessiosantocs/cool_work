@@ -1,0 +1,20 @@
+<h1>Editing company_category</h1>
+
+<% form_for(@company_category) do |f| %>
+  <%= f.error_messages %>
+
+  <p>
+    <%= f.label :category %><br />
+    <%= f.text_field :category %>
+  </p>
+  <p>
+    <%= f.label :company %><br />
+    <%= f.text_field :company %>
+  </p>
+  <p>
+    <%= f.submit 'Update' %>
+  </p>
+<% end %>
+
+<%= link_to 'Show', @company_category %> |
+<%= link_to 'Back', company_categories_path %>

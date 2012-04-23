@@ -1,0 +1,28 @@
+<h1>Listing profits</h1>
+
+<table>
+  <tr>
+    <th>Year</th>
+    <th>Date launched</th>
+    <th>Belongs to</th>
+    <th>Amount</th>
+    <th>Company</th>
+  </tr>
+
+<% @profits.each do |profit| %>
+  <tr>
+    <td><%=h profit.year %></td>
+    <td><%=h profit.date_launched %></td>
+    <td><%=h profit.belongs_to %></td>
+    <td><%=h profit.amount %></td>
+    <td><%=h profit.company %></td>
+    <td><%= link_to 'Show', profit %></td>
+    <td><%= link_to 'Edit', edit_profit_path(profit) %></td>
+    <td><%= link_to 'Destroy', profit, :confirm => 'Are you sure?', :method => :delete %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New profit', new_profit_path %>

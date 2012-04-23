@@ -1,0 +1,230 @@
+<% content_for :head do %>
+
+
+
+<script type="text/javascript">
+
+function sendData(section){
+	var sendArray;
+	sendArray = new Array(); 
+	sendArray["section"] = section; 
+	sendArray["companyID"] = companyID; 
+	sendArray["draftID"] = draftID;
+	
+	$.ajax({
+
+   url: "/draft_reviews/processData",
+   datatype: "xml",
+      data: returnStringArray(sendArray),
+      type: "GET",
+   success: function(xml){
+
+	window.location.reload();
+
+}
+}); 
+
+
+
+}
+
+
+function post_processed(){
+        var fi = new Array();
+        fi["id"] = dID;
+        
+$.ajax({
+
+   url: urlProcess("/draft_reviews/post_processed"),
+   data: returnStringArray(fi),
+      type: "POST",
+   datatype: "xml",
+   success: function(xml){
+		window.location = "/draft_reviews/draft_review_list?email_tracker_id=<%= @dr.email_tracker_id %>";
+
+    }});
+
+
+}
+
+
+
+
+function sendAccepted(){
+post_processed();
+
+}
+
+var companyID = "<%= @company.id %>"; 
+var draftID = "<%= @draft_company.id %>";
+var dID = "<%= @dr.id %>";
+
+
+
+
+</script>
+
+
+<% end %>
+
+
+
+
+
+
+
+
+<%= link_to 'Back', email_trackers_path %><br>
+<button onClick="sendAccepted();"> Click Here When Done Editing </button> 
+<hr>
+
+<br/><br/>
+
+
+<div class="span-9">
+<h2>
+DB: Basic Company Info
+</h2>
+<hr>
+Name: <%=h @company.name %><br/>
+URL: <%=h @company.url %><br/>
+Founded: <%=h @company.founded %><br/>
+Employee_Number: <%=h @company.employee_number %><br/>
+Market Segments: <%=h @company.market_segment %><br/>
+Description: <%=h @company.description %><br/>
+Last Updated: <%=h @company.updated_at %><br />
+
+
+</div>
+
+<div class="span-9 last">
+<h2>
+Draft: Basic Company Info
+</h2>
+<hr>
+Name: <%=h @draft_company.name %><br/>
+URL: <%=h @draft_company.url %><br/>
+Founded: <%=h @draft_company.founded %><br/>
+Employee_Number: <%=h @draft_company.employee_number %><br/>
+Market Segments: <%=h @draft_company.market_segment %><br/>
+Description: <%=h @draft_company.description %><br/>
+Last Updated: <%=h @draft_company.updated_at %> <br />
+
+</div>
+<div class="span-18">
+<div class="prepend-6 span-5"><button name="companyButton" onclick="sendData('company');">Accept Draft Company</button></div>
+<br/>
+<br/><br/>
+<br/>
+</div>
+
+
+
+
+
+
+
+<div class="span-9">
+<h2>
+DB: Investments
+</h2>
+<hr>
+
+<%= @investmentsString %>
+
+
+</div>
+
+<div class="span-9 last">
+<h2>
+Draft: Investments
+</h2>
+<hr>
+<%= @d_investmentsString %>
+
+</div>
+<div class="span-18">
+<div class="prepend-6 span-5"><button name="companyButton" onclick="sendData('investment');">Accept Draft Investments</button></div>
+<br/>
+<br/><br/>
+<br/>
+</div>
+
+<div class="span-9">
+<h2>
+DB: Partnerships
+</h2>
+<hr>
+<%= @partnershipsString %>
+
+</div>
+
+<div class="span-9 last">
+<h2>
+Draft: Partnerships
+</h2>
+<hr>
+<%= @d_partnershipsString %>
+
+</div>
+<div class="span-18">
+<div class="prepend-6 span-5"><button name="companyButton" onclick="sendData('partnership');">Accept Draft Partnerships</button></div>
+<br/>
+<br/><br/>
+<br/>
+</div>
+
+
+
+<div class="span-9">
+<h2>
+DB: Products
+</h2>
+<hr>
+<%=@productsString %>
+
+</div>
+
+
+
+<div class="span-9 last">
+<h2>
+Draft: Products
+</h2>
+<hr>
+<%= @d_productsString %>
+
+</div>
+<div class="span-18">
+<div class="prepend-6 span-5"><button name="companyButton" onclick="sendData('product');">Accept Draft Products</button></div>
+<br/>
+<br/><br/>
+<br/>
+</div>
+
+<div class="span-9">
+<h2>
+DB: People
+</h2>
+<hr>
+<%= @personnelsString %>
+
+</div>
+
+<div class="span-9 last">
+<h2>
+Draft: People
+</h2>
+<hr>
+<%= @d_personnelsString %>
+
+</div>
+
+
+<div class="span-18">
+<div class="prepend-6 span-5"><button name="companyButton" onclick="sendData('personnel');">Accept Draft People</button></div>
+<br/>
+<br/><br/>
+<br/>
+</div>
+

@@ -1,0 +1,26 @@
+<h1>Listing partnerships</h1>
+
+<table>
+  <tr>
+    <th>Name</th>
+    <th>Date</th>
+    <th>Description</th>
+    <th>Company</th>
+  </tr>
+
+<% @partnerships.each do |partnership| %>
+  <tr>
+    <td><%=h partnership.name %></td>
+    <td><%=h partnership.date %></td>
+    <td><%=h partnership.description %></td>
+    <td><%=h partnership.company %></td>
+    <td><%= link_to 'Show', partnership %></td>
+    <td><%= link_to 'Edit', edit_partnership_path(partnership) %></td>
+    <td><%= link_to 'Destroy', partnership, :confirm => 'Are you sure?', :method => :delete %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New partnership', new_partnership_path %>
