@@ -1,0 +1,124 @@
+<%= render :partial => '/admin/account_search' %>
+
+<div class="view-menu">
+	<span>Intake > Sort Order ID <%= @order.identifier %></span>
+</div>
+<% if @order.payment.status == 'complete' %>
+	<h2>This Order has already been processed</h2>
+<% else %>
+<table cellspacing=20>
+	<tr style="vertical-align: top;">
+		<td>
+			<table cellspacing=8 style="background-color: #AEDDD0; border: 1px solid black;">
+				<tr>
+					<td><b>Order ID#: </b></td>
+					<td><%= @order.identifier %></td>
+				</tr>
+				<tr>
+					<td><b>Customer Name: </b></td>
+					<td><%= @order.customer.account.blank? ? "" : @order.customer.account.name %></td>
+				</tr>
+				<tr>
+					<td><b>Delivery Date: </b></td>
+					<td><%= format_date(@order.delivery_date) if @order.delivery_date %></td>
+				</tr>
+				<tr>
+					<td><b>Delivery Time: </b></td>
+					<td><%= time_window(@order.delivery_window) if @order.delivery_time %></td>
+				</tr>
+				<tr>
+					<td><b>Route: </b></td>
+					<td><%= @order.route %></td>
+				</tr>
+			</table>
+		</td>
+	</tr>
+	<tr>
+		<td colspan=2><h2 class="green">Use the <%= link_to 'Quick Sort', quick_sort_admin_intake_path(@order) %> or Itemize below</h2></td>
+	<tr>
+		<td colspan=2>
+			<% for service in @services %>
+				<h2><%= service.name %>&nbsp;&nbsp;&nbsp;&nbsp;<%= link_to_lightbox 'ADD', new_order_item_path + '?s_id='+service.id.to_s+'&o_id='+@order.id.to_s, :class => 'action new green' %></h2>
+				<table cellspacing=3>
+					<tr style="text-align: left;">
+						<th>Tracking Number</th>
+						<th>Type</th>
+						<% if service.weighable? %>
+							<th>Weight</th>
+                                                        <th>Premium</th>
+						<% else %>
+							<th>Brand</th>
+							<th>Color</th>
+							<th>Size</th>
+							<th>Premium</th>
+							<th>Special</th>
+						<% end %>
+						<th>Starch</th>
+						<th>Packaging</th>
+						<th>&nbsp;</th>
+						<th>&nbsp;</th>
+					</tr>
+					<% for item_type in service.applicable_item_types %>
+						<% items = @order.items_from_type(item_type, service.id) %>
+						<% for item in items %>
+							<% form_for(item) do |f| %>
+								<tr>
+									<td><%= item.tracking_number %></td>
+									<td><%= item.customer_item.item_type.name %></td>
+									<% if item.is_weighable? %>
+										<td><%= f.text_field :weight, :size => 8 %></td>
+                                                                                <% if item.is_premium? %>
+										  <td><%= f.check_box :premium, :checked => "checked" %></td>
+                                                                                <% else %>
+										  <td><%= f.check_box :premium %></td>
+                                                                                <% end %>
+									<% else %>
+										<td><%= f.text_field :brand, :size => 12 %></td>
+										<td><%= f.text_field :color, :size => 12 %></td>
+										<td><%= f.text_field :size, :size => 4 %></td>
+                                                                                <% if item.is_premium? %>
+										  <td><%= f.check_box :premium, :checked => "checked" %></td>
+                                                                                <% else %>
+										  <td><%= f.check_box :premium %></td>
+                                                                                <% end %>
+										<td><%= f.text_field :instructions_text, :size => 40 %></td>
+									<% end %>
+									<td><%= f.check_box :ls_starch %></td>
+									<td><%= @order.customer.preferences.ls_packaging %></td>
+                                                                        <td><%= link_to_lightbox 'upcharge', edit_extra_charge_order_item_path + '?&o_id='+item.id.to_s, :class => 'new green' %></td>
+									<td>
+										<%= f.submit item.verified? ? "RE-SCAN" : "SCAN", :class => 'button green' %>
+									</td>
+									<td>&nbsp;&nbsp;&nbsp;<%= link_to '&nbsp;', item, :confirm => 'Are you sure?', :method => :delete, :class => 'action delete' %></td>
+								</tr>
+							<% end %>
+						<% end %>
+					<% end %>
+				</table>
+				<br/>
+			<% end %>
+		</td>
+	</tr>
+</table>
+
+
+<br/><br/>
+<% if @order.fully_verified? %>
+	<% form_for :order, :url => finalize_order_admin_intake_path(@order) do |f| -%>
+		<table cellspacing=8 style="background-color: #AEDDD0; border: 1px solid black;">
+			<tr>
+				<td><%= f.check_box :recycling %> Recycle Bags</td>
+				<td><%= f.check_box :clothing_donation %> Clothing Donations</td>
+			</tr>
+			<tr>
+				<td colspan=2><span><%= submit_tag 'FINALIZE ORDER', :class =>"button" %></span><td></td>
+			</tr>
+		</table>
+	<%- end %>
+<% else %>
+	<h3 class="red">Please Scan/Verify all Items to be able to finalize the order.</h3>
+<% end %>
+<% end %>
+
+  <div class="view-menu" style="display:block;text-align:center;height:20px;">
+</div>

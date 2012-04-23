@@ -1,0 +1,46 @@
+<%= render :partial => '/admin/account_search' %>
+
+<div class="view-menu">
+	<span class="float-right"><b>Report of <%=Date::MONTHNAMES[@month.to_i] + " " + @year %></b></span>
+        <%= render :partial => 'report_drop_down' %>
+</div>
+<table  cellspacing="10" style="background-color: rgb(240, 240, 240); border: 1px solid rgb(192, 192, 192);text-align:center;width:100%">
+  <tr>
+      <td><form method="POST">
+          <lable><b>Select Date</b>&nbsp;</lable>
+          <% options = "<option value=\"\">All Days</option>\n" + options_for_select(Date::DAYNAMES.collect{ |day| [day, day]}, params[:day]) %>
+          <%= select_tag :day, options %>
+          <%= date_select :date , :select, {:order => [:month, :year], :default => { :month => (@month.to_i), :year => @year }} %>
+          <input type="submit" name="submit" id="submit" value="Get Report">
+          </form>
+      </td>
+  </tr>
+</table>
+
+<table cellspacing=10 width="100%">
+  <% if @result.blank? %>
+      <tr><td>"No Record Found"</td></tr>
+  <% else %>
+      <tr class="<%= cycle('light-blue', 'drag-green', :name => "price_class") %>">
+          <th>Time Of Order Pickup</th>
+          <% @days.each do |day| %>
+              <th><%= day %></th>
+          <% end %>
+      </tr>
+      <% windows = Window.find(:all, :conditions => 'regular = TRUE') %>
+      <% windows.each do |window|%>
+          <tr style="text-align: left;" class="<%= cycle('light-blue', 'drag-green', :name => "price_class") %>" valign="middle">
+              <th><%= window.start.strftime('%I %p') + " - " + (window.end + 1.second).strftime('%I %p') %></th>
+              <% @days.each do |day| %>
+                      <td><%= @result[day][window.id.to_s].to_i %></td>
+              <% end %>
+          </tr>
+      <% end %>
+      <tr style="text-align: left;" class="<%= cycle('light-blue', 'drag-green', :name => "price_class") %>">
+          <th>Total</th>
+          <% @days.each do |day| %>
+              <td><%= @result[day]["total"].to_i %></td>
+          <% end %>
+      </tr>
+    <% end %>
+</table>

@@ -1,0 +1,40 @@
+<div class="view-menu">
+	<span><strong>Promotion Services</strong></span>
+<span style="float:right;"><%= link_to_lightbox 'New', new_admin_promotion_promotion_service_path(params[:promotion_id]), :class => 'action new' if logged_in? && current_user.has_role?('content') %></span>
+</div>
+<table width="1000" cellpadding="10px">
+<tr>
+    <th>Service</th>
+    <th>Item Type</th>
+    <th>&nbsp;</th>
+</tr>
+<% unless @promotion_services.blank?%>
+    <% for promotion_service in @promotion_services %>
+      <% form_for promotion_service, :url => admin_promotion_promotion_service_path(params[:promotion_id], promotion_service),:html => {:method => 'put'} do |f| %>
+        <tr class="<%= cycle('light-blue', 'light-green', :name => "order_class") %>">
+          <td><%= f.select :service_id, Service.find(:all).collect{|s| [s.name, s.id]}, {}, { :onchange => "#{remote_function(:url  => {:action => "update_sub_categories"}, :with => "'service_id='+value+'&update=sub_categories_#{promotion_service.id}&type_id=#{promotion_service.item_type_id}'")}", :style => "width:240px;"} %></td>
+          <td>
+              <div id="sub_categories_<%= promotion_service.id%>">
+              <%= render :partial => 'item_types', :object => Service.find(promotion_service.service_id).applicable_item_types,:locals=> {:f=>promotion_service.item_type_id} %></div>
+          </td>
+          <td align="center"><%= f.submit "Update", :class => 'button green' %><br/><%= link_to '&nbsp;', admin_promotion_promotion_service_path(params[:promotion_id], promotion_service.id), :confirm => 'Are you sure?', :method => :delete, :class => 'action delete' if logged_in? && current_user.has_role?('content') %></td>
+        </tr>
+      <% end %>
+    <% end %>
+<% end %>
+
+<tr>
+    <td valign="top">
+        &nbsp;
+    </td>
+    <td valign="top">
+        &nbsp;
+    </td>
+</tr>
+</tbody>
+</table>
+</td>
+<td valign="top">
+    &nbsp;
+</td>
+</tr>

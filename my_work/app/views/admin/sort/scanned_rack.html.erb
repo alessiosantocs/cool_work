@@ -1,0 +1,38 @@
+<%= render :partial => '/admin/account_search' %>
+
+<div id="rack_information">
+  <h2> Rack Information </h2>
+  tracking number: <%= @rack.tracking_number %> <br/>
+  location: <%= @rack.position.name %> <br/>
+  <br/>
+</div>
+<div id="bin_contents">
+  <h2> Contents </h2>
+<table>
+<tr>
+  <th>tracking number</th><th>status</th><th>type</th><th>service</th><th>color</th><th>brand</th><th>size</th>
+</tr>
+  <% @rack.contents.each do |item| %>
+<tr>
+	<td><%= item.tracking_number %></td>
+	<td><%= item.status %></td>
+	<td><%= item.item_type.name %></td>
+	<td><%= item.service.name %></td>
+	<td><%= item.color %></td>
+	<td><%= item.brand %></td>
+	<td><%= item.size %></td>
+</tr>
+  <% end %>
+</table>
+<br/>
+</div>
+
+<div id="bin_order_part_information">
+  <h2> Order Part Information </h2>
+  <% if @rack.order_part %>
+  number scanned: <%= @rack.order_part.number_scanned_at(@area) %> / <%= @rack.order_part.size %><br/>
+  <% end %>
+
+</div>
+
+<%= render :partial => '/admin/sort/scan_item', :area => @area, :context => @rack, :notes => "Scan rack again to close" %>

@@ -1,0 +1,69 @@
+<%= render :partial => '/admin/account_search' %>
+
+<div class="view-menu">
+	<span>Accounts</span>
+</div>
+	<table cellspacing="1" cellpadding="5" width="100%">
+			<tr>
+				<th>ID</th>
+				<th>Name</th>
+				<th>Email</th>
+				<th>Address</th>
+				<th>Notes</th>
+				<th>Login</th>
+			</tr>
+				
+		<% for account in @accounts %>
+			<tr  class="<%= cycle('light-blue', 'light-green', :name => "order_class") %>">
+				<td><%= account.id %></td>
+				<td><%= account.name %></td>
+				<td><%= account.email %></td>
+				<td><%= account.customer.addresses.first.to_s if !account.customer.nil? %></td>
+				<td>
+					<% for note in account.customer.notes %>
+					<div>
+						<div>
+							<strong><%= link_to_function note.note_type, "$('note_#{note.id}').toggle()" %></strong>
+							<%= link_to_lightbox 'Edit', edit_note_path(note), :class => 'action edit' %>
+						</div>
+						<div id="note_<%= note.id %>" style="display:none">
+							<div><%= simple_format(note.body) %></div>
+						</div>
+					</div>
+					<% end %>	
+				</td>
+				<td>
+					<%= link_to 'Login as '+account.name, '/admin/accounts/'+account.id.to_s, :class => 'green action edit' %> OR 
+					<%= link_to 'View Details', admin_customer_path(account.customer), :class => 'green' %> OR 
+					<%= link_to 'Place Order', fresh_order_customer_path(account.customer), :class => 'green' %>
+				</td>
+			</tr>
+		<% end %>
+		<% if !@item.nil? %>
+			<% account = @item.customer.account %>
+			<tr>
+				<td><%= account.id %></td>
+				<td><%= account.name %></td>
+				<td><%= account.email %></td>
+				<td><%= account.customer.addresses.first.to_s %></td>
+				<td>
+					<% for note in account.customer.notes %>
+					<div>
+						<div>
+							<strong><%= link_to_function note.note_type, "$('note_#{note.id}').toggle()" %></strong>
+							<%= link_to_lightbox 'Edit', edit_note_path(note), :class => 'action edit' %>
+						</div>
+						<div id="note_<%= note.id %>" style="display:none">
+							<div><%= simple_format(note.body) %></div>
+						</div>
+					</div>
+					<% end %>	
+				</td>
+				<td><%= link_to 'Edit', edit_user_path(account), :class => 'action edit' %></td>
+			</tr>
+		<% end %>
+	</table>
+  
+<div class="view-menu" style="display:block;text-align:center;height:20px;">
+  <%= will_paginate @orders %>
+</div>

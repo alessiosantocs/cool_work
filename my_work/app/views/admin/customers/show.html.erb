@@ -1,0 +1,173 @@
+<%= render :partial => '/admin/account_search' %>
+
+<div class="view-menu">
+	<span class="float-right"><%= link_to_lightbox('Add Note', new_note_path + '?c_id='+ @customer.id.to_s, :class => 'action new') if current_user.has_role?('note') %></span>
+	<span><strong>Accounts > Account Details: </strong></span>
+	<span style="font-size: 20px; color: #B24F45"><strong><%= @customer.name %></strong></span>
+</div>
+<ul class="tabselector" id="tabcontrol1">
+    <li class="tab-unselected">
+        <%= link_to_unless_current_heirarchy ("MY DASHBOARD",dashboard_customer_path(@customer)) %>
+    </li>
+    <li class="tab-unselected">
+        <%= link_to_unless_current_heirarchy ("Order History", customer_orders_path(@customer)) %>
+    </li>
+	<li class="tab-selected">
+        <%= link_to_unless_current_heirarchy ("Account Info", admin_customer_path(@customer)) %>
+    </li>
+    <li class="tab-unselected">
+        <%= link_to_unless_current_heirarchy ("Payment Info", customer_credit_cards_path(@customer)) %>
+    </li>
+        <li class="tab-unselected">
+        <%= link_to_unless_current_heirarchy ("Eco-Logics", ecologic_customer_path(@customer)) %>
+    </li>
+        <li class="tab-unselected">
+        <%= link_to_unless_current_heirarchy ("Preferences", preferences_customer_path(@customer)) %>
+    </li>
+</ul>
+<h1>Primary Information</h1>
+<h2>Service Address</h2>
+<%= error_messages_for :user %>
+<%= error_messages_for :customer %>
+<%= error_messages_for :building %>
+<%= error_messages_for :address %>
+
+<% form_for :customer, :url => customer_path(@customer), :html => {:method => :put} do |f| -%>
+<table cellspacing="10">
+	
+	<% fields_for :address do |a| %>
+		<tr>
+			<td class="label"><label for="address_label">Building Name:</label></td>
+			<td><%= a.text_field :label %></td>
+		</tr>
+	<% end %>
+	
+	<% fields_for :building do |b| %>
+		<tr>
+			<td class="label"><label for="building_addr1">Street Address:</label></td>
+			<td><%= b.text_field :addr1 %></td>
+		</tr>
+		<tr>
+			<td class="label"><label for="building_addr2">Street Address:</label></td>
+			<td><%= b.text_field :addr2 %></td>
+		</tr>
+	<% end %>
+	
+	<% fields_for :address do |a| %>
+		<tr>
+			<td class="label"><label for="address_unit_number">Apt/Ste:</label></td>
+			<td><%= a.text_field :unit_number %></td>
+		</tr>
+	<% end %>
+	
+	<% fields_for :building do |b| %>
+		<tr>
+			<td class="label"><label for="building_city">City:</label></td>
+			<td><%= b.text_field :city %></td>
+		</tr>
+		<tr>
+			<td class="label"><label for="building_state">State:</label></td>
+			<td><%= b.select :state, Building.supported_states %></td>
+		</tr>
+		<tr>
+			<td class="label"><label for="building_zip">Zip code:</label></td>
+			<td><%= b.text_field :zip %></td>
+		</tr>
+	
+	<% end %>
+		
+	<% fields_for :user do |u| %>
+		<tr>
+			<td class="label"><label for="user_first_name">First Name:</label></td>
+			<td><%= u.text_field :first_name, :live => true %></td>
+		</tr>
+		<tr>
+			<td class="label"><label for="user_last_name">Last Name:</label></td>
+			<td><%= u.text_field :last_name, :live => true %></td>
+		</tr>
+	<% end %>
+		
+	<% fields_for :customer do |c| %>
+		<tr>
+		        <td class="label"><label for="customer_home">Home Phone:</label></td>
+  		        <td><%= c.text_field :home, :size => 10 %>
+		</tr>
+		<tr>
+			<td class="label"><label for="customer_free_shipping"><Strong>Free Delivery:</Strong></label></td>
+			<td><%= c.check_box :free_shipping, :checked => @building.doorman %></td>
+		</tr>
+	<% end %>
+</table>
+
+<div class="submit-buttons">
+	<span><font face="HelveticaRounded"><%= submit_tag 'SAVE', :class =>"button" %></font></span>
+</div>
+<% end -%>
+
+<h1>Preferences</h1>
+<div id="customer_preferences">
+	<% form_remote_for :customer_preferences, :url => customer_preference_path(@customer_preferences), :loading => "$('flash').update('<span class=\"notice\">Saving...<\/span>')", :complete => "$('flash').update('<span class=\"notice\">Preferences Saved!<\/span>')", :html => { :method => :put } do |f| -%>
+		<table cellspacing="5">
+			<tr>
+				<td>
+					<h4>Laundered Shirts</h4><br/>
+					<%= f.radio_button :ls_starch, true %> Yes <%= f.radio_button :ls_starch, false %> No
+				</td>
+				<td>
+					<h4>Dry Cleaning</h4><br/>
+					<%= f.radio_button :dc_starch, true %> Yes <%= f.radio_button :dc_starch, false %> No
+				</td>
+				<td>
+					<h4>Carbon Buyback</h4><br/>
+					<%= f.radio_button :my_fresh_air, true, :checked => true %><label for="customer_preferences_my_fresh_air_true"> Yes</label>
+					<%= f.radio_button :my_fresh_air, false %><label for="customer_preferences_my_fresh_air_false"> No</label>
+				</td>
+			</tr>
+		</table>
+		<div class="submit-buttons">
+			<font face="HelveticaRounded"><%= submit_tag 'SAVE', :class =>"button" %></font>
+		</div>
+	<% end -%>
+</div>
+
+<h1>Points</h1>
+<table cellspacing="5">
+	<tr>
+		<td>
+			<h4>Carbon Points</h4><br/>
+			<h2><%= @customer.total_carbon_footprint %></h2>
+		</td>
+		<td>
+			<h4>Water Points</h4><br/>
+			<h2><%= @customer.total_water_saved %></h2>
+		</td>
+		<td>
+			<h4>Eco-Logic Points</h4><br/>
+			<h2><%= @customer.eco_points %></h2>
+		</td>
+	</tr>
+</table>
+
+<h1>Order History</h1>
+<% for order in @customer.orders %>
+	<div>
+		<div>
+			<span class="float-right"><%= link_to 'View Order Details', customer_order_path(order.customer, order) %></span>
+			<span><%= "#{order.created_at.strftime('%B %d, %Y at %I:%M')} - Order Number #{order.tracking_number}" %></span>
+		</div>
+		<div></div>
+	</div>
+<% end %>
+
+<h1>Notes</h1>
+<% for note in @customer.notes %>
+	<div>
+		<div>
+			<span class="float-right"><%= link_to_lightbox 'View Note Details', edit_note_path(note) %></span>
+			<span><%= "#{note.created_at.strftime('%B %d, %Y at %I:%M')}" %><%= " - Order Number #{note.order.tracking_number}" if note.order %></span>
+		</div>
+		<div></div>
+	</div>
+<% end %>
+<div class="view-menu" style="display:block;text-align:center;height:20px;">
+</div>

@@ -1,0 +1,48 @@
+#calContainer{
+	border-collapse: collapse;	
+}
+	
+#calContainer td{
+	width: 14%;
+}
+
+#calContainer .month, .nav{
+	background-color: #F1F7FC;
+	font-size: 8pt;
+	font-weight: bold;
+	text-align: center;
+}
+#calContainer .nav{
+	cursor: pointer;
+	cursor: hand;
+}
+#calContainer .dayHeader{
+	color: black;
+	font-size: 7pt;
+	font-weight: bold;
+	text-align: center;
+}
+#calContainer .empty{
+	background-color: white;
+}
+#calContainer .days{
+	text-align: center;
+	color: black;
+	background-color: #80B442;
+	font-size: 7pt;
+	cursor: pointer;
+	padding: 2px;
+	cursor: hand;
+}
+#calContainer .date{
+	text-align: center;
+	background-color: #80B442;
+	border: 1px solid black;
+	font-size: 7pt;
+	font-weight: bold;
+	cursor: pointer;
+	cursor: hand;
+}
+#calContainer .full{
+	background-color: #FAF9D4;
+}

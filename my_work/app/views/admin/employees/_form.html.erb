@@ -1,0 +1,167 @@
+<table cellspacing="10">
+<% fields_for :user do |u| %>  
+		<tr>
+			<td class="label"><label for="user_email">Email:</label></td>
+			<td><%= u.text_field :email_confirmation, :value => @user.email %></td>
+		</tr>
+		<tr>
+			<td class="label"><label for="user_login">Confirm Email:</label></td>
+			<td><%= u.text_field :email %></td>
+		</tr>
+		<tr>
+			<td class="label"><label for="user_password_confirmation">Password:</label></td>
+			<td><%= u.password_field :password_confirmation %></td>
+		</tr>
+		<tr>
+			<td class="label"><label for="user_password">Confirm Password:</label></td>
+			<td><%= u.password_field :password %></td>
+		</tr>
+		<tr>
+			<td class="label"><label for="user_first_name">First Name:</label></td>
+			<td><%= u.text_field :first_name %></td>
+		</tr>
+		<tr>
+			<td class="label"><label for="user_last_name">Last Name:</label></td>
+			<td><%= u.text_field :last_name %></td>
+		</tr>
+	<% end %>
+
+	<% fields_for :building do |b| %>
+		<tr>
+			<td class="label"><label for="building_addr1">*Street Address:</label></td>
+			<td><%= b.text_field :addr1 %></td>
+		</tr>
+		<tr>
+			<td class="label"><label for="building_addr2">Street Address:</label></td>
+			<td><%= b.text_field :addr2 %></td>
+		</tr>
+	<% end %>
+	
+	<% fields_for :address do |a| %>
+		<tr>
+			<td class="label"><label for="address_unit_number">Apt/Ste:</label></td>
+			<td><%= a.text_field :unit_number %></td>
+		</tr>
+	<% end %>
+	
+	<% fields_for :building do |b| %>
+		<tr>
+			<td class="label"><label for="building_city">*City:</label></td>
+			<td>New York<%= b.hidden_field :city %><%= b.hidden_field :state, :value => "NY" %></td>
+		</tr>
+		<tr>
+			<td class="label"><label for="building_zip">*Zip Code:</label></td>
+			<td><%= b.text_field :zip %></td>
+		</tr>
+	<% end %>
+	
+	<% fields_for :employee do |e| %>
+		<tr>
+			<td class="label"><label for="customer_home">*Home Phone:</label></td>
+	  		<td><%= e.text_field :home, :size => 10 %><span class="small_text"><i>(please use <b>ONLY</b> numbers) e.g. 2121234567</i></span></td>
+		</tr>
+		<tr>
+			<td class="label"><label for="customer_cell">*Mobile Phone:</label></td>
+	  		<td><%= e.text_field :cell, :size => 10 %><span class="small_text"><i>(please use <b>ONLY</b> numbers) e.g. 2121234567</i></span></td>
+	  	</tr>
+	<% end %>
+		
+	<tr>
+		<td class="title" colspan="2">PERMISSIONS</td>
+	</tr>
+	<tr>
+		<td colspan="2">
+                    <table width="100%"><tr><td>
+			<h3>Accounts</h3>
+			<div>
+				<input type="radio" value="true" name="user_roles[accounts]" id="user_roles_accounts_true" <%= 'checked="checked"' if @user.has_role?('accounts') %> /><label for="user_roles_accounts_true">  Yes</label>
+				<input type="radio" value="false" name="user_roles[accounts]" id="user_roles_accounts_false" <%= 'checked="checked"' if !@user.has_role?('accounts') %> /><label for="user_roles_accounts_false">  No</label>
+			</div>
+		</td>
+		<td>
+			<h3>Intake</h3>
+			<div>
+				<input type="radio" value="true" name="user_roles[intake]" id="user_roles_intake_true" <%= 'checked="checked"' if @user.has_role?('intake') %> /><label for="user_roles_intake_true">  Yes</label>
+				<input type="radio" value="false" name="user_roles[intake]" id="user_roles_intake_false" <%= 'checked="checked"' if !@user.has_role?('intake') %> /><label for="user_roles_intake_false">  No</label>
+			</div>
+		</td>
+        </tr>
+        <tr>
+		<td>
+			<h3>Scheduling</h3>
+			<div>
+				<input type="radio" value="true" name="user_roles[scheduling]" id="user_roles_scheduling_true" <%= 'checked="checked"' if @user.has_role?('scheduling') %> /><label for="user_roles_scheduling_true">  Yes</label>
+				<input type="radio" value="false" name="user_roles[scheduling]" id="user_roles_scheduling_false" <%= 'checked="checked"' if !@user.has_role?('scheduling') %> /><label for="user_roles_scheduling_false">  No</label>
+			</div>
+		</td>
+		<td>
+			<h3>Sort</h3>
+			<div>
+				<input type="radio" value="true" name="user_roles[sort]" id="user_roles_sort_true" <%= 'checked="checked"' if @user.has_role?('sort') %> /><label for="user_roles_sort_true">  Yes</label>
+				<input type="radio" value="false" name="user_roles[sort]" id="user_roles_sort_false" <%= 'checked="checked"' if !@user.has_role?('sort') %> /><label for="user_roles_sort_false">  No</label>
+			</div>
+		</td>
+	</tr>
+	<tr>
+		<td>
+			<h3>Deliver</h3>
+			<div>
+				<input type="radio" value="true" name="user_roles[deliver]" id="user_roles_deliver_true" <%= 'checked="checked"' if @user.has_role?('deliver') %> /><label for="user_roles_deliver_true">  Yes</label>
+				<input type="radio" value="false" name="user_roles[deliver]" id="user_roles_deliver_false" <%= 'checked="checked"' if !@user.has_role?('deliver') %> /><label for="user_roles_deliver_false">  No</label>
+			</div>
+		</td>
+		<td>
+			<h3>Content</h3>
+			<div>
+				<input type="radio" value="true" name="user_roles[content]" id="user_roles_content_true" <%= 'checked="checked"' if @user.has_role?('content') %> /><label for="user_roles_content_true">  Yes</label>
+				<input type="radio" value="false" name="user_roles[content]" id="user_roles_content_false" <%= 'checked="checked"' if !@user.has_role?('content') %> /><label for="user_roles_content_false">  No</label>
+			</div>
+		</td>
+	</tr>
+        <tr>
+                <td>
+			<h3>Reschedule</h3>
+			<div>
+				<input type="radio" value="true" name="user_roles[reschedule]" id="user_roles_reschedule_true" <%= 'checked="checked"' if @user.has_role?('reschedule') %> /><label for="user_roles_reschedule_true">  Yes</label>
+				<input type="radio" value="false" name="user_roles[reschedule]" id="user_roles_reschedule_false" <%= 'checked="checked"' if !@user.has_role?('reschedule') %> /><label for="user_roles_reschedule_false">  No</label>
+			</div>
+		</td>
+                <td>
+			<h3>Note</h3>
+			<div>
+				<input type="radio" value="true" name="user_roles[note]" id="user_roles_note_true" <%= 'checked="checked"' if @user.has_role?('note') %> /><label for="user_roles_note_true">  Yes</label>
+				<input type="radio" value="false" name="user_roles[note]" id="user_roles_note_false" <%= 'checked="checked"' if !@user.has_role?('note') %> /><label for="user_roles_note_false">  No</label>
+			</div>
+		</td>
+	</tr>
+	<tr>
+                <td>
+			<h3>Manifest</h3>
+			<div>
+				<input type="radio" value="true" name="user_roles[manifest]" id="user_roles_manifest_true" <%= 'checked="checked"' if @user.has_role?('manifest') %> /><label for="user_roles_manifest_true">  Yes</label>
+				<input type="radio" value="false" name="user_roles[manifest]" id="user_roles_manifest_false" <%= 'checked="checked"' if !@user.has_role?('manifest') %> /><label for="user_roles_manifest_false">  No</label>
+			</div>
+		</td>
+                <td>
+			<h3>Reporting</h3>
+			<div>
+				<input type="radio" value="true" name="user_roles[reporting]" id="user_roles_reporting_true" <%= 'checked="checked"' if @user.has_role?('reporting') %> /><label for="user_roles_reporting_true">  Yes</label>
+				<input type="radio" value="false" name="user_roles[reporting]" id="user_roles_reporting_false" <%= 'checked="checked"' if !@user.has_role?('reporting') %> /><label for="user_roles_reporting_false">  No</label>
+			</div>
+		</td>
+        </tr>
+        </table>
+        </td>
+        </tr>
+</table>
+
+    
+<% if create %>
+    <div class="submit-buttons">
+		<span><font face="HelveticaRounded"><%= submit_tag 'SUBMIT', :class =>"button" %></font></span>
+	</div>
+<% else %>
+    <div class="submit-buttons">
+		<span><font face="HelveticaRounded"><%= submit_tag 'UPDATE', :class =>"button" %></font></span>
+	</div>
+<% end %>

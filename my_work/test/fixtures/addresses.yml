@@ -1,0 +1,26 @@
+# == Schema Information
+# Schema version: 98
+#
+# Table name: addresses
+#
+#  id               :integer(11)   not null, primary key
+#  label            :string(20)    
+#  building_id      :integer(11)   
+#  customer_id      :integer(11)   
+#  unit_designation :string(12)    
+#  unit_number      :string(8)     
+#  employee_id      :integer(11)   
+#
+
+b1stallman:
+    id: 1
+    building_id: 1
+    unit_designation: apt
+    unit_number: 3-A
+    
+b1sussman:
+    id: 2
+    building_id: 1
+    unit_designation: apt
+    unit_number: 8-F
+

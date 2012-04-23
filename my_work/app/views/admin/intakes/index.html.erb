@@ -1,0 +1,49 @@
+<%= render :partial => '/admin/account_search' %>
+
+<div class="view-menu">
+	<span>Intake > Dashboard</span>
+</div>
+
+<% form_tag '/admin/intakes', :method => 'get' do %>
+
+  <p style="text-align:center">
+    <%= text_field_tag :search, params[:search], :size=>'30' %>
+    <%= submit_tag "Search Intakes by Accounts", :name => nil %>
+  </p>
+  
+<% end %>
+
+<table cellspacing=10 width="100%">
+  <tr style="text-align: left;">
+  	<th><a href="intakes?sort=tracking_number&orderby=<%=@orderby%><%= "&search=#{params[:search]}" if params[:search] %>">Order ID</a></th>
+	<th><a href="intakes?sort=customer_id&orderby=<%=@orderby%><%= "&search=#{params[:search]}" if params[:search] %>">Customer</a></th>
+	<th>Classes</th>
+	<th>#Items</th>
+	<th><a href="intakes?sort=verified&orderby=<%=@orderby%><%= "&search=#{params[:search]}" if params[:search] %>">Verified</a></th>
+	<th><a href="intakes?sort=status&orderby=<%=@orderby%><%= "&search=#{params[:search]}" if params[:search] %>">Status</a></th>
+	<th>&nbsp;</th>
+  </tr>
+
+  <% unless @orders.blank? %>
+    <% for order in @orders %>
+      <tr class="<%= cycle('light-blue', 'light-green', :name => "order_class") %>">
+        <td><%= order.identifier %></td>
+          <td><%= order.customer.user.blank? ? "" : order.customer.user.name %></td>
+          <td><%= order.classes.join(', ') %></td>
+          <td><%= order.items.size %></td>
+          <td><%= order.fully_verified? %></td>
+          <% if order.processed? %>
+                  <td class="processed"><%= link_to 'Processed', sort_admin_intake_path(order) %></td>
+                  <td><%= link_to 'Print Ticket', receipt_customer_order_path(order.customer, order), :popup => true %></td>
+          <% else %>
+                  <td class="process"><%= link_to 'Process', sort_admin_intake_path(order) %></td>
+                  <td width='75px'>&nbsp;</td>
+          <% end %>
+      </tr>
+    <% end %>
+  <% end %>
+</table>
+
+<div class="view-menu" style="display:block;text-align:center;">
+  <%= will_paginate @orders unless @orders.blank? %>
+</div>

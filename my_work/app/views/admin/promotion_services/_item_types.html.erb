@@ -1,0 +1,4 @@
+<!--<%= collection_select(:promotion_service, :item_type_id, item_types, :id, :name, {:prompt   => "All"}, { :style => "width:240px;"}) %>-->
+<% options = options_from_collection_for_select(item_types, :id, :name, f)%>
+<% options = "<option value=\"\">All</option>\n" + options %>
+<%= select_tag 'promotion_service_item_type_id', options, {:style => "width:240px;", :name =>'promotion_service[item_type_id]'} %>

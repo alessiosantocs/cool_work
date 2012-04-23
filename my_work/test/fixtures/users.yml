@@ -1,0 +1,67 @@
+# == Schema Information
+# Schema version: 98
+#
+# Table name: users
+#
+#  id                        :integer(11)   not null, primary key
+#  first_name                :string(255)   
+#  last_name                 :string(255)   
+#  login                     :string(255)   
+#  email                     :string(255)   
+#  remember_token            :string(255)   
+#  maiden                    :string(255)   
+#  crypted_password          :string(40)    
+#  salt                      :string(40)    
+#  created_at                :datetime      
+#  updated_at                :datetime      
+#  remember_token_expires_at :datetime      
+#  user_class                :string(20)    
+#  account_id                :integer(11)   
+#  account_type              :string(255)   
+#  referrer                  :integer(11)   
+#
+
+quentin:
+  id: 1
+  login: quentin
+  email: quentin@example.com
+  salt: 7e3041ebc2fc05a40c60028e2c4901a81035d3cd
+  crypted_password: 00742970dc9e6319f8019fd54864d3ea740f04b1 # test
+  created_at: <%= 5.days.ago.to_s :db %>
+
+
+aaron:
+  id: 2
+  login: aaron
+  email: aaron@example.com
+  salt: 7e3041ebc2fc05a40c60028e2c4901a81035d3cd
+  crypted_password: 00742970dc9e6319f8019fd54864d3ea740f04b1 # test
+  created_at: <%= 1.days.ago.to_s :db %>
+
+uStallman:
+  id: 3
+  login: rstallman
+  email: rstallman@gnu.org
+  salt: 7e3041ebc2fc05a40c60028e2c4901a81035d3cd
+  crypted_password: 00742970dc9e6319f8019fd54864d3ea740f04b1 # test
+  account_id: 1
+  account_type: customer
+  
+uSussman:
+  id: 4
+  login: sussman
+  email: sussman@mit.edu
+  salt: 7e3041ebc2fc05a40c60028e2c4901a81035d3cd
+  crypted_password: 00742970dc9e6319f8019fd54864d3ea740f04b1 # test
+  account_id: 2
+  account_type: customer
+  referrer: 3
+
+admin:
+  id: 5
+  login: admin
+  email: admin@example.com
+  salt: 7e3041ebc2fc05a40c60028e2c4901a81035d3cd
+  crypted_password: 00742970dc9e6319f8019fd54864d3ea740f04b1 # test
+  # activation_code: adminscode # only if you're activating new signups
+  created_at: <%= 1.days.ago.to_s :db %>

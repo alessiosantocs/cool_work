@@ -1,0 +1,15 @@
+.order_status {
+	width:97%;
+	height:29px;
+	margin-bottom: 20px;
+	border-bottom: 1px solid #E7E6EC;
+	padding-bottom:10px;
+}
+
+.order_status img {
+	width:600px;
+	height: 29px;
+	vertical-align: top;
+	margin-left:0px;
+
+}

@@ -1,0 +1,32 @@
+<%= error_messages_for :user %>
+
+<span style="font-size: 14px; margin-right: 40px">Account Details</span>
+<%= link_to_lightbox 'Add Note', new_note_path + '?c_id='+@user.customer.id.to_s, :class => 'action new' %>
+
+<table cellspacing="5">
+<% form_for :user, :url => user_path(@user), :html => {:method => :put} do |f| -%>
+		<tr>
+			<td class="title" colspan="2">USER</td>
+		</tr>
+		<tr>
+			<td><label for="login">Login</label></td>
+			<td><%= f.text_field :login %></td>
+		</tr>
+		<tr>
+			<td><label for="email">Email</label></td>
+			<td><%= f.text_field :email %></td>
+		</tr>
+		<tr>
+			<td><label for="password">Password</label></td>
+			<td><%= f.password_field :password %></td>
+		</tr>
+		<tr>
+			<td><label for="password_confirmation">Confirm Password</label></td>
+			<td><%= f.password_field :password_confirmation %></td>
+		</tr>
+	</table>
+	
+	<p class="float-right">
+		<font face="HelveticaRounded"><%= image_submit_tag 'update_btn.png', :class=>"align-button" %></font>
+	</p>
+<% end -%>

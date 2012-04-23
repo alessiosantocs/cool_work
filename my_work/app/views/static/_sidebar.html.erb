@@ -1,0 +1,124 @@
+<% if logged_in? %>
+<td rowspan="3" width="250" class="user">
+    <div id="welcome">
+        <strong>Welcome</strong>
+    </div>
+    <div id="name">
+        <strong><%= current_user.name %></strong>
+    </div>
+	<br/>
+	<div>
+        <% if logged_in? && current_user.employee? %>
+			<%= link_to '<span class="green">Your Dashboard >></span>', '/admin' %>
+		<% else %>
+        	<%= link_to '<span class="green">Your Dashboard >></span>', dashboard_customer_path(current_user.account) %>
+		<% end %>
+    </div>
+    <br/>
+    <br/>
+    <div>
+        <%= link_to image_tag('logout_btn.png'), logout_url, :class => 'align-button' %>
+    </div>
+</td>
+<% else %>
+<td rowspan="3"  valign="top" width="250">
+    <img src="/images/my_revolution.jpg" height="219" width="251">
+    <br/><br/>
+	<div style="text-align: left; margin-left: 24px;">
+		<%= link_to image_tag('login_btn.png'), login_url, :class => 'align-button' %>
+		<%= link_to image_tag('signup_white_btn.png'), reg_url, :class => 'align-button' %>
+	</div>
+    <table border="0" cellpadding="0" cellspacing="0" width="240">
+        <tbody>
+            <tr>
+                <td>
+                    <div align="left">
+                        <span class="secondary_copy">
+                            <br>
+                            <div style="margin-left: 25px;">Find out when we come to your neighborhood. <a href="<%= reg_url %>">SIGN UP NOW!</a></div>
+                        </span>
+                    </div>
+                    <br>
+                    <a href="/my_environment"><img style="margin-left: 18px;" src="/images/my_environment.gif" height="42" width="240"></a>
+                    <a href="/my_fresh_air" onmouseout="MM_swapImgRestore()" onmouseover="MM_swapImage('Image16','','/images/right_links2-Over_01.gif',1)"><img src="/images/right_links2_01.gif" name="Image16" id="Image16" border="0" height="24" width="240">
+                        <br>
+                    </a>
+                    <br>
+                    <a href="/my_ecologic" onmouseout="MM_swapImgRestore()" onmouseover="MM_swapImage('Image18','','/images/right_links2-Over_03.gif',1)"><img src="/images/right_links2_03.gif" name="Image18" id="Image18" border="0" height="22" width="240"></a>
+                    <br>
+                </td>
+            </tr>
+            <tr>
+                <td class="main_copy_font" style="" height="165" valign="top" width="240">
+                	<div style="margin-left: 16px;">
+                    <a href="/news">
+                        <br>
+                        <img src="/images/news.gif" height="31" width="240">
+                    </a>
+                    <br>
+                    <table style="margin-left: 19px;" border="0" cellpadding="0" cellspacing="0" width="210">
+                        <tbody>
+                            <tr>
+                                <td align="left">
+                                	<% for news in News.find(:all) %>
+                                    <span class="right_nav_links_text"><%= news.title %></span>
+                                    <br>
+                                    <a href="/news">read more</a>
+                                    <br>
+                                    <br>
+									<% end %>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+				</div>
+                </td>
+            </tr>
+            <tr>
+                <td class="main_copy_font" style="" height="151" valign="top" width="240">
+                	<div style="margin-left: 16px;">
+                    <a href="/fresh_promotions"><img src="/images/promos.gif" height="33" width="240"></a>
+                    <table style="margin-left: 19px;" border="0" cellpadding="0" cellspacing="0" width="210">
+                        <tbody>
+                            <tr>
+                                <td align="left">
+                                    <span class="right_nav_links_text">MY FRESH PROMOTIONS</span>
+                                    <br>
+                                    <a href="/fresh_promotions">read more</a>
+                                    <span class="right_nav_links_text">
+                                        <br>
+                                        <br>
+                                        MY FREE TRIAL
+                                    </span>
+                                    <br>
+                                    <a href="/fresh_promotions" class="right_nav_links_text">read more</a>
+                                    <span class="right_nav_links_text">
+                                        <br>
+                                        <br>
+                                        MY FRESH CASH
+                                    </span>
+                                    <br>
+                                    <a href="/fresh_promotions">read more</a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </td>
+				</div>
+            </tr>
+            <tr align="right">
+                <td>
+                    <a href="/my_ecologic"><img src="/images/index_19.jpg" border="0"></a>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</td>
+<% end %>
+					
+</tr>
+<tr>
+    <td colspan="7" valign="top">
+        <table border="0" cellpadding="0" cellspacing="0" width="750">
+            <tbody>
+                <tr>

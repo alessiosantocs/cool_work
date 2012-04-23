@@ -1,0 +1,28 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<style type="text/css">
+<!--
+body p{
+font-family: Verdana, Geneva, sans-serif;
+}
+-->
+</style>
+</head>
+
+<body>
+	<p><% email_content do %>
+My Oh My!</p>
+
+<p>It’s too late to make any changes, your order has already been processed!</p>
+
+<p>If no one will be home to hand-off or receive your clothing to/from our delivery personnel, at your earliest convenience, please contact one of our customer service representatives at: customerservice@myfreshshirt.com or call (212) 625-3131</p>
+<p>Use of the My Fresh Shirt service and Web site constitutes acceptance of our Terms of Use and Privacy Policy.</p>
+<% end %>
+<%= render :partial => 'signature' %>  
+
+</body>
+
+</html>

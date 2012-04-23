@@ -1,0 +1,14 @@
+<h1>New promotion_zip</h1>
+  <%= error_messages_for :promotion_zip %>
+<% form_for(@promotion_zip , :url => admin_promotion_promotion_zips_path(params[:promotion_id]), :html => { :method => 'post'}) do |f| %>
+<table>
+  <tr>
+      <td><b>Zip Code</b><br /></td>
+      <td><%= f.select(:serviced_zip_id, ServicedZip.find(:all, :conditions => {:active => true}).collect{|s| [s.zip, s.id]}, {}, { :style => "width:140px;"}) %></td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+    <td><%= f.submit 'Create' %></td>
+  </tr>
+</table>
+<% end %>

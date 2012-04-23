@@ -1,0 +1,674 @@
+class OrdersController < ApplicationController
+  ssl_required :payment, :make_payment, :completion, :confirm
+  before_filter :login_required
+  before_filter :employee_required, :only => [:show]
+  require_role "accounts", :only => [:show]
+  filter_parameter_logging :number
+  
+  # GET /orders
+  def index
+    @customer = Customer.find(params[:customer_id])
+    @current_orders = @customer.current_orders.sort! {|a,b| b.pickup_date <=> a.pickup_date}
+    @pending_orders = @customer.pending_orders.sort! {|a,b| b.pickup_date <=> a.pickup_date}
+    @previous_orders = @customer.previous_orders.sort! {|a,b| b.pickup_date <=> a.pickup_date}
+    @recurring_orders = @customer.recurring_orders.sort! {|a,b| b.pickup_date <=> a.pickup_date}
+    @recurring_order = @customer.recurring_order
+    @missed_pickup_orders = @customer.missed_pickup.sort! {|a,b| b.pickup_date <=> a.pickup_date}
+    @missed_delivery_orders = @customer.missed_delivery.sort! {|a,b| b.pickup_date <=> a.pickup_date}
+    @notes = @customer.notes.all(:order => 'created_at desc')
+    @windows = Window.find_all_regular
+  end
+  
+  def show
+    session[:tab] = request.url unless !current_user.admin?
+    @order = Order.find(params[:id])
+    @customer = @order.customer
+    @customer_preferences = @customer.preferences
+    @user = @customer.user
+    @address = @customer.addresses[0]
+    @building = @address.building
+  end
+  
+  # GET /orders/1/edit
+  def edit
+    @order = Order.find(params[:id])
+    @customer = Customer.find(params[:customer_id])
+    @services = Service.find(:all)
+  end
+  
+  # POST /orders
+  # POST /orders.xml
+  def create
+    @customer = Customer.find(params[:customer_id])
+    @order = Order.new(params[:order])
+    @order.customer = @customer
+    
+    respond_to do |format|
+      if @order.save
+        flash[:notice] = 'Order was successfully created.'
+        format.html { redirect_to fresh_order_customer_path(@customer) }
+        format.xml  { render :xml => @order, :status => :created }
+      else
+        format.html { redirect_to fresh_order_customer_path(@customer) }
+        format.xml  { render :xml => @order.errors, :status => :unprocessable_entity }
+      end
+    end
+  end
+  
+  # PUT /orders/1
+  # PUT /orders/1.xml
+  def update
+    @order = Order.find(params[:id])
+    Customer.remove_fresh_cash(@order)
+    promotion_code = @order.promotion_code
+    customer = @order.customer
+    services = Service.find(:all)
+
+    @order.premium = params[:premium][:yes] if params[:premium]
+
+    for item in @order.items
+      customer_item = item.customer_item 
+      if params['item'] && params['item'][item.id.to_s] == 'on' && params['service_'+ item.service.id.to_s] == 'on'
+        item.weight = params['weight_item_type_'+item.customer_item.item_type.id.to_s].to_i
+        customer_item.instructions.destroy if customer_item.instructions
+        instruction = Instructions.create(params['instructions_item_'+item.id.to_s])
+        customer_item.instructions_id = instruction.id
+        customer_item.update_attributes(params['item_'+item.id.to_s])
+        price = Price.find(:first, :conditions=> ["item_type_id = ? AND service_id = ?", customer_item.item_type_id.to_s, item.service_id.to_s])
+        is_premium = ( customer_item.premium || @order.premium || item.premium )
+        customer_item.plant_price =  price.get_plant_price(is_premium, item.weight)
+        item.save! && customer_item.save!
+      else
+        item.destroy
+      end
+    end
+    
+    for service in services
+      if params['service_'+service.id.to_s] == 'on'
+        for item_type in service.applicable_item_types
+          unless params['item_details_'+item_type.id.to_s].blank?
+              position_ids = params['item_details_'+item_type.id.to_s].keys if service.detailable? && item_type.name != 'Miscellaneous' && item_type.is_active.to_i == 1
+              count = params['quantity_item_type_'+item_type.id.to_s].to_i - @order.items_from_type(item_type,service.id).size
+              for i in 1..count 
+                if service.detailable? && !position_ids[i-1].blank? 
+                  pos_id = position_ids[i-1].to_s
+                  customer_item = CustomerItem.new(params['customer_item_type_'+item_type.id.to_s+'_'+pos_id])
+                  @instruction = Instructions.create(params['instructions_item_type_'+item_type.id.to_s+'_'+pos_id])
+                  customer_item.instructions_id = @instruction.id 
+                else
+                  customer_item = CustomerItem.new()
+                end
+                customer_item.customer = customer
+                customer_item.item_type = item_type
+                price = Price.find(:first, :conditions=> ["item_type_id = ? AND service_id = ?", item_type.id.to_s, service.id.to_s])
+                is_premium = ( customer_item.premium || @order.premium )
+                customer_item.plant_price = price.get_plant_price(is_premium, params['weight_item_type_'+item_type.id.to_s].to_i)
+                @order.order_items.build(:customer_item => customer_item, :service_id => service.id, :weight => params['weight_item_type_'+item_type.id.to_s].to_i)
+              end
+          end
+        end
+      end
+    end
+    orders = Order.count(:conditions => "customer_id = " + customer.id.to_s)
+    @order.save!
+    @order = Order.find(@order.id)
+    array_data=Array.new
+    array_data=['awaiting pickup','delivered','processing','missed pickup']
+    if customer.orders.find(:all,:conditions =>["status in(?)",array_data]).size==0
+      @order.promotion_code = "FREETRIAL"
+    elsif promotion_code == "FREETRIAL"
+      @order.promotion_code = nil
+    else
+      @order.promotion_code = promotion_code
+    end
+    remaining_discount = 0.00
+    if !@order.promotion_id.blank? && Promotion.get_zip_activity(@order)
+      promotion = @order.promotion
+      remaining_discount = promotion.function == "amount_off" ? promotion.arguments.to_f - @order.discount.to_f : 0.00
+    end
+    bag_prices = @order.order_products.collect {|product| product.price * product.quantity}.sum
+    bag_tax = bag_prices* 0.09
+    estimated_amount = @order.estimated_amount.round(2) - bag_prices - bag_tax - @order.estimated_shipping_amount.round(2)
+#     if estimated_amount >= 40.00 && Customer.is_invitated_customer( @order )
+#       invitated_from = @invitated_customer.sender
+#       invitated_from.frash_cash = invitated_from.frash_cash.to_f + 1.00
+#       invitated_from.save!
+#     end
+    if @order.fresh_cash_used.to_f > 0.00
+      fresh_cash_remain = customer.fresh_cash.to_f - estimated_amount 
+      if fresh_cash_remain > 0.00
+        @order.fresh_cash_used = estimated_amount
+        customer.fresh_cash = fresh_cash_remain + remaining_discount
+      else
+        @order.fresh_cash_used = customer.fresh_cash
+        customer.fresh_cash = remaining_discount
+      end
+    elsif estimated_amount < 0.00 && @order.fresh_cash_used.to_f <= 0.00
+      customer.fresh_cash = customer.fresh_cash + estimated_amount + remaining_discount
+    else
+      customer.fresh_cash = customer.fresh_cash + remaining_discount
+    end
+    if @order.save! && customer.save!
+      @services = Service.find(:all)
+      
+      if !params[:redirect_to].blank?
+        puts ">>>>>>>>>I'm in order " + params[:redirect_to].to_s 
+        redirect_to params[:redirect_to] 
+      else
+        redirect_to schedule_customer_order_path(@order.customer, @order.id)
+      end
+    else
+      @order = Order.find(params[:id])
+      @customer = Customer.find(params[:customer_id])
+      @services = Service.find(:all)
+
+      render :action => 'edit'
+      flash[:error] = "There was a problem with your order"
+    end
+  end
+  
+  def schedule
+    @customer = Customer.find(params[:customer_id])
+    @order = Order.find(params[:id])
+    @order.customer = @customer
+
+    @windows = Window.find_all_regular
+    @selected_location = @customer.primary_address.parent_location.parent_location
+    session[:calendar_day] = params[:date].blank? ? Time.now.to_date : params[:date].to_date  
+    @from_date = params[:date].blank? ? Time.now.to_date : params[:date].to_date  if current_user.employee?
+#    @t = Time.now - (60*60*4)
+    
+    respond_to do |format|
+      format.html #
+      format.js {
+        if params[:express] == 'false'
+          @delivery_schedules = Schedule.for_week_of(@selected_location, @order.earliest_deliverable(session[:calendar_day]), params[:start])
+        else
+          @delivery_schedules = Array.new
+          @delivery_schedules << @order.express_delivery_schedule(@selected_location, session[:calendar_day] || Time.now.to_date, params[:start])
+        end
+        render :update do |page|
+          page.replace_html "order_delivery", :partial => 'delivery', :locals => {:pickup => false, :schedules => @delivery_schedules}
+        end
+      }
+    end
+  end
+  
+  def reschedule
+    @customer = Customer.find(params[:customer_id])
+    @order = Order.find(params[:id])
+    @windows = Window.find_all_regular
+    @selected_location = @customer.primary_address.parent_location.parent_location
+    @mail_for_reschedule = true
+    session[:calendar_day] = params[:date].blank? ? Time.now.to_date : params[:date].to_date  
+    @from_date = params[:date].blank? ? Time.now.to_date : params[:date].to_date  if current_user.employee?
+#    @t = Time.now - (60*60*4)
+    respond_to do |format|
+#       if current_user.employee?
+#         format.html {render :action => 'admin_schedule'}
+#       else
+        format.html {render :action => 'schedule'}
+#       end
+      format.js {
+        if params[:express] == 'false'
+          @delivery_schedules = Schedule.for_week_of(@selected_location, @order.earliest_deliverable(session[:calendar_day]), params[:start])
+        else
+          @delivery_schedules = Array.new
+          @delivery_schedules << @order.express_delivery_schedule(@selected_location, session[:calendar_day], params[:start])
+        end
+        render :update do |page|
+          page.replace_html "order_delivery", :partial => 'delivery', :locals => {:pickup => false, :schedules => @delivery_schedules}
+        end
+      }
+    end
+  end
+  
+  def make_request
+    @customer = Customer.find(params[:customer_id])
+    @order = Order.find(params[:id])
+    @windows = Window.find_all_regular
+    @selected_location = @customer.primary_address.parent_location.parent_location
+    if params[:express][:yes] == 'true'
+      @order.express = true
+    else
+      @order.express = false
+    end
+    
+    if @order.status == 'missed pickup' && !params[:pickup].nil?
+      @order.status = 'awaiting pickup'
+    elsif @order.status == 'missed delivery' && !params[:delivery].nil?
+      @order.status = 'processing'
+    end
+    @order.save!
+   
+#    doorman = params[:doorman] ? params[:doorman][:yes] : false 
+    if params[:schedule_next_url]
+      goto_url = params[:schedule_next_url][:goto_url]
+      @customer.goto_url = goto_url
+      @customer.save!
+    end
+      @order.give_point_for_green_leaf_pickup(params[:pickup],params[:stop_id_for_pickup]) if !params[:stop_id_for_pickup].nil? and @order.green_leaf_pickup != 1
+      @order.give_point_for_green_leaf_delivery(params[:delivery],params[:stop_id_for_delivery]) if !params[:stop_id_for_delivery].nil? and @order.green_leaf_delivery != 1
+      @order.take_point_for_green_leaf_pickup(params[:pickup],params[:stop_id_for_pickup]) if @order.green_leaf_pickup == 1 and params[:mail_for_reschedule]
+      @order.take_point_for_green_leaf_delivery(params[:delivery],params[:stop_id_for_delivery]) if @order.green_leaf_delivery == 1 and params[:mail_for_reschedule]
+    if (params[:pickup].nil? || (params[:delivery].nil? && params[:defer_delivery] != "on"))
+   
+      flash[:error] = 'Please select a Pickup and Delivery slot.'
+      if request.referer.include?('reschedule')
+        redirect_to reschedule_customer_order_path(@order.customer, @order)
+      else
+#        @t = Time.now - (60*60*4)
+#        render :action => "schedule"
+        redirect_to schedule_customer_order_path(@order.customer, @order)
+      end
+    else    
+      # Pickup
+      pickup_param = params[:pickup].split('_')
+      pickup_date = pickup_param[0].to_date
+      pickup_index = pickup_param[1].to_i
+      pickupdoorman = true ? pickup_index == 6 : false
+      pickup_stop = Schedule.for(@selected_location, pickup_date)[pickup_index]
+      pickup_stop.make_request(@order, :pickup, pickupdoorman)
+      if params[:defer_delivery] != "on"
+        # delivery
+        delivery_param = params[:delivery].split('_')
+        delivery_date = delivery_param[0].to_date
+        delivery_index = delivery_param[1].to_i
+        deliverydoorman = true ? delivery_index == 6 : false
+        delivery_stop = Schedule.for(@selected_location, delivery_date)[delivery_index]
+        delivery_stop.make_request(@order, :delivery, deliverydoorman)
+      elsif @order.delivery
+        @order.delivery.destroy 
+      end
+      if pickupdoorman.to_s == 'true' and deliverydoorman.to_s == 'true'
+        @order.free_shipping = true
+      else
+        @order.free_shipping = false
+      end
+      @order.save!
+      if params[:recurring] == 'weekly' && params[:previous_selected] != params[:recurring]
+        @order.make_recurring(params[:recurring].to_sym)
+      elsif params[:recurring] == 'two_weeks' && params[:previous_selected] != params[:recurring]
+        @order.make_recurring(params[:recurring].to_sym)
+      elsif params[:recurring] == 'four_weeks' && params[:previous_selected] != params[:recurring]
+        @order.make_recurring(params[:recurring].to_sym)
+      elsif !params[:renew].blank?
+        update_recurring = @customer.recurring_order.find(:last)
+        update_recurring.strating_on = Date.today
+        update_recurring.last_order_id = ''
+        update_recurring.save!
+#       elsif params[:recurring] == 'No Thanks' && params[:previous_selected] != params[:recurring]
+#         recurr_order = @customer.recurring_order
+#         recurr_order.destroy unless recurr_order.blank?
+
+      end
+      if !params[:redirect_to].blank?
+        redirect_to params[:redirect_to] 
+      elsif request.referer and request.referer.include?('reschedule')
+        if !params[:mail_for_reschedule].blank? && params[:defer_delivery] != "on"
+         @order_new = Order.find(params[:id])
+         Notifier.deliver_send_mail_for_reschduling(@order_new)
+        end
+        if current_user.employee?
+          flash[:notice] = "Pickup & Delivery times updated"
+          #redirect_to customer_order_path(@order.customer, @order)
+          redirect_to session[:tab]
+        else          
+          redirect_to customer_orders_path(@customer) + '?order='+@order.id.to_s+'#current'
+        end
+      else
+        redirect_to payment_customer_order_path(@customer, @order)
+      end
+    end
+  end
+  
+  def payment
+    @customer = Customer.find(params[:customer_id])
+    @order = Order.find(params[:id])
+    @services = Service.find(:all)
+    orders = Order.count(:conditions => "customer_id = " + @customer.id.to_s)
+#     if  orders <= 1 and @order.amount() > 50.00
+#       @order.promotion_code = "FREETRIAL"
+#     end
+    populate_card(@order)
+#     @promotion_code = @order.promotion_code
+  end
+  
+  def receipt
+    @order = Order.find(params[:id])
+    respond_to do |format|
+      format.pdf do
+	render :pdf => @order.identifier.to_s,
+               :hack_file_name =>"dipak",
+               :template => "orders/receipt.pdf.erb",
+               :exe_path => '/usr/local/bin/wkhtmltopdf',
+	       :layout => "manifest",
+               :margin => { :top => 10,                         # default 10 (mm)
+                            :bottom => 0,
+                            :left => 0,
+                            :right => 0}
+      end
+    end
+    #render :layout => "manifest"
+  end
+  
+  def completion
+    @customer = Customer.find(params[:customer_id])
+    
+    @order = Order.find(params[:id])
+    @services = Service.find(:all)
+    @promotion_code = @order.promotion_code
+  end
+  
+  def confirm
+    @customer = Customer.find(params[:customer_id])
+    @order = Order.find(params[:id])
+    #integers
+    laundry_qty = params[:Reusable_laundry_bag].to_i
+    garment_qty = params[:Reusable_garmet_bag].to_i
+    detergent_qty = params[:detergent_item].to_i
+    @order.buy_laundry_bags(laundry_qty) if laundry_qty > 0
+    @order.buy_garment_bags(garment_qty) if garment_qty > 0
+    @order.buy_detergent(detergent_qty) if detergent_qty > 0
+    @order.buy_carbon_credits() if params[:buy_carbon] == 'true'
+    @order.buy_water_credits() if params[:buy_water] == 'true'
+    @order.donations = 1 if params[:canned_goods] == 'true'
+    @order.hangers = 1 if params[:Reusable_garmet_bag].to_i > 0 or params[:Reusable_laundry_bag].to_i > 0
+    @order.eco_status = 1
+#     @order.give_eco_points() if params[:recycle]  == 'true'
+#     @order.give_eco_points() if params[:clothes]  == 'true'
+#     @order.give_eco_points() if params[:canned_goods] == 'true'
+#     @order.give_fifty_eco_points() if params[:Reusable_garmet_bag].to_i > 0 or params[:Reusable_laundry_bag].to_i > 0
+#     @order.give_fresh_cash_for_eco_points()
+    #boolean
+    @order.recycling = params[:recycle]
+    @order.clothing_donation = params[:clothes]
+    @order.status = 'awaiting pickup'
+    @customer.customer_preferences.day_of_email
+    if @order.save
+      flash[:notice] = "Your order has been confirmed"
+      Notifier.deliver_order_thanks(@order) ? @customer.customer_preferences.day_of_email : false
+      redirect_to thanks_customer_order_path(@customer, @order)
+    else
+      flash[:error] = "Order could not be completed"
+      @order = Order.find(params[:id])
+      render :action => :completion
+    end
+  end
+  
+  def thanks
+    @order = Order.find(params[:id])
+  end
+  
+  def make_payment
+    @order = Order.find(params[:id])
+    Customer.remove_fresh_cash(@order)
+    @customer = Customer.find(params[:customer_id])
+    @promotion_code = params[:promotion_code]
+    begin
+      @order.promotion_code = @promotion_code
+      array_data=Array.new
+      array_data=['awaiting pickup','delivered','processing','missed pickup']
+      if @customer.orders.find(:all,:conditions =>["status in(?)",array_data]).size==0
+	@order.promotion_code = "FREETRIAL"
+      end
+      if (!@promotion_code.blank? && @order.promotion.nil?) || (!@order.save)
+        populate_card(@order)
+        flash[:error] = 'Invalid promotion code!'
+        render :action => :payment
+      else
+        if params[:existing_card] != 'No'
+          @credit_card = CreditCard.find(params[:existing_card])
+        else
+          @credit_card = CreditCard.new(params[:credit_card])
+          card_number = "XXXXXXXXXXXX" 
+          card_number +=@credit_card.number[@credit_card.number.length-4,@credit_card.number.length]
+          @credit_card.last_four_digits = card_number
+          @credit_card.expiration = params[:exp_month] + params[:exp_year]
+          @credit_card.payment_method = params[:credit_card][:payment_method]
+        end
+        
+        #save_card = params[:save_card] == "on"
+        save_card = true
+        remaining_discount = 0.00
+        if !@order.promotion_id.blank? && Promotion.get_zip_activity(@order)
+          promotion = @order.promotion
+          remaining_discount = promotion.function == "amount_off" ? promotion.arguments.to_f - @order.discount.to_f : 0.00
+        end
+        bag_prices = @order.order_products.collect {|product| product.price * product.quantity}.sum
+        bag_tax = bag_prices* 0.09
+        estimated_amount = @order.estimated_amount.round(2) - bag_prices - bag_tax - @order.estimated_shipping_amount.round(2)
+#         if estimated_amount >= 40.00 && Customer.is_invitated_customer( @order )
+#           invitated_from = @invitated_customer.sender
+#           invitated_from.frash_cash = invitated_from.frash_cash.to_f + 1.00
+#           invitated_from.save!
+#         end
+        if params[:pay_by_fresh_cash] == 'true' && @customer.fresh_cash.to_f > 0.00
+          fresh_cash_remain = @customer.fresh_cash.to_f - estimated_amount 
+          if fresh_cash_remain > 0.00
+            @order.fresh_cash_used = estimated_amount
+            @customer.fresh_cash = fresh_cash_remain + remaining_discount
+          else
+            @order.fresh_cash_used = @customer.fresh_cash
+            @customer.fresh_cash = remaining_discount
+          end
+        elsif estimated_amount < 0.00 && @order.fresh_cash_used.to_f <= 0.00
+          @customer.fresh_cash = @customer.fresh_cash + estimated_amount + remaining_discount
+        else
+          @customer.fresh_cash = @customer.fresh_cash + remaining_discount
+        end
+        if params[:existing_card] == 'No' && save_card
+          if @customer.credit_cards << @credit_card
+            flash[:notice] = @credit_card.response_code
+            @order.payment = Payment.find_or_create_by_order_id(@order)
+            @order.payment.credit_card = @credit_card
+            @order.payment.save!
+            @order.save! && @customer.save!
+            if params[:admin] == "true"
+              flash[:notice] = "Order has been confirmed"
+              Notifier.deliver_order_thanks(@order) 
+              redirect_to("/admin/accounts")
+            elsif params[:mpi] == "true"
+              redirect_to "/admin"
+            else
+              redirect_to( :action => :completion )
+            end
+          else
+            render :action => :payment
+          end
+        else
+          @order.payment = Payment.find_or_create_by_order_id(@order)
+          @order.payment.credit_card = @credit_card
+          @order.status = ['awaiting pickup', 'incomplete'].include?(@order.status) ? 'awaiting pickup' : @order.status
+          @order.payment.save!
+          @order.save! && @customer.save!
+          if params[:admin] == "true"
+            flash[:notice] = "Order has been confirmed"
+            Notifier.deliver_order_thanks(@order) 
+            redirect_to("/admin/accounts")
+          elsif params[:mpi] == "true"
+            redirect_to "/admin"
+          else
+            redirect_to( :action => :completion )
+          end
+        end
+      end
+    rescue
+      populate_card(@order)
+      render :action => :payment
+    end
+  end
+  
+  # DELETE /orders/1
+  # DELETE /orders/1.xml
+  def destroy
+    @order = Order.find(params[:id])
+    if @order.status == 'awaiting pickup' || @order.status == 'picked up'
+      if @order.cancel
+        Customer.remove_fresh_cash(@order, true)
+        #@order.destroy
+        @order.save
+        flash[:notice] = 'The selected order was successfully cancelled'
+      else
+        flash[:error] = 'This order has already been processed and cannot be cancelled'
+      end
+    else
+      flash[:error] = 'This order has already been processed and cannot be cancelled'
+    end
+    
+    if params[:from_admin]
+      redirect_to :back
+    else
+      respond_to do |format|
+        format.html { redirect_to customer_orders_path(@order.customer) }
+        format.xml  { head :ok }
+      end
+    end
+  end
+  
+  def admin_schedule
+    @order = Order.new
+    @customer = Customer.find(params[:customer_id])
+    @order.customer = @customer
+
+    @windows = Window.find_all_regular
+    @selected_location = @customer.primary_address.parent_location.parent_location
+    session[:calendar_day] = params[:date].blank? ? Time.now.to_date : params[:date].to_date
+    @from_date = params[:date].blank? ? Time.now.to_date : params[:date].to_date
+#    @t = Time.now - (60*60*4)
+    
+    respond_to do |format|
+      format.html #
+      format.js {
+        if params[:express] == 'false'
+          @delivery_schedules = Schedule.for_week_of(@selected_location, @order.earliest_deliverable(session[:calendar_day]), params[:start])
+        else
+          @delivery_schedules = Array.new
+          @delivery_schedules << @order.express_delivery_schedule(@selected_location, session[:calendar_day] || Time.now.to_date, params[:start])
+        end
+        render :update do |page|
+          page.replace_html "order_delivery", :partial => 'delivery', :locals => {:pickup => false, :schedules => @delivery_schedules}
+        end
+      }
+    end
+  end
+
+  def admin_make_request
+    @customer = Customer.find(params[:customer_id])
+    if @customer.credit_cards.size > 0
+      @order
+      if params[:ord_id].blank?
+        @order = Order.new
+      else
+        @order = Order.find(params[:ord_id])
+      end
+      @order.customer = @customer
+      @windows = Window.find_all_regular
+      @selected_location = @customer.primary_address.parent_location.parent_location
+      
+      if params[:express][:yes] == 'true'
+        @order.express = true
+      else
+        @order.express = false
+      end
+      
+      if @order.status == 'missed pickup' && !params[:pickup].nil?
+        @order.status = 'awaiting pickup'
+      elsif @order.status == 'missed delivery' && !params[:delivery].nil?
+        @order.status = 'processing'
+      end
+      
+      @order.save!
+      
+  #    doorman = params[:doorman] ? params[:doorman][:yes] : false 
+      if params[:schedule_next_url]
+        goto_url = params[:schedule_next_url][:goto_url]
+        @customer.goto_url = goto_url
+        @customer.save!
+      end
+      
+      if (params[:pickup].nil? || (params[:delivery].nil? && params[:defer_delivery] != "on"))
+        flash[:error] = 'Please select a Pickup and Delivery slot.'
+        if request.referer.include?('reschedule')
+          redirect_to reschedule_customer_order_path(@order.customer, @order)
+        else
+  #        @t = Time.now - (60*60*4)
+  #        render :action => "schedule"
+          redirect_to schedule_customer_order_path(@order.customer, @order)
+        end
+      else    
+        # Pickup
+        pickup_param = params[:pickup].split('_')
+        pickup_date = pickup_param[0].to_date
+        pickup_index = pickup_param[1].to_i
+        pickupdoorman = true ? pickup_index == 6 : false
+        pickup_stop = Schedule.for(@selected_location, pickup_date)[pickup_index]
+        pickup_stop.make_request(@order, :pickup, pickupdoorman)
+        
+        if params[:defer_delivery] != "on"
+          # delivery
+          delivery_param = params[:delivery].split('_')
+          delivery_date = delivery_param[0].to_date
+          delivery_index = delivery_param[1].to_i
+          deliverydoorman = true ? delivery_index == 6 : false
+          delivery_stop = Schedule.for(@selected_location, delivery_date)[delivery_index]
+          delivery_stop.make_request(@order, :delivery, deliverydoorman)
+        elsif @order.delivery
+          @order.delivery.destroy 
+        end
+        if pickupdoorman.to_s == 'true' and deliverydoorman.to_s == 'true'
+          @order.free_shipping = true
+        else
+          @order.free_shipping = false
+        end
+        @order.save!
+        if params[:recurring] != 'No Thanks'
+          @order.make_recurring(params[:recurring].to_sym)
+        end
+        
+        if !params[:redirect_to].blank?
+          redirect_to params[:redirect_to] 
+        elsif request.referer and request.referer.include?('reschedule')
+          if current_user.employee?
+            flash[:notice] = "Pickup & Delivery times updated"
+            #redirect_to customer_order_path(@order.customer, @order)
+            redirect_to session[:tab]
+          else          
+            redirect_to customer_orders_path(@customer) + '?order='+@order.id.to_s+'#current'
+          end
+        else
+          redirect_to payment_customer_order_path(@customer, @order)+"?admin=true"
+        end
+      end
+    else
+      flash[:error] = "No Credit Card Information Found"
+      render :back
+    end
+  end
+
+  private
+  def populate_card(order)
+    @credit_card = CreditCard.new
+    if order.payment && order.customer.credit_cards
+      @credit_card.payment_method = order.payment.cc_payment_method
+      @credit_card.number = order.payment.cc_number
+      @credit_card.expiration = order.payment.cc_expiration
+      @credit_card.security_code = order.payment.cc_security_code
+      @credit_card.address = order.payment.cc_address
+      @credit_card.city = order.payment.cc_city
+      @credit_card.state = order.payment.cc_state
+      @credit_card.zip = "%05d" % order.payment.cc_zip
+    end
+    
+    address = order.customer.primary_address
+    @credit_card.address = address.addr1
+    @credit_card.city = address.city
+    @credit_card.state = address.state
+    @credit_card.zip = "%05d" % address.zip.to_i
+    @credit_card.first_name = current_user.first_name
+    @credit_card.last_name = current_user.last_name
+  end
+
+
+
+end

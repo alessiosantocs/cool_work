@@ -1,0 +1,54 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+    <head>
+        <meta name="Keywords" content="dry cleaners, wash and fold, dry cleaner, dry cleaning, laundry, laundry service, laundry shop, shirt laundry, new york laundry, new york city laundry, ny laundry, dry cleaner new york, new york city dry cleaners, dry cleaning prices, dry cleaning nyc, best dry cleaners nyc, commercial laundry services, dry cleaners nyc" /><meta name="Description" content="My online cleaner is a company of principles – revolutionizing convenience, dedication to service, and commitment to quality. In addition we are committed to promoting ethical environmental & social responsibility within our culture. " /><meta name="Keyphrases" content="cleaners new york city, laundry cleaners, ny laundry service, eco friendly cleaning services, wash and fold laundry service, eco friendly cleaners, laundry delivery nyc" /><meta name="revisit-after" content="1 WEEK" /><meta name="robots" content="ALL" /><meta name="distribution" content="Global" /><meta name="company" content="MyOnLine Cleaner" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+        <title><%= page_title %></title>
+        <%= javascript_include_tag 'prototype', 'effects', 'controls', 'dragdrop', 'application', 'calendar', 'lightwindow', 'live_validation'  %>
+        <%= stylesheet_link_tag 'default', 'lightwindow', 'live_validation' %>
+    </head>
+    <% body_tag( :style=>"font-family: Verdana,Arial,Helvetica,sans-serif;font-size: 11px;margin-left: auto;") do %>
+    <div id="logo">
+      <table cellspacing=0 style="margin: auto; ">
+        <tr>
+          <td><%= image_tag('banner_left.jpg') %></td>
+          <td><%= link_to image_tag('myfreshshirt.jpg', :style => "margin-top: 40px;"), "/"  %></td>
+          <td><%= image_tag('banner_right.jpg') %></td>
+        </tr>
+      </table>
+    </div>
+    
+    <div id="menu">
+        <div id="settings-menu">
+            <span><strong><%= current_user.email %></strong></span>
+            <%= '| <span>' + link_to_unless_current_heirarchy("Promotions", "/admin/promotions")  + '</span>' if current_user.has_role?('content')%>
+            <%= '| <span>' + link_to_unless_current_heirarchy("Content", "/admin/content")  + '</span>' if current_user.has_role?('content')%>
+            | <span><%= link_to_unless_current_heirarchy "Help", faq_url %></span>
+            | <span><%= link_to "Sign Out", logout_url %></span>
+        </div>
+        <div id="location-menu">
+            <%= '<span>' + link_to_unless_current("Dashboard", "/admin") + '</span>' %>
+            <%= '<span>' + link_to_unless_current_heirarchy("Employees", admin_employees_path) + '</span>' if current_user.has_role?('employees') %>
+            <%= '<span>' + link_to_unless_current_heirarchy("Accounts", admin_accounts_path) + '</span>' if current_user.has_role?('accounts') %>
+            <%= '<span>' + link_to_unless_current_heirarchy("Schedule", "/admin/schedule") + '</span>' if current_user.has_role?('scheduling') %>
+            <%= '<span>' + link_to_unless_current_heirarchy("Manifest", "/admin/manifest") + '</span>' if current_user.has_role?('manifest') %>
+            <%= '<span>' + link_to_unless_current_heirarchy("Intake", admin_intakes_path) + '</span>' if current_user.has_role?('intake') %>
+            <%= '<span>' + link_to_unless_current_heirarchy("Sort", "/admin/sort") + '</span>' if current_user.has_role?('sort') %>
+            <%= '<span>' + link_to_unless_current_heirarchy("Service", "/admin/services") + '</span>' if current_user.has_role?('service') %>
+            <%= '<span>' + link_to_unless_current_heirarchy("Reporting", "/admin/reporting") + '</span>' if current_user.has_role?('reporting') %>
+<!--            <%= '<span>' + link_to_unless_current_heirarchy("Deliver", "#")  + '</span>' if current_user.has_role?('deliver')%>
+!-->
+        </div>
+    </div>
+    <div id="flash">
+        <%= content_tag 'span', h(flash[:notice]),
+        :class => 'notice' if flash[:notice] %>
+        <%= content_tag 'span', h(flash[:error]),
+        :class => 'error' if flash[:error] %>
+    </div>
+    <div id="container">
+        <%= yield :layout %>
+    </div>
+    
+    <% end %>
+</html>

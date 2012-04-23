@@ -1,0 +1,8 @@
+<%= error_messages_for :user %>
+<%= error_messages_for :employee %>
+<%= error_messages_for :building %>
+<%= error_messages_for :address %>
+
+<% form_for :employee, :url => admin_employees_path do |f| -%>
+	<%= render :partial => 'form', :locals => { :create => true, :f => f } %>	
+<% end -%>

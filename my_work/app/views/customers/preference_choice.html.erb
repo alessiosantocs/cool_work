@@ -1,0 +1,19 @@
+<% form_for :customer, :url => fresh_order_customer_path(@customer), :html => {:method => :get} do |f| -%>
+	<p>
+		In order to better serve you, we ask many questions up front so that we will better know you as a customer. Once you have set your preferences, you will no longer need to define or describe each order, however, if you so choose, the options will always be available.
+	</p>
+	<p>
+		I will:
+	</p>
+	<p>
+		<input type="radio" value="true" name="set-preferences" id="set-now"/><label for="set-now">  Do It Now</label>
+		<input type="radio" value="false" name="set-preferences" id="set-later" checked /><label for="set-later">  Do It Later</label>
+	</p>
+	<p>
+		If you choose not to set your preferences, we will leave it up to the cleaning professionals to decide what isthe best cleaning preferences for your clothing.
+	</p>
+	<div class="float-right">
+		<font face="HelveticaRounded"><%= image_submit_tag 'continue_to_order_btn.png', :name => nil, :class=>"align-button" %></font>
+	</div>
+	<br />
+<% end -%>

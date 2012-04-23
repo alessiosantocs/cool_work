@@ -1,0 +1,408 @@
+# == Schema Information
+# Schema version: 98
+#
+# Table name: customers
+#
+#  id                    :integer(11)   not null, primary key
+#  title                 :string(255)   
+#  company               :string(255)   
+#  sex                   :string(1)     
+#  dob                   :date          
+#  primary_address_id    :integer(11)   
+#  work                  :string(10)    
+#  home                  :string(10)    
+#  cell                  :string(10)    
+#  active                :boolean(1)    
+#  accepted_terms        :boolean(1)    
+#  points                :integer(11)   default(0)
+#  created_on            :datetime      
+#  updated_on            :datetime      
+#  carbon_credits        :float         
+#  water_credits         :float         
+#  work_extension        :string(10)    
+#  is_building           :boolean(1)    
+#  authdotnet_profile_id :string(255)   
+#  goto_url              :string(255)   
+#  free_shipping         :boolean(1)    
+#
+
+require 'digest/sha1'
+class Customer < ActiveRecord::Base
+  has_one :user, :as => :account, :dependent => :destroy
+  has_many :addresses, :dependent => :destroy
+  has_many :customer_items, :dependent => :destroy
+  has_many :orders
+  has_many :notes
+  has_many :credit_cards
+  has_one :customer_preferences
+  has_many :recurring_order
+  
+  validates_presence_of :user, :addresses, :home, :cell
+  validates_numericality_of :home, :only_integer => true
+  validates_numericality_of :cell, :only_integer => true
+  validates_length_of       :home,    :is => 10
+  validates_length_of       :cell,    :is => 10
+  validates_associated  :user
+  validates_inclusion_of :accepted_terms, :in => [true], :message => ' - Please accept the terms'
+  #validates building customers have only one recurring order
+  
+  liquid_methods :first_name, :last_name, :name, :account
+  
+  def primary_address
+    unless self.primary_address_id
+      self.primary_address_id = Address.find_by_customer_id(self.id).id 
+    end
+    return Address.find(self.primary_address_id) 
+  end
+  
+  def referrer
+    self.account.referrer
+  end
+  def referrer=(val)
+    self.account.referrer=val
+  end
+  
+  def is_delinquent?
+    self.previous_orders.each do |order|
+      if order.payment.status == 'declined'
+        return true
+      end
+    end
+    return false
+  end
+   
+  #convenience find class methods
+  def self.find_by_name full_name
+    User.find_by_first_name_and_last_name(full_name.split(" ")[0], full_name.split(" ")[1]).customer
+  end
+  def self.find_by_names first_name, last_name
+    User.find_by_first_name_and_last_name(first_name, last_name).customer
+  end
+  def self.find_by_first_name first_name
+    User.find_by_first_name(first_name).customer
+  end
+  def self.find_by_last_name last_name
+    User.find_by_last_name(last_name).customer
+  end
+  def self.find_by_email email
+    User.find_by_email(email).customer
+  end
+  def self.find_by_login login
+    User.find_by_login(login).customer
+  end
+  def self.find_all_by_referrer ref
+    User.find_all_by_referrer(ref).customer
+  end
+  
+  #aliases
+  def closet
+    self.customer_items
+  end
+  def account= value
+    self.user = value
+  end
+  def account
+    self.user
+  end
+  def preferences
+    self.customer_preferences
+  end
+  
+  def registered_invitees
+    User.find(:all,
+          :select => "users.id, invitations.sender_id, invitations.recipient_email, invitations.first_name, invitations.last_name", 
+          :conditions => ["invitations.recipient_email is not null and invitations.sender_id = ?", self.account], 
+          :joins => "left join invitations on (users.email = invitations.recipient_email)" )
+  end
+  
+  def unregistered_invitees
+    User.find(:all,
+          :select => "users.id, invitations.sender_id, invitations.recipient_email, invitations.first_name, invitations.last_name", 
+          :conditions => ["users.id is null and invitations.sender_id = ?", self.account], 
+          :joins => "right join invitations on (users.email = invitations.recipient_email)" )
+  end
+  
+  
+#   def fresh_cash_invitees
+#     Order.count_by_sql(
+#       ["select count(*) as count
+#       from orders left join payments on (orders.id=payments.order_id) where payments.amount > ? and payments.status = ? and orders.customer_id in 
+#                 (select users.account_id from users left join invitations on (users.email = invitations.recipient_email)  
+#                 where invitations.recipient_email is not null and invitations.sender_id = ?)",
+#                 40, 'complete', self.account])
+#   end
+  
+  #@@StatusMenu (2009/01/16)= ['awaiting pickup', 'delivered', 'in transit', 'processing', 'incomplete', 'missed pickup', 'cancelled', 'picked up', 'enroute to delivery', 'missed dellivery']
+  def current_orders
+    Order.find(:all, 
+      :conditions => ['orders.status IN (?) AND customer_id = ?', ['awaiting pickup', 'in transit', 'picked up'], self],
+      :joins      => 'INNER JOIN customers ON orders.customer_id = customers.id')
+  end
+
+  def pending_orders
+    Order.find(:all, 
+      :conditions => ['orders.status IN (?) AND customer_id = ?', ['processing', 'enroute to delivery'], self],
+      :joins      => 'INNER JOIN customers ON orders.customer_id = customers.id')
+  end
+
+  def previous_orders
+    Order.find(:all, 
+      :conditions => ['orders.status IN (?) AND customer_id = ?', ['delivered', 'cancelled'], self],
+      :joins      => 'INNER JOIN customers ON orders.customer_id = customers.id')
+  end
+
+  def missed_pickup
+    Order.find(:all, 
+      :conditions => ['orders.status IN (?) AND customer_id = ?', ['missed pickup'], self],
+      :joins      => 'INNER JOIN customers ON orders.customer_id = customers.id')
+  end
+
+  def missed_delivery
+    Order.find(:all, 
+      :conditions => ['orders.status IN (?) AND customer_id = ?', ['missed delivery'], self],
+      :joins      => 'INNER JOIN customers ON orders.customer_id = customers.id')
+  end
+
+  def payment_activity(status = nil, start = nil, end_ = nil)
+    #returns an array of payments for this customer having status between start date and end_ date
+    start = Date.new(2000, 1, 1) if start == nil
+    end_ = Date.today() if end_ == nil
+    status = '%' if status == nil
+    Payment.find(:all, 
+        :joins => 'INNER JOIN orders ON payments.order_id = orders.id',
+        :conditions => ['orders.created_at BETWEEN ? AND ? AND payments.status LIKE ? AND orders.customer_id = ?', start, end_, status, self])
+  end
+  
+  def newest_orders(how_many = 10)
+    Order.newest_orders(how_many, self)
+  end
+  
+  def recurring_orders
+    self.orders.find_all {|order| order.recurring }
+  end
+  
+  def recurring_orders_since(date = Date.today - 30.days)
+    self.orders.find_all {|order| order.recurring and order.created_at > date}
+  end
+  
+  def login= value
+    self.user.login = value
+  end
+  def login
+    self.user.login
+  end
+  
+  def registered_building
+    return true if self.primary_address.building.building_customer
+    return false
+  end
+  def doorman_building?
+    return true if self.primary_address.building.doorman
+    return false
+  end
+  def building_pickup(address = self.primary_address)
+    bc = self.primary_address.building.building_customer
+    #bc = Customer.find(:first,
+    #    :joins => 'INNER JOIN addresses ON addresses.customer_id = customers.id INNER JOIN buildings ON addresses.building_id = buildings.id',
+    #    :conditions => ['buildings.id = ? AND customers.is_building = ?', address.building, true])
+    return nil if bc == nil
+    next_order = Order.find_by_customer_id(bc, :order => 'created_at desc').pickup
+  end
+  def building_delivery(address = self.primary_address)
+    bc = self.primary_address.building.building_customer
+    #bc = Customer.find(:first,
+    #    :joins => 'INNER JOIN addresses ON addresses.customer_id = customers.id INNER JOIN buildings ON addresses.building_id = buildings.id',
+    #    :conditions => ['buildings.id = ? AND customers.is_building = ?', address.building, true])
+    return nil if bc == nil
+    next_order = Order.find_by_customer_id(bc, :order => 'created_at desc').delivery
+  end
+  
+  def email= value
+    self.user.email = value
+  end
+  def email
+    self.user.email
+  end
+  
+  def password= value
+    self.user.password = value
+  end
+  def password
+    self.user.password
+  end
+  
+  def password_confirmation= value
+    self.user.password_confirmation = value
+  end
+  def password_confirmation
+    self.user.password_confirmation
+  end
+  
+  def first_name= value
+    self.user.first_name = value
+  end
+  def first_name
+    self.user.first_name
+  end
+  
+  def last_name= value
+    self.user.last_name = value
+  end
+  def last_name
+    self.user.last_name
+  end
+  def name
+    self.user.name
+  end
+  
+  def maiden= value
+    self.user.maiden = value
+  end
+  def maiden
+    self.user.maiden
+  end
+  
+  def fresh_dollars
+    self.fresh_cash
+  end
+  
+  def eco_points
+    self.points
+  end
+  
+  def cash_in_points(num_points, exchange_rate = 100/1)
+    raise Exception if num_points > self.points
+    self.points -= num_points
+    self.fresh_cash += num_points / exchange_rate
+    self.save!
+  end
+  
+  def self.building_customers
+    self.find_all_by_is_building(true)
+  end
+  
+  def total_carbon_footprint(since = Time.utc(2000,1,1))
+    self.orders.collect{|o| (o.carbon_footprint > 0 and o.created_at > since) ? o.carbon_footprint : 0}.sum
+  end
+  
+  def total_water_saved(since = Time.utc(2000,1,1))
+    self.orders.collect{|o| (o.water_saved > 0 and o.created_at > since) ? o.water_saved : 0}.sum
+  end
+  
+  def total_carbon_offset(since = Time.utc(2000,1,1))
+    self.orders.collect{|o| (o.created_at > since) ? o.carbon_offset : 0 }.sum
+  end
+  
+  def total_water_donated(since = Time.utc(2000,1,1))
+    self.orders.collect{|o| (o.created_at > since) ? o.water_donated : 0 }.sum
+  end
+  
+  def self.calculate_fresh_cash(order)
+    if order.fresh_cash_used.to_f > 0.00
+      customer = order.customer
+      bag_prices = order.order_products.collect {|product| product.price * product.quantity}.sum
+      bag_tax = bag_prices* 0.09
+      estimated_amount = order.estimated_amount.round(2) - bag_prices - bag_tax - order.estimated_shipping_amount.round(2)
+      fresh_cash_remain = customer.fresh_cash.to_f - estimated_amount
+      remaining_discount = 0.00
+      if !order.promotion_id.blank? && Promotion.get_zip_activity(order)
+        promotion = order.promotion
+        remaining_discount = promotion.function == "amount_off" ? promotion.arguments.to_f - order.discount.to_f : 0.00
+      end
+      if fresh_cash_remain > 0.00
+        order.fresh_cash_used = estimated_amount
+        customer.fresh_cash = fresh_cash_remain + remaining_discount
+      else
+        order.fresh_cash_used = customer.fresh_cash.to_f + order.fresh_cash_used.to_f
+        customer.fresh_cash = remaining_discount
+      end
+      order.save! && customer.save!
+    end
+  end
+
+  def self.remove_fresh_cash(order, is_remove = false)
+    customer = order.customer
+    remaining_discount = 0.00
+    if !order.promotion_id.blank? && Promotion.get_zip_activity(order)
+      promotion = order.promotion
+      remaining_discount = promotion.function == "amount_off" ? promotion.arguments.to_f - order.discount.to_f : 0.00
+    end
+    bag_prices = order.order_products.collect {|product| product.price * product.quantity}.sum
+    bag_tax = bag_prices* 0.09
+    order_amount =  order.estimated_amount.round(2) - bag_prices - bag_tax - order.estimated_shipping_amount.round(2)
+#     if order_amount >= 40.00 && Customer.is_invitated_customer( order )
+#       invitated_from = @invitated_customer.sender
+#       fc = invitated_from.frash_cash.to_f - 1.00
+#       if fc < 0.00 && !invitated_from.blank?
+#         invitee_last_order = Order.find(:last , :conditions => ["customer_id = ? AND status IN ('picked up', 'awaiting pickup') AND fresh_cash_used > 0.00", invitated_from.id])
+#         invitee_last_order.frash_cash_used = invitee_last_order.frash_cash_used - 1.00
+#         invitated_from.frash_cash = 0.00
+#         invitee_last_order.save!
+#       else
+#         invitated_from.frash_cash = fc
+#       end
+#       invitated_from.save!
+#     end
+    if order.fresh_cash_used.to_f > 0.00 || order.discount.to_f > 0.00
+      if order_amount >= 0.00
+        customer.fresh_cash = customer.fresh_cash.to_f + order.fresh_cash_used.to_f - remaining_discount
+      elsif order.discount.to_f >= 0.00
+        customer.fresh_cash = customer.fresh_cash.to_f + order_amount + 2 * order.fresh_cash_used.to_f - remaining_discount
+      else
+        customer.fresh_cash = customer.fresh_cash.to_f + order.fresh_cash_used.to_f
+      end
+      Customer.remove_discount_from_other_orders(is_remove, order, customer)
+      order.fresh_cash_used = 0.00
+      order.discount = 0.00
+      order.promotion_id = nil
+      order.save! && customer.save!
+    else
+      customer.fresh_cash = customer.fresh_cash.to_f - remaining_discount
+      Customer.remove_discount_from_other_orders(is_remove, order, customer)
+      customer.save!
+    end
+  end
+
+  def self.remove_discount_from_other_orders(is_remove, order, customer)
+    if is_remove && customer.fresh_cash < 0.00
+      order_with_fresh_cash = Order.find(:all , :conditions => ["customer_id = ? AND status IN ('picked up', 'awaiting pickup') AND fresh_cash_used > 0.00 AND id > ?", customer.id, order.id])
+      fresh_cash = customer.fresh_cash
+      unless order_with_fresh_cash.blank?
+        order_with_fresh_cash.each do |ord|
+          fresh_cash += ord.fresh_cash_used
+          ord.fresh_cash_used = 0.00
+          ord.save!
+          if fresh_cash >= 0.00
+            customer.fresh_cash = fresh_cash
+            break
+          end
+        end
+      end
+    end
+  end
+
+#   def self.is_invitated_customer(order)
+#     account = order.customer.account
+#     @invitated_customer = Invitation.find(:first, :conditions => ['recipient_email = ?', account.email])
+#     ( !@invitated_customer.blank? && account.created_at <= @invitated_customer.sender.created_at ) ? true : false
+#   end
+
+  def is_renew
+    recurring_orders = self.recurring_order
+    return false if recurring_orders.blank? 
+    recurring_orders.each do |recurring_order|
+      return true  if (recurring_order.interval == 7) and (!last_order.nil? && ((70...80).include?(( Date.today  - recurring_order.starting_on )) ? true : false))
+      return true  if (recurring_order.interval == 14) and (!last_order.nil? && ((140...150).include?(( Date.today  - recurring_order.starting_on )) ? true : false))
+      return true  if (recurring_order.interval == 28) and (!last_order.nil? && ((280...290).include?(( Date.today  - recurring_order.starting_on )) ? true : false))
+    end
+    return false
+  end
+
+  protected
+  
+  def before_save
+    self.user.save!
+  end
+end
+
+#params = {:user => {:login => "testuser", :first_name => "test", :last_name => "user", :email => "testuser@mfs.com", :password => "password", :password_confirmation => "password"}, :title => "test user", :company => "mfs", :sex => "M", :dob => "20070101", :accepted_terms => true}

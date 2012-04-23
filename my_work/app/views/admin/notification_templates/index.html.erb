@@ -1,0 +1,48 @@
+<ul class="tabselector">
+    <li class="tab-unselected">
+        <%= link_to_unless_current_heirarchy("SITE WIDE", "/admin/content/site") %>
+    </li>
+	<li class="tab-unselected">
+        <%= link_to_unless_current_heirarchy("HOME PAGE", "/admin/content/home") %>
+    </li>
+	<li class="tab-unselected">
+        <%= link_to_unless_current_heirarchy("NEWS", "/admin/content/news") %>
+    </li>
+	<li class="tab-unselected">
+        <%= link_to_unless_current_heirarchy("TICKERS", "/admin/content/tickers") %>
+    </li>
+	<li class="tab-unselected">
+        <%= link_to_unless_current_heirarchy("PROMOTIONS", "/admin/content/promotions") %>
+    </li>
+	<li class="tab-selected">
+        <%= link_to_unless_current_heirarchy("MAIL & SMS TEMPLATES", "/admin/notification_templates") %>
+    </li>
+</ul>
+<ul class="panes">
+    <li class="pane-selected">
+		<h1>Notification Templates</h1>
+		
+		<table cellspacing=10>
+		  <tr>
+		    <th>Name</th>
+		    <th>Mail</th>
+		    <th>SMS</th>
+		  </tr>
+		
+		<% for notification_template in @notification_templates %>
+		  <tr>
+		    <td><%=h notification_template.name %></td>
+		    <td><%=h notification_template.mail_body %></td>
+		    <td><%=h notification_template.sms_body %></td>
+		    <td><%= link_to 'Edit', edit_admin_notification_template_path(notification_template), :class=>'action edit green' %></td>
+		    <td><%= link_to 'Destroy', admin_notification_template_path(notification_template), :confirm => 'Are you sure? Deleting this template will default to the hardcoded template.', :method => :delete, :class=>'action delete green' %></td>
+		  </tr>
+		<% end %>
+		</table>
+		
+		<br />
+		
+		<%= link_to 'New Notification Template', new_admin_notification_template_path, :class=> 'action new green' %>
+    </li>
+<ul>
+

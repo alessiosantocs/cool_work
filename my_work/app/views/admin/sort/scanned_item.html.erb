@@ -1,0 +1,43 @@
+<%= render :partial => '/admin/account_search' %>
+
+<div id="item_information">
+  <h2> Item Information </h2>
+  tracking number: <%= @item.tracking_number %> <br/>
+  location: <%= @item.position.name if @item.position %> <br/>
+  status: <%= @item.status %> <br/>
+  type: <%= @item.item_type.name %> <br/>
+  service: <%= @item.service.name %> <br/>
+  color: <%= @item.color %> <br/>
+  brand: <%= @item.brand %> <br/>
+  size: <%= @item.size %> <br/>
+  <br/>
+</div>
+<div id="order_information">
+  <h2> Order Information </h2>
+  order number: <%= @item.order.tracking_number %> <br/>
+  delivery date: <%= format_date(@item.order.delivery_date) %> (<%= @item.order.delivery_date.strftime('%A')%>) <br/>
+  delivery time: <%= time_window(@item.order.delivery_window) %> <br/>
+  <br/>
+</div>
+<div id="mate_locations">
+  <h2> Mates </h2>
+<table>
+<tr>
+  <th>tracking number</th><th>status</th><th>type</th><th>color</th><th>brand</th><th>size</th><th>location</th>
+</tr>
+  <% @item.find_mates().each do |item| %>
+<tr>
+	<td><%= item.tracking_number %></td>
+	<td><%= item.status %></td>
+	<td><%= item.item_type.name %></td>
+	<td><%= item.color %></td>
+	<td><%= item.brand %></td>
+	<td><%= item.size %></td>
+	<td><% if item.position %><%= item.position.name %> > <%= item.container_number %><% else %> unknown <% end %></td>
+</tr>
+  <% end %>
+</table>
+<br/>
+</div>
+
+<%= render :partial => '/admin/sort/scan_item', :area => @area, :context => @rack, :notes => "Scan rack again to close" %>

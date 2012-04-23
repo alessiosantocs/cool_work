@@ -1,0 +1,172 @@
+<table class="order-ticket" cellspacing="4">
+	<% order = @order; customer = order.customer %>
+	<tr>
+		<td class="id" colspan="2">Order ID# <%= order.identifier %></td>
+	</tr>
+	<tr>
+		<td>
+			<div class="label">Customer:</div></td>
+			<td>
+			<div><%= order.customer.name %></div>
+		</td>
+	</tr>			
+	<tr>
+		<td>
+			<div class="label">Address:</div></td>
+			<td>
+			<div><%= order.customer.primary_address.formatted %></div>
+		</td>
+	</tr>
+	
+	<tr>
+		<td><span><u>Pickup:</u> </td>
+		<td></span><%= format_date(@order.pickup_date) %><%= ', ' + time_window(@order.pickup_window) if @order.pickup_date %></td>
+	</tr>
+	<tr>
+		<td><span><u>Delivery:</u> </td>
+		<td><%= format_date(@order.delivery_date) %><%= ', ' + time_window(@order.delivery_window) if @order.delivery_date %></span></td>
+	</tr>
+	<tr>
+		<td><span><u>Express:</u></td>
+		<td> <%= @order.express? ? 'yes' : 'no' %></span></td>
+	</tr>
+	<tr>
+		<td><span><u>Premium:</u></td>
+		<td><%= @order.premium? ? 'yes' : 'no' %></span></td>
+	</tr> 
+	<tr>
+		<td><span><u>Carbon:</u></td>
+		<td><%= @order.carbon_footprint %></span></td>
+	</tr> 
+	<tr>
+		<td><span><u>Water:</u></td>
+		<td><%= @order.water_saved %></span></td>
+	</tr> 
+	
+	
+	<tr>
+		<td>
+			<!--	<tr><td>	<span><u>Total Pieces:</u></td><td> <%= order.total_pieces %></span><br/>
+		</td>
+	</tr> -->
+	
+	<tr>
+	
+		<td colspan="2"><br>
+			<% if order.order_items.size > 0 %>
+				<div id="<%= type %>_<%= order.id %>_items">
+					<table cellspacing="0" class="padding5" >
+						<tr>
+							<th class="align-left">Category<br><br></th>
+							<th class="align-left">Item<br><br></th>
+							<th class="align-left">Quantity<br><br></th>
+							<th class="align-left">Special Handling<br><br></th>
+              <th  class="align-left">Price<br><br></th>
+                                        </tr>
+					<% order.order_items.group_by(&:customer_item_type).sort.each do |service, items| %>
+						<tr>
+							<td><%= service.services.first.name %></td>
+							<td><%= service.name %>
+                                                               <%= service.services.first.name  == 'Wash and Fold' ? "(#{items[0].weight.to_i}lb)" : '' %></td>
+							<td><%= items.size %></td>
+							<td>
+								<% for item in items %>
+									<% sp =  item.order.premium %>
+									<% if(sp || item.customer_item.premium)%>
+										<div>Premium</div>
+                                                                        <% else %>
+                                                                                <div>&nbsp;</div>
+									<% end %>
+                                                                        <% if !(item.customer_item.extra_charge == 0.00) %>
+                                                                            <div>Upcharge: <%= item.customer_item.extra_charge_description %></div>
+                                                                        <% end %>
+								<% end %>
+							</td>
+              <td>
+                <% for item in items %>
+                  <div><%= number_to_currency(item.price) %></div>
+                  <% if !(item.customer_item.extra_charge == 0.00) %>
+                      <div><%= number_to_currency(item.customer_item.extra_charge) %></div>
+                  <% end %>
+                <% end %>
+              </td>
+						</tr>
+					<% end %>
+					<tr><td colspan="5"><hr /></td></tr>
+						<tr>
+							<td>
+							<strong>Total Items:</strong></td>
+								<td><strong>&nbsp;&nbsp;<%= order.order_items.size %></strong>
+							</td>
+						</tr>
+						<tr>
+		<% if @order.order_products.size > 0 %>
+		<td colspan="2">
+			<div><strong>Special Items:</strong></div>
+			<% for product in @order.order_products %>
+				<%= product.quantity %> <%= product.name %>(s)<br/>
+			<% end %>
+			<br>
+		</td>
+		<% end %>
+	</tr>
+						<% if order.discount.to_f > 0.0 %>
+					<tr>
+							<td><strong>Promotional Discount:</strong></td><td><strong>&nbsp;&nbsp;<%= number_to_currency(order.discount.to_f) %></strong></td>
+					</tr>
+					<% end %>							
+					<tr>
+							<% if order.finalized == true %>
+							     <td><strong>Order Total:</strong></td><td><strong>&nbsp;&nbsp;<%= number_to_currency(order.total) %></strong></td>
+
+							<% end %>
+
+							<% if order.finalized != true %>
+
+							     <td><strong>Estimated Total:</strong></td><td><strong>&nbsp;&nbsp;<%= number_to_currency(order.estimated_amount) %></strong></td>
+							<% end %>
+					</tr>
+					
+					</table>
+				</div>
+			<% else %>
+				<div><strong>Total Items:</strong> 0</div>
+			<% end %>
+		</td>	
+	</tr>
+	<tr>
+		<td>
+			<br>
+			<div class="label">Payment:</div>
+			<div>
+				<% if order.payment %>
+					<strong><%= order.payment.cc_payment_method%></strong>: <%= order.payment.cc_number%>
+				<% end %>
+			</div>
+		</td>
+	</tr>
+	
+	<tr>
+		<td>
+			<br>
+			<div class="label">Handling:</div>
+			<div><%= order.instruction_notes %></div>
+		</td>
+	</tr>
+	
+	
+	<tr>
+		<td>
+			<br>
+			<div class="label">Notes:</div>
+			<div>
+				<% for note in order.notes %>
+					<div><strong><%= note.note_type %>:</strong> <%= note.body %></div>
+				<% end %>
+			</div>
+		</td>
+	</tr>
+</table>				
+<center>
+	<a href="JavaScript:window.print();">Print</a> | <a href="javascript:window.close();">Close</a> 
+</center>

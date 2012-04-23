@@ -1,0 +1,319 @@
+<table width="550" border="0" align="center" cellpadding="0" cellspacing="0">
+  <tr>
+    <td><img src="images/popup_header.jpg" width="520" height="93" border="0" usemap="#Map" /></td>
+  </tr>
+  <tr>
+    <td><table border="0" cellpadding="0" cellspacing="0" style="border-collapse: collapse" bordercolor="#111111" width="550" id="AutoNumber1">
+  <tr>
+    <td width="462">&nbsp;</td>
+    <td width="57"><font face="Verdana" size="1" color="#99B833">
+    <a href="javascript:window.close();"><font color="#669900">close</font></a></font></td>
+  </tr>
+  <tr>
+    <td width="462">
+    <div align="center">
+      <center>
+      <table border="0" cellpadding="4" cellspacing="0" style="border-collapse: collapse" bordercolor="#111111" width="425" id="AutoNumber2">
+        <tr>
+          <td width="398" colspan="2">
+          <p align="left"><font size="1" face="Verdana" color="#669900">FRESH 
+          SERVICE | </font><font size="1" face="Verdana" color="#99B833"> <a href="#Premium">
+          <font color="#669900">PREMIUM SERVICE</font></a></font></td>
+        </tr>
+        <tr>
+          <td width="250">&nbsp;</td>
+          <td width="50">&nbsp;</td>
+        </tr>
+        <tr>
+          <td width="398" colspan="2">
+          <img border="0" src="images/freshserv2.jpg" width="259" height="24"></td>
+        </tr>
+        <tr>
+          <td width="250">&nbsp;</td>
+          <td width="50">&nbsp;</td>
+        </tr>
+        <tr>
+          <td width="250"><font face="Verdana" style="font-size: 16pt">INCLUDES:</font></td>
+          <td width="50">&nbsp;</td>
+        </tr>
+        <tr>
+          <td width="398" colspan="2">
+          <ul>
+            <li><font face="Verdana" size="2" color="#000033">Convenient 2 hour 
+            service windows</font></li>
+            <li><font face="Verdana" size="2" color="#000033">100% perc-free, 
+            non-toxic cleaning</font></li>
+            <li><font face="Verdana" size="2" color="#000033">Five Points 
+            cleaning process, </font>
+            <font face="Verdana" size="2" color="#99B833">
+            <a href="five_points"><font color="#669900">read 
+            more</font></a></font></li>
+          </ul>
+          </td>
+        </tr>
+        <tr>
+          <td width="250">&nbsp;</td>
+          <td width="50" align="right">&nbsp;</td>
+        </tr>
+        <% if !@services.blank? %>
+            <% @services.each do |service| %>
+                <% prices = Price.find(:all, :joins=>[:item_type], :conditions => ["service_id = ? AND is_active = TRUE", service.id], :order => 'item_types.name asc') %>
+                <% if !prices.blank? %>
+                  <tr>
+                    <td width="250" style="color: #9ACD34; font-family: arial; font-size: 18px; font-weight: bold; text-transform: uppercase;">
+                    <%= service.name %></td>
+                    <td width="50" align="right">&nbsp;</td>
+                  </tr>
+                  <tr>
+                    <td width="250">&nbsp;</td>
+                    <td width="50" align="right">
+                    <font face="Verdana" size="2" color="#000033">starting at</font></td>
+                  </tr>
+                  <% prices.each do |price| %>
+                    <tr>
+                      <td width="250"><font face="Verdana" color="#000033" size="2"><%= price.item_type.name %>
+                      </font></td>
+                      <td width="50" align="right">
+                      <font face="Verdana" color="#000033" size="2"><%= number_to_currency(price.price) %></font></td>
+                    </tr>
+                    <% if !(price.each_additional_standard == 0.0) %>
+                      <tr>
+                        <td width="250"><font face="Verdana" color="#000033" size="1">each additional
+                        </font></td>
+                        <td width="50" align="right">
+                        <font face="Verdana" color="#000033" size="2"><%= number_to_currency(price.each_additional_standard) %></font></td>
+                      </tr>
+                    <% end %>
+                  <% end %>
+                  <tr>
+                    <td width="250">&nbsp;</td>
+                    <td width="50" align="right">
+                    <font face="Verdana" size="1" color="#99B833"><a href="#Top">
+                    <font color="#669900">back to top</font></a></font></td>
+                  </tr>
+                  <tr>
+                    <td width="250">&nbsp;</td>
+                    <td width="50" align="right">&nbsp;</td>
+                  </tr>
+                <% end %>
+            <% end %>
+        <% end %>
+        <tr>
+          <td width="398" colspan="2"><a name="Premium">
+          <img border="0" src="images/PREM.jpg" width="305" height="24"></a></td>
+        </tr>
+        <tr>
+          <td width="250">&nbsp;</td>
+          <td width="50">&nbsp;</td>
+        </tr>
+        <tr>
+          <td width="250"><font face="Verdana" style="font-size: 16pt">INCLUDES:</font></td>
+          <td width="50">&nbsp;</td>
+        </tr>
+        <tr>
+          <td width="398" colspan="2">
+          <ul>
+            <li><font face="Verdana" size="2" color="#000033">Convenient 2 hour 
+            service windows</font></li>
+            <li><font face="Verdana" size="2" color="#000033">100% perc-free, 
+            non-toxic cleaning</font></li>
+            <li><font face="Verdana" size="2" color="#000033">Seven Stage 
+            cleaning process,</font><font face="Verdana" size="2" color="#669900"> </font><font face="Verdana" size="2" color="#000033"> <a href="seven_stages">
+            <font color="#669900">read more</font></a></font></li>
+          </ul>
+          </td>
+        </tr>
+        <tr>
+          <td width="250">&nbsp;</td>
+          <td width="50" align="right">&nbsp;</td>
+        </tr>
+         <% if !@services.blank? %>
+            <% @services.each do |service| %>
+                <% prices = Price.find(:all, :joins=>[:item_type], :conditions => ["service_id = ? AND is_active = TRUE", service.id], :order => 'item_types.name asc') %>
+                <% if !prices.blank? %>
+                  <tr>
+                    <td width="250" style="color: #9ACD34; font-family: arial; font-size: 18px; font-weight: bold; text-transform: uppercase;">
+                    <!--<img border="0" src="images/LAUNDRY.jpg" width="79" height="13">!--> <%= service.name%></td>
+                    <td width="50" align="right">&nbsp;</td>
+                  </tr>
+                  <tr>
+                    <td width="250">&nbsp;</td>
+                    <td width="50" align="right">
+                    <font face="Verdana" size="2" color="#000033">starting at</font></td>
+                  </tr>
+                  <% prices.each do |price| %>
+                    <tr>
+                      <td width="250"><font face="Verdana" color="#000033" size="2"><%= price.item_type.name %></font></td>
+                      <td width="50" align="right">
+                      <font face="Verdana" size="2" color="#000033">&nbsp;<%= number_to_currency(price.premium) %></font></td>
+                    </tr>
+                    <% if !(price.each_additional_premium == 0.0) %>
+                      <tr>
+                        <td width="250"><font face="Verdana" color="#000033" size="1">each additional
+                        </font></td>
+                        <td width="50" align="right">
+                        <font face="Verdana" color="#000033" size="2"><%= number_to_currency(price.each_additional_premium) %></font></td>
+                      </tr>
+                    <% end %>
+                  <% end %>
+                  <tr>
+                    <td width="250">&nbsp;</td>
+                    <td width="50" align="right">
+                    <font face="Verdana" size="1" color="#99B833"><a href="#Top">
+                    <font color="#669900">back to top</font></a></font></td>
+                  </tr>
+                  <tr>
+                    <td width="250">&nbsp;</td>
+                    <td width="50" align="right">&nbsp;</td>
+                  </tr>
+                <% end %>
+            <% end %>
+        <% end %>
+      </table>
+    </center>
+    </div>
+    <p>&nbsp;</p>
+    </td>
+    <td width="57">&nbsp;</td>
+  </tr>
+  <tr>
+    <td width="462">&nbsp;</td>
+    <td width="57"><font face="Verdana" size="1" color="#99B833">
+    <a href="javascript:window.close();"><font color="#669900">close<br />
+    <br />
+    <br />
+    </font></a></font></td>
+  </tr>
+</table></td>
+  </tr>
+</table>
+
+<map name="Map" id="Map"><area shape="rect" coords="135,13,387,80" href="/" />
+</map>
+<!--
+<table width="520" border="0" align="center" cellpadding="0" cellspacing="0" style="font-family:arial">
+  <tr>
+    <td><img src="images/popup_header.jpg" width="520" height="93" border="0" usemap="#Map" /></td>
+  </tr>
+  <tr>
+    <td><table border="0" cellpadding="0" cellspacing="0" style="border-collapse: collapse" bordercolor="#111111" width="522" id="AutoNumber1">
+  <tr>
+    <td width="462">&nbsp;</td>
+    <td width="57"><font face="Verdana" size="1" color="#99B833">
+    <a href="javascript:window.close();"><font color="#669900">close</font></a></font></td>
+  </tr>
+  <tr>
+    <td width="462">
+    <div align="center">
+      <center>
+      <table border="0" cellpadding="4" cellspacing="0" style="border-collapse: collapse" bordercolor="#111111" width="401" id="AutoNumber2">!-->
+        <!--<tr>
+          <td width="398" colspan="3">
+          <p align="left"><font size="1" face="Verdana" color="#669900">FRESH 
+          SERVICE | </font><font size="1" face="Verdana" color="#99B833"> <a href="#Premium">
+          <font color="#669900">PREMIUM SERVICE</font></a></font></td>
+        </tr>!-->
+        <!--<tr>
+          <td colspan="3">&nbsp;</td>
+        </tr>
+        <tr>
+          <td width="398" colspan="3">
+          <img border="0" src="images/freshserv2.jpg" width="259" height="24"></td>
+        </tr>
+        <tr>
+          <td colspan="3">&nbsp;</td>
+        </tr>
+        <tr>
+          <td width="200"><font face="Verdana" style="font-size: 16pt">INCLUDES:</font></td>
+          <td colspan="2">&nbsp;</td>
+        </tr>
+        <tr>
+          <td width="398" colspan="3">
+          <ul>
+            <li><font face="Verdana" size="2" color="#000033">Convenient 2 hour 
+            service windows</font></li>
+            <li><font face="Verdana" size="2" color="#000033">100% perc-free, 
+            non-toxic cleaning</font></li>
+            <li><font face="Verdana" size="2" color="#000033">Five Points 
+            cleaning process, </font>
+            <font face="Verdana" size="2" color="#99B833">
+            <a href="five_points"><font color="#669900">read 
+            more</font></a></font></li>
+          </ul>
+          </td>
+        </tr>
+        <tr>
+          <td >&nbsp;</td>
+          <td width="90" align="right" style="color: rgb(0,0,255);font-size: 14px;font-weight: bold;">STANDARD</td>
+          <td width="90" align="right" style="color: rgb(255,0,0);font-size: 14px;font-weight: bold;">PREMIUM</td>
+        </tr>
+        <% if !@services.blank? %>
+            <% @services.each do |service| %>
+                <% prices = Price.find(:all, :joins=>[:item_type], :conditions => ["service_id = ? AND is_active = TRUE", service.id], :order => 'item_types.name asc') %>
+                <% if !prices.blank? %>
+                  <tr>
+                    <td width="200" style="color: #9ACD34; font-family: arial; font-size: 18px; font-weight: bold; text-transform: uppercase;">
+                    <%= service.name %></td>!-->
+                   <!-- <td width="90" align="right" style="color: Blue;font-size: 13px;font-weight: bold;">STANDARD</td>
+                    <td width="90" align="right" style="color: Red;font-size: 13px;font-weight: bold;">PREMIUM</td>!-->
+                  <!--</tr>
+                  <tr>
+                    <td width="200">&nbsp;</td>
+                    <td width="90" align="right">
+                    <font face="Verdana" size="2" color="#000033">MFS-New</font></td>
+                    <td width="90" align="right">
+                    <font face="Verdana" size="2" color="#000033">MFS-New</font></td>
+                  </tr>
+                  <% prices.each do |price| %>
+                    <tr>
+                      <td width="200"><font face="Verdana" color="#000033" size="2"><%= price.item_type.name %><%= price.item_type.name == "Assorted" ? " (10 lb minimum)" : ""  %>
+                      </font></td>
+                      <td width="90" align="right">
+                      <font face="Verdana" color="#000033" size="2"><%= number_to_currency(service.name == "Wash and Fold" ? price.price*10 : price.price ) %></font></td>
+                      <td width="90" align="right">
+                      <font face="Verdana" color="#000033" size="2"><%= number_to_currency(service.name == "Wash and Fold" ? price.premium*10 : price.premium ) %></font></td>
+                    </tr>
+                    <% if (price.each_additional_standard > 0.0 || price.each_additional_premium > 0.0) %>
+                      <tr>
+                        <td width="200"><font face="Verdana" color="#000033" size="1">each additional
+                        </font></td>
+                        <td width="90" align="right">
+                        <font face="Verdana" color="#000033" size="2"><%= number_to_currency(price.each_additional_standard) %></font></td>
+                        <td width="90" align="right">
+                        <font face="Verdana" color="#000033" size="2"><%= number_to_currency(price.each_additional_premium) %></font></td>
+                      </tr>
+                    <% end %>
+                  <% end %>
+                  <tr>
+                    <td width="200">&nbsp;</td>
+                    <td width="90" align="right">&nbsp;</td>
+                    <td width="90" align="right">
+                    <font face="Verdana" size="1" color="#99B833"><a href="#Top">
+                    <font color="#669900">back to top</font></a></font></td>
+                  </tr>
+                  <tr>
+                    <td colspan="3">&nbsp;</td>
+                  </tr>
+                <% end %>
+            <% end %>
+        <% end %>
+      </table>
+    </center>
+    </div>
+    </td>
+    <td width="57">&nbsp;</td>
+  </tr>
+  <tr>
+    <td width="462">&nbsp;</td>
+    <td width="57"><font face="Verdana" size="1" color="#99B833">
+    <a href="javascript:window.close();"><font color="#669900">close<br />
+    <br />
+    <br />
+    </font></a></font></td>
+  </tr>
+</table></td>
+  </tr>
+</table>
+
+<map name="Map" id="Map"><area shape="rect" coords="135,13,387,80" href="/" />
+</map>!-->

@@ -1,0 +1,51 @@
+# == Schema Information
+# Schema version: 98
+#
+# Table name: services
+#
+#  id                   :integer(11)   not null, primary key
+#  name                 :string(255)   
+#  description          :text          
+#  min_length           :integer(11)   not null
+#  rushable             :integer(11)   default(0), not null
+#  is_itemizeable       :boolean(1)    
+#  is_detailable        :boolean(1)    
+#  is_weighable         :boolean(1)    
+#  area_of_availability :integer(11)   
+#  image_url            :string(255)   default("other.jpg")
+#
+
+wash_and_fold:
+    id: 1
+    name: wash and fold
+    description: regular laundering for assorted, machine-washable items
+    min_length: 3
+    rushable: 1
+
+dry_clean:
+    id: 2
+    name: dry cleaning
+    description: dry cleaning, as per preferences
+    min_length: 4
+    rushable: 2
+
+shoes:
+    id: 3
+    name: shoes
+    description: a classic spit-shine, now with real spit!
+    min_length: 3
+    rushable: 2
+
+donation:
+    id: 4
+    name: donation
+    description: got clothes you don't need any more?
+    min_length: 0
+    rushable: 0
+
+laundering:
+    id: 5
+    name: launder
+    description: clean and press.  Is there any better feeling in the world than a freshly starched shirt?
+    min_length: 3
+    rushable: 2

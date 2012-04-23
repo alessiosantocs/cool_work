@@ -1,0 +1,37 @@
+<h1>Create Promotion</h1>
+
+<%= error_messages_for :content_promotion %>
+
+<% form_for(@content_promotion, :url => "/admin/content_promotions", :html=> { :method => 'post', :multipart => true }) do |f| %>
+  <table>
+    <tr>
+        <td><b>Title</b><br /></td>
+        <td><%= f.text_field :title %></td>
+    </tr>
+
+    <tr>
+        <td><b>Body</b><br /></td>
+        <td><%= f.text_area :body, :size=> "34x10" %></td>
+    </tr>
+
+    <tr>
+        <td><b>Expiry date</b><br /></td>
+        <td><%= f.date_select :expiry_date %></td>
+    </tr>
+
+    <tr>
+        <td><b><div style="line-height:1;">Tie it to a Promotional Code</div></b><br /></td>
+        <td><%= f.select :promotion_id, Promotion.find(:all, :select =>"id,code", :conditions => ["expiry >= ?",Date.today.strftime("%Y-%m-%d")]).collect {|p| [ p.code, p.id ] } %></td>
+    </tr>
+
+    <tr>
+        <td><b>Image Upload</b><br /></td>
+        <td><%= f.file_field :image %></td>
+    </tr>
+
+    <tr>
+        <td>&nbsp;</td>
+        <td><%= f.submit "Create" %></td>
+    </tr>
+  </table>
+<% end %>

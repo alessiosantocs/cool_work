@@ -1,0 +1,19 @@
+<%= render :partial => 'orders/order_status', :locals=>{ :p => 5 }  %>
+
+<% if @order.approved? %>
+	<h1 class="green">THANK YOU!</h1>
+	<p>Your Order ID: <strong><%= @order.identifier %></strong></p>
+	<p>Thank you for your recent order with us. Your business is greatly appreciated. If there are any questions, please feel free to contact us. <%= link_to 'Please Click Here to contact us', '#', :class=>'green' %></p>
+	<p>If you have any suggestions about your web experience or other ways that we can help the environment, please email us at <%= mail_to 'customerservice@myfreshshirt.com', nil, :class=>'green' %>. Thank you!</p>
+	<p>If there are any changes you need to make to your order, or you want to update any of your account information, please go to your <%= link_to 'dashboard', dashboard_customer_path(@order.customer), :class=>'green' %>. Thank you!</p>
+<% else %>
+	<h1 class="red">INCOMPLETE ORDER!</h1>
+	<p>Your Order ID: <strong><%= @order.identifier %></strong></p>
+	<p>Payment of your order has not been completed, to finalise payment, please go to your <%= link_to 'order payment', payment_customer_order_path(@order.customer), :class=>'green' %>. Thank you!</p>
+<% end %>
+
+<hr class="grey"/>
+
+<div class="float-right">
+	<span><%= link_to image_tag('to_dashboard_btn.png'), dashboard_customer_path(@order.customer), :class=>'align-button' %></span>
+</div>

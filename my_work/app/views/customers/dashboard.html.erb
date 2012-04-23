@@ -1,0 +1,35 @@
+<% if current_user.employee? %>
+<div class="view-menu">
+	<span class="float-right"><%= link_to_lightbox 'Add Note', new_note_path + '?c_id='+ @customer.id.to_s, :class => 'action new' %></span>
+	<span><strong>Accounts > Account Details: </strong></span>
+	<span style="font-size: 20px; color: #B24F45"><strong><%= @customer.name %></strong></span>
+</div>
+<ul class="tabselector" id="tabcontrol1">
+    <li class="tab-selected">
+        <%= link_to_unless_current_heirarchy ("MY DASHBOARD",dashboard_customer_path(@customer)) %>
+    </li>
+    <li class="tab-unselected">
+        <%= link_to_unless_current_heirarchy ("Order History", customer_orders_path(@customer)) %>
+    </li>
+	<li class="tab-unselected">
+        <%= link_to_unless_current_heirarchy ("Account Info", admin_customer_path(@customer)) %>
+    </li>
+    <li class="tab-unselected">
+        <%= link_to_unless_current_heirarchy ("Payment Info", customer_credit_cards_path(@customer)) %>
+    </li>
+        <li class="tab-unselected">
+        <%= link_to_unless_current_heirarchy ("Eco-Logics", ecologic_customer_path(@customer)) %>
+    </li>
+        <li class="tab-unselected">
+        <%= link_to_unless_current_heirarchy ("Preferences", preferences_customer_path(@customer)) %>
+    </li>
+</ul>
+<br><br>
+<% end %>
+
+<h1>CLICK YOUR WAY TO CLEAN CLOTHES!</h1>
+<h2>PLACE AN <%= link_to 'ORDER NOW!', fresh_order_customer_path(current_user.customer.blank? ? @customer : current_user.customer), :class => 'green', :style => 'font-size: 18px;' %> WE WANT TO CLEAN YOUR CLOTHES.</h2>
+<p>This is your dashboard. Please click the buttons to your left to edit information related to your account.<br/> Remember we want  to make this as convenient as possible for you.</p>
+
+<p>If you have any enquires please don't hesitate to contact us. You can reach  us by calling us at <%= Content.find(1).phone || "(212) 625 3131" %>.<br/> We would love to hear your suggestions. Or you could email us at: <%= mail_to 'customerservice@myfreshshirt.com ', nil, :class => 'green' %>. 
+</p>	

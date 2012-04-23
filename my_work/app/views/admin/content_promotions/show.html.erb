@@ -1,0 +1,43 @@
+<p>
+  <b>Title:</b>
+  <%=h @content_promotion.title %>
+</p>
+
+<p>
+  <b>Body:</b>
+  <%=h @content_promotion.body %>
+</p>
+
+<p>
+  <b>Expiry date:</b>
+  <%=h @content_promotion.expiry_date %>
+</p>
+
+<p>
+  <b>Promotion:</b>
+  <%=h @content_promotion.promotion_id %>
+</p>
+
+<p>
+  <b>Image file name:</b>
+  <%=h @content_promotion.image_file_name %>
+</p>
+
+<p>
+  <b>Image content type:</b>
+  <%=h @content_promotion.image_content_type %>
+</p>
+
+<p>
+  <b>Image file size:</b>
+  <%=h @content_promotion.image_file_size %>
+</p>
+
+<p>
+  <b>Image updated at:</b>
+  <%=h @content_promotion.image_updated_at %>
+</p>
+
+
+<%= link_to 'Edit', edit_content_promotion_path(@content_promotion) %> |
+<%= link_to 'Back', content_promotions_path %>

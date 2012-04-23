@@ -1,0 +1,5 @@
+<%= error_messages_for :stop %>
+
+<% form_for :stop, :url => stop_path(@stop), :html => { :method => :put } do |f| %>
+	<%= render :partial => 'form', :locals => { :create => false, :f => f } %>
+<% end %>

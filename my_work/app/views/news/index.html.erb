@@ -1,0 +1,83 @@
+<ul class="tabselector">
+    <li class="tab-unselected">
+        <%= link_to_unless_current_heirarchy ("SITE WIDE", "/admin/content/site") %>
+    </li>
+	<li class="tab-unselected">
+        <%= link_to_unless_current_heirarchy ("HOME PAGE", "/admin/content/home") %>
+    </li>
+	<li class="tab-selected">
+        <%= link_to_unless_current_heirarchy ("NEWS", "/admin/content/news") %>
+    </li>
+        <li class="tab-unselected">
+        <%= link_to_unless_current_heirarchy ("TICKERS", "/admin/content/tickers") %>
+    </li>
+	<li class="tab-unselected">
+        <%= link_to_unless_current_heirarchy ("PROMOTIONS", "/admin/content/promotions") %>
+    </li>
+	<li class="tab-unselected">
+        <%= link_to_unless_current_heirarchy ("MAIL & SMS TEMPLATES", "/admin/notification_templates") %>
+    </li>
+</ul>
+<table>
+<tr>
+<td valign="top">
+    <br>
+    <img src="/images/MYFRESHNEWS.gif" height="34" width="273">
+    <br>
+    <br>
+    <span class="subtitle">Catch
+        the latest on company news that may affect your service, news in
+        technological improvements in professional garment care, news on global
+        climate change, and tips on cleaning and being green.
+        <br>
+        <br>
+    </span>
+    <br>
+    <img src="/images/news.jpg" height="24" width="72"> 
+	<%= link_to_lightbox 'New', new_news_path, :class => 'action new' if logged_in? && current_user.has_role?('content') %>
+    <br>
+    <br>
+    </td>
+</tr>
+	<% for news in @news %>
+          <tr class="<%= cycle('light-blue', 'light-green', :name => "order_class") %>"><td>
+          <div style="float:left;padding-right:10px;width:200px;min-height:100px;"><%= image_tag(news.image.url(:medium)) unless news.image_file_name.blank? %></div><br>
+	  <span class="subtitleGreen" style="color: #9ACD34; font-family: arial; font-size: 18px; bold; text-transform: uppercase;"><%= news.title %><br/></span>
+	  <span class="right_nav_links_text">By <span class="style2"><%= news.user.name %></span> | <%= format_date(news.created_at.to_date) %>
+	  <%= link_to_lightbox 'Edit', edit_news_path(news), :class => 'action edit' if logged_in? && current_user.has_role?('content') %>
+	  <%= link_to '&nbsp;', news, :confirm => 'Are you sure?', :method => :delete, :class => 'action delete' if logged_in? && current_user.has_role?('content') %> 
+	  <br/><br/>
+	  <div>
+	  	<%= simple_format(news.body)%>
+	  </div></td></tr>
+	<% end %>
+	
+<!--    <img src="/images/olds.gif" height="24" width="72">
+    <br>
+    <br>
+    February 2008
+    <br>
+    January 2008
+    <br>
+    </span>
+    <br>
+    <br>
+-->
+</td>
+</tr>
+<tr>
+    <td valign="top">
+        &nbsp;
+    </td>
+    <td valign="top">
+        &nbsp;
+    </td>
+</tr>
+</tbody>
+</table>
+</td>
+<td valign="top">
+    &nbsp;
+</td>
+</tr>
+

@@ -1,0 +1,14 @@
+<p>
+	<span><strong>State: </strong></span>
+	<span><%= f.text_field :name %></span>
+</p>
+
+
+<p>
+	<% if create %>
+        <%= f.submit "Create" %>
+    <% else %>
+        <%= f.submit "Update" %>
+    <% end %>
+</p>
+

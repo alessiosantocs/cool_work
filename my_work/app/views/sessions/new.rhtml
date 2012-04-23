@@ -1,0 +1,57 @@
+<a href="/"><%= image_tag ("fresh_logins.jpg") %></a>
+<br/>
+<div id="flash">
+        <%= content_tag 'span', h(flash[:notice]),
+        :class => 'notice' if flash[:notice] %>
+        <%= content_tag 'span', h(flash[:error]),
+        :class => 'error' if flash[:error] %>
+    </div>
+	<div style="float: right; vertical-align: text-top;">
+		<%= image_tag ("bottomcorner.jpg") %>
+	</div>
+<div style="padding-left: 300px;" >
+<% form_tag session_path, :id => 'login-form' do -%>
+	<table>
+		<tr>
+			<td class="label"><label for="login">Login:</label></td>
+		</tr>			
+		<tr>
+			<td><%= text_field_tag 'login', @login, {:class => "input"} %></td>
+		</tr>
+		<tr>
+			<td class="label"><label for="password">Password:</label></td>
+		</tr>			
+		<tr>
+			<td><%= password_field_tag 'password' , @password, {:class => "input"} %></td>
+		</tr>
+		<tr>
+			<td><%= check_box_tag 'remember_me' %><label for="remember_me"> Remember me on this computer</label></td>
+		</tr>
+	</table>
+	
+	<br/>
+	<div  style="text-align: center">
+		<font face="HelveticaRounded"><%= image_submit_tag 'login_btn.png' %></font>
+		<%= link_to image_tag('signup_white_btn.png'), '/zip' %>
+	</div>
+	
+	
+	<table style="text-align: center;">
+		<tr>
+			<td><br/>
+			<%= link_to image_tag('forgot_your_pass.png'), forgot_password_url %>
+		</td>
+		</tr>
+		<tr>
+			<td><br/><br/>New Customer? <a href="javascript:load_window('/servicearea',%20'Service_Areas')">See if we service your area.</a>
+			
+			
+			
+			</td>
+		</tr>
+	</table>
+<% end -%>
+
+<%= javascript_tag "$('login').focus()" %>
+</div>
+<br/><br/>

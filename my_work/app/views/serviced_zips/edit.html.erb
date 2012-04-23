@@ -1,0 +1,10 @@
+<%= error_messages_for :serviced_zip %>
+
+<% form_for :serviced_zip, :url => serviced_zip_path(@serviced_zip), :html => { :method => :put } do |f| %>
+	<%= render :partial => 'form', :locals => { :create => false, :f => f } %>
+<% end %>
+
+<!--
+<hr align='center' />
+<%= link_to 'Delete', serviced_zip_path(@serviced_zip), :class => 'admin', :confirm => 'Are you sure?', :method => :delete %>
+-->

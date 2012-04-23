@@ -1,0 +1,193 @@
+# == Schema Information
+# Schema version: 98
+#
+# Table name: recurring_orders
+#
+#  id            :integer(11)   not null, primary key
+#  address_id    :integer(11)   
+#  pickup_time   :integer(11)   
+#  delivery_time :integer(11)   
+#  interval      :integer(11)   
+#  pickup_day    :integer(11)   
+#  delivery_day  :integer(11)   
+#  created_at    :datetime      
+#  updated_at    :datetime      
+#  customer_id   :integer(11)   
+#  starting_on   :date          
+#  last_order_id :integer(11)   
+#
+
+class RecurringOrder < ActiveRecord::Base
+  belongs_to :customer
+  belongs_to :address
+  
+  def before_save
+    if self.starting_on == nil
+      start_date = Date.today
+      until start_date.wday == self.pickup_day
+        start_date = start_date + 1.day
+      end
+      self.starting_on = start_date
+    end
+  end
+  
+  def first_pickup_date
+    pickup_on = self.starting_on
+    until pickup_on.wday == self.pickup_day
+      pickup_on = pickup_on + 1
+    end
+    pickup_on
+  end
+  
+  def first_delivery_date
+    delivery_on = self.starting_on
+    until delivery_on.wday == self.delivery_day
+      delivery_on = delivery_on + 1
+    end
+    delivery_on
+  end
+  
+  def less_than_48_hour_gap?
+    first_pickup_date + 2.days > first_delivery_date
+  end
+  
+  def last_order
+    if self.last_order_id
+      begin
+        Order.find(self.last_order_id)
+      rescue
+        nil
+      end
+    else
+      nil
+    end
+  end
+  
+  def next_pickup_date
+    if self.last_order
+      self.last_order.pickup_date + self.interval.days
+    else
+      self.starting_on
+    end
+  end
+  
+  def next_delivery_date
+    if self.last_order
+      self.last_order.delivery_date + self.interval.days
+    else
+      next_delivery = self.starting_on
+      until next_delivery.wday == self.delivery_day 
+        next_delivery = next_delivery + 1.day
+      end
+      if less_than_48_hour_gap?
+        return next_delivery + 7.days
+      else
+        return next_delivery
+      end
+    end
+  end
+  
+  def place_next(days_in_advance = 7)
+    if next_pickup_date <= Date.today
+      @selected_location = customer.primary_address.parent_location.parent_location
+      pickup_stops = Schedule.for(@selected_location, next_pickup_date).stops
+      pickup_stop = nil
+      for stop in pickup_stops
+        if stop.window_id == self.pickup_time
+          pickup_stop = stop 
+          break
+        end
+      end
+      
+      delivery_stops = Schedule.for(@selected_location, next_delivery_date).stops
+      delivery_stop = nil
+      for stop in delivery_stops
+        if stop.window_id == self.delivery_time
+          delivery_stop = stop
+          break
+        end
+      end
+      
+      # Do stops for these dates exist yet
+      if pickup_stop && delivery_stop
+        o = Order.create(:recurring => true)
+        previous_payment = self.last_order.payment 
+        self.customer.orders << o
+        pickup_stop.make_request(o, :pickup, customer.doorman_building?)
+        delivery_stop.make_request(o, :delivery, customer.doorman_building?)
+        o.payment = Payment.create(:credit_card_id => previous_payment.credit_card_id) unless previous_payment.nil?
+        self.last_order_id = o.id
+        o.status="awaiting pickup"
+        o.save
+        self.save
+        puts "Successful"
+      else
+        puts "Failed!"
+        puts "Pickup Stop for #{next_pickup_date} doesnt exist" if pickup_stop.nil?
+        puts "Delivery Stop for #{next_delivery_date} doesnt exist" if delivery_stop.nil?
+      end
+    end
+  end
+  
+  #  def place
+  #    pickup_on = Date.today
+  #    #puts "today = " + pickup_on.to_s + '(' + pickup_on.wday.to_s + ')'
+  #    until pickup_on.wday == self.pickup_day
+  #      pickup_on = pickup_on + 1.day
+  #      break if pickup_on.wday == self.pickup_day
+  #      #puts 'advancing to ' + pickup_on.to_s + '(' + pickup_on.wday.class.to_s + '==' + self.pickup_day.class.to_s + ')'
+  #    end
+  #    deliver_on = pickup_on
+  #    until deliver_on.wday == self.delivery_day
+  #      deliver_on = deliver_on + 1.day
+  #      break if deliver_on.wday == self.delivery_day
+  #      #puts 'advancing to ' + deliver_on.to_s + '(' + deliver_on.wday.to_s + '==' + self.delivery_day.to_s + ')'
+  #    end
+  #    pickup_stop = Stop.find_by_date_and_window_id(pickup_on, self.pickup_time)
+  #    #puts 'PICKUP',pickup_stop
+  #    delivery_stop = Stop.find_by_date_and_window_id(deliver_on, self.delivery_time)
+  #    #puts 'DELIVERY',delivery_stop
+  #    o = Order.create(:recurring => true)
+  #    self.customer.orders << o
+  #    [pickup_stop.make_request(o, :pickup), delivery_stop.make_request(o, :delivery)]
+  #    self.last_order = o
+  #    self.save
+  #    o
+  #  end
+  
+  def interval_string
+    str = 'None'
+    str = 'Weekly' if interval == 7 
+    str = '2 Weeks' if interval == 14
+    str = '3 Weeks' if interval == 21
+    str = '4 weeks' if interval == 28
+    str
+  end
+  
+  def self.place_recurring_order
+    recurring_weekly = RecurringOrder.find(:all, :conditions => ["starting_on >= ? and recurring_orders.interval =  ?", Date.today - 70.days, 7])
+    recurring_two_week = RecurringOrder.find(:all, :conditions => ["starting_on >= ? and recurring_orders.interval = ? ", Date.today - 140.days, 14])
+    recurring_month = RecurringOrder.find(:all, :conditions => ["starting_on >= ? and recurring_orders.interval = ?", Date.today - 280.days, 28])
+      unless recurring_weekly.blank?
+        recurring_weekly.each do |ord|
+            if !ord.last_order.blank? and (Date.today - ord.last_order.created_at.to_date).days >=7 
+              ord.place_next()
+            end
+        end
+      end
+      unless recurring_two_week.blank?
+        recurring_two_week.each do |ord|
+            if !ord.last_order.blank? and (Date.today - ord.last_order.created_at.to_date).days >=14 
+              ord.place_next()
+            end
+        end
+      end
+      unless recurring_month.blank?
+        recurring_month.each do |ord|
+            if !ord.last_order.blank? and (Date.today - ord.last_order.created_at.to_date).days >=28 
+              ord.place_next()
+            end
+        end
+      end
+  end
+end

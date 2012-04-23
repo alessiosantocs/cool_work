@@ -1,0 +1,129 @@
+<div>
+  <%= image_tag('ref_hdn.png') %>
+</div>
+
+<div>
+  <table cellspacing="5">
+    <tr>
+      <td colspan="3"><%= error_messages_for :invitation %></td>
+    </tr>
+    <tr>
+      <td colspan="4"><hr class="grey" /></td>
+    </tr>
+    <tr>
+      <td colspan="3" class="title">MY FRESH CASH FROM INVITEES</td>
+    </tr>
+    <tr>
+      <td colspan="3">
+        <div class="float-left">
+          <%= image_tag("fresh_cash.jpg") %>
+        </div>
+        <div style="margin-left: 90px;">
+          <h1 class="fresh-payment-value"><%= number_to_currency( ( @registered.blank? ? 0 : @registered.collect {|reg| reg.fresh_cash_earned}.sum ) , options = {:unit => ""}) %></h1>
+          <h2 class="green">DOLLARS</h2>
+        </div>
+      </td>
+    </tr>
+    <tr>
+      <td colspan="4"><hr class="grey" /></td>
+    </tr>
+   
+    <tr>
+      <td colspan="3" id="invitations">
+        <div id='invite'>
+      <%if !@promotion.first.nil?%>   
+        <table width="100%">
+        
+            <tr>
+                <td>
+                    <div style="float:left;padding-right:10px;width:200px;min-height:100px;padding-top:10px;"><%= image_tag(@promotion.first.image.url(:medium)) unless @promotion.first.image_file_name.blank? %></div>
+                    <div class="subtitleGreen" style="color:#000;padding-top:5px;text-transform:capitalize;">
+                        <%= @promotion.first.title %><br></div>
+                    <span class="right_nav_links_text"><%= @promotion.first.updated_at.strftime("%B %d, %Y")%></span> <br><br><%= simple_format(@promotion.first.body) %>
+                    
+                </td>
+            </tr>
+          </table>
+     <%end%>
+        </div>
+      
+        <% form_for @invitation do |f| %>
+            <table>
+               <tr>
+                  <td class="title" colspan="4">INVITE A FRIEND </td>
+              </tr>
+              <tr>
+                <td valign="middle" style="padding:5px"><%= f.label :first_name, "First Name", :id => "color" %><br /></td>
+                <td valign="top" style="padding: 5px;"><%= f.text_field :first_name, :size =>25 %></td>
+              </tr>
+            
+              <tr>
+                <td valign="middle" style="padding: 5px;"><%= f.label :last_name, "Last Name",:id => "color" %><br /></td>
+                <td valign="top" style="padding: 5px;"><%= f.text_field :last_name, :size =>25 %></td>
+              </tr>
+              <tr>
+                <td valign="middle" style="padding: 5px;"><%= f.label :recipient_email, "Email" , :id => "color" %><br /></td>
+                <td valign="top" style="padding: 5px;"><%= f.text_field :recipient_email, :size =>25 %></td>
+              </tr>
+              <tr>
+                <td>&nbsp;</td>
+                <td style="padding: 5px;"><%= f.submit "Invite!" %></td>
+              </tr>
+            </table>
+            <br/>
+MFS will only use these email addresses for the purpose of sending an invitation on your behalf.
+<% end %>
+       
+      </td>
+    </tr>
+    <tr>
+      <td colspan="4"><hr class="grey" /></td>
+    </tr>
+    
+    <tr><td colspan="4">
+        <table width="100%">
+            <tr>
+                <td class="title">MY REGISTERED INVITEES</td>
+                <td class="small_text" style="vertical-align: bottom;text-align:right;">My friends who have signed up</td>
+            </tr>
+        </table></td>
+    </tr>
+    <tr>
+      <th style="width:235px;text-align:left;">Name</th>
+      <th style="width:235px;text-align:left;">Email</th>
+      <th style="width:85px;text-align:left;">Cash Earned</th>
+    </tr>
+    <% unless @registered.blank? %>
+      <% for reg in @registered %>
+        <tr>
+          <td style="width:235px;text-align:left;" class="green"><%= reg.name %></td>
+          <td style="width:235px;text-align:left;" class="green"><%= reg.recipient_email %></td>
+          <td style="width:85px;;text-align:left;" class="green"><%= number_to_currency(reg.fresh_cash_earned) %></td>
+        </tr>
+      <% end %>
+    <% end -%>
+    <tr>
+      <td colspan="4"><hr class="grey" /></td>
+    </tr>
+    <tr>
+        <td colspan="4">
+        <table width="100%">
+            <tr>
+                <td class="title">MY UNREGISTERED INVITEES</td>
+                <td class="small_text" style="vertical-align: bottom;text-align:right;">My friends who haven't signed up yet</td>
+            </tr>
+        </table>
+        </td>
+    </tr>
+    <tr>
+      <th style="width:235px;text-align:left;">Name</th>
+      <th style="width:235px;text-align:left;">Email</th>
+    </tr>
+    <% for ureg in @unregistered %>
+    <tr>
+        <td style="width:235px;text-align:left;" class="blue"><%= ureg.name %></td>
+        <td style="width:235px;text-align:left;" class="blue"><%= ureg.recipient_email %></td>
+    </tr>
+    <% end -%>
+  </table>
+</div>

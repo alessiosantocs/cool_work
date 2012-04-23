@@ -1,0 +1,15 @@
+<%= render :partial => '/admin/account_search' %>
+
+<div class="view-menu">
+	<span>Sort > Terminal > <%=@terminal.name.capitalize%> </span>
+</div>
+
+ 
+<table class="sort-login" cellspacing=15>
+	<tr>
+		<td class="green"><h3><%= @terminal.name %></h3></td>
+	</tr>
+	<tr>
+		<td><%= render :partial => 'scan_item', :area => @area %></td>
+	</tr>
+</table>

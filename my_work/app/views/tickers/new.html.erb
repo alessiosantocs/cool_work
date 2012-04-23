@@ -1,0 +1,28 @@
+<h1>New Ticker</h1>
+
+<%= error_messages_for :ticker %>
+
+<% form_for(@ticker) do |f| %>
+<table>
+    <tr>
+        <td><b>Title</b><br /></td>
+        <td><%= f.text_field :title %></td>
+    </tr>
+
+  <tr>
+    <td><b>Body</b><br /></td>
+    <td><%= f.text_area :body, :size => "34x10" %></td>
+  </tr>
+
+  <tr>
+    <td><b>Expiry</b><br /></td>
+    <td><%= f.date_select :expiry %></td>
+  </tr>
+
+  <tr>
+    <td></td>
+    <td><%= f.submit "Create" %></td>
+  </tr>
+</table>
+<% end %>
+

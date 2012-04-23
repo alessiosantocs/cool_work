@@ -1,0 +1,93 @@
+<%= render :partial => 'sidebar' %>
+<td valign="top">
+    <table width="725" style="padding-right: 15px;" border="0" cellspacing="0" cellpadding="0">
+        <tr>
+            <td width="351" valign="top"><br>
+            <img src="/images/MYohmy.jpg" alt="my" width="178" height="193" />
+            <br/>
+            <span class="subtitle">HOW CAN WE HELP YOU TODAY? </span>
+            <br/>
+            <br/>
+            <span class="subtitleGreen"><a href="/faq">FAQS </a></span>
+            <br/>
+            <span class="main_copy_font">
+                <br/>
+                We answer your most frequently asked questions. If you don&rsquo;t find your answer here, please feel free to email us using the FRESH form on the right. 
+                <br/>
+                <a href="/faq">
+                    <br/>
+                </a>
+            </span>
+            <a href="/faq#0"><span class="right_nav_links_text">SERVICE</span></a>
+            <br/>
+            <a href="/faq#1"><span class="right_nav_links_text">ORDER</span></a>
+            <br/>
+            <a href="/faq#2"><span class="right_nav_links_text">PICK UP &amp; DELIVERY</span></a>
+            <br/>
+            <a href="/faq#3"><span class="right_nav_links_text">PAYMENT</span></a>
+            </span>
+            <br/>
+            <br/>
+        </td>
+        <td width="370" rowspan="3" valign="top">
+            <table border="0" align="right" cellpadding="0" cellspacing="0">
+                <tr>
+                    <td colspan="2" valign="top">
+                        <br/>
+                        <img src="/images/GETFRESHWITHIT.gif" alt="get" width="374" height="42" />
+                    </td>
+                </tr>
+                <tr>
+                    <td width="15">
+                        &nbsp;
+                    </td>
+                    <td width="355" valign="top">
+                        <form id="form1" name="form1" method="post" action="/send_message">
+                            <br/>
+                            <span class="main_copy_font">Regardless of the nature, it’s always great to hear from you. Please feel free to contact us by using the handy FRESH form below.</span>
+                            <br/>
+                            <br/>
+							<div id="flash" style="width:auto">
+							<%= content_tag 'span', h(flash[:notice]),
+							    :class => 'notice' if flash[:notice] %>
+							<%= content_tag 'span', h(flash[:error]),
+							    :class => 'error' if flash[:error] %>
+							</div>
+                            <br/>
+						
+							<div class="subtitle">Please select an inquiry type:*</div>
+                            <select name="type" id="type" tabindex="1">
+                                <option value="1">Service</option>
+                                <option value="2">Order</option>
+                                <option value="3">Pick Up &amp; Delivery</option>
+                                <option value="4">Payment</option>
+                            </select>
+                            <br/>
+                            <br/>
+							<div class="subtitle">Your email address:*</div>
+							<input name="your_email" id="your_email" sixe="40" tabindex="2" />
+							<br/>
+                            <br/>
+							<div class="subtitle">Your inquiry:*</div>
+                            <textarea name="text" id="text" cols="40" rows="10" tabindex="3" /></textarea>
+                            <br/>
+                            <span class="right_nav_links_text">We will respond within 24 hours, usually sooner. </span>
+                            <br/>
+                            <br/>
+							<INPUT type="image" src="images/send.gif" width="43" height="18" alt="Submit Form">
+                        </form>
+                    </td>
+                </tr>
+            </table>
+        </td>
+        </tr>
+    </table>
+    <br/>
+</td>
+</tr>
+</table>
+</td>
+<td valign="top">
+    &nbsp;
+</td>
+</tr>

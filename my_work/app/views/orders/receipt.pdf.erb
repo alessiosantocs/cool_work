@@ -1,0 +1,190 @@
+<table class="order-ticket" cellspacing="4" style="color: black;font-size:36px;margin:20px auto" width="100%">
+	<% order = @order; customer = order.customer %>
+        <tr>
+		<td style="font-size: 55px;font-weight: bold; vertical-align: top;text-align:center;" colspan="2">MY FRESH SHIRT</td>
+        </tr>
+        <tr>
+            <td style="vertical-align: top;text-align:center;" colspan="2"> Welcome to The Laundry Revolution</td>
+	</tr>
+        <tr><td colspan="2">&nbsp;</td></tr><tr><td colspan="2">&nbsp;</td></tr>
+	<tr>
+		<td style="text-decoration: underline;" width="50%">Order ID#</div></td>
+                <td style="font-size: 50px;"> <%= order.identifier %></td>
+	</tr>
+	<tr>
+		<td style="text-decoration: underline;">Customer:</div></td>
+                <td style="font-size: 50px; vertical-align: top; text-transform:capitalize;"><div><%= order.customer.name %></div></td>
+	</tr>
+	<tr>
+		<td style="text-decoration: underline; vertical-align: top;">Address:</div></td>
+		<td style="vertical-align: top;font-size:40px"><div><%= order.customer.primary_address.formatted %></div></td>
+	</tr>
+	<tr>
+		<td style="text-decoration: underline; vertical-align: top;">Order Date:</td>
+		<td style="vertical-align: top;font-size:40px"><div><%= @order.created_at.strftime("%A-%m/%d/%Y") if @order.created_at %></div>
+                <div><%= @order.created_at.strftime("%I:%M %p") if @order.created_at %></div></td>
+	</tr>
+	<tr>
+		<td style="text-decoration: underline; vertical-align: top;">Pickup:</td>
+		<td style="vertical-align: top;font-size:40px"><div><%= @order.pickup_date.strftime("%A-%m/%d/%Y") if @order.pickup_date %></div><div><%= time_window(@order.pickup_window) if @order.pickup_date %></div></td>
+	</tr>
+	<tr>
+		<td style="text-decoration: underline; vertical-align: top;">Delivery: </td>
+		<td style="vertical-align: top;font-size:40px"><div><%= @order.delivery_date.strftime("%A-%m/%d/%Y") if @order.delivery_date %></div><div><%= time_window(@order.delivery_window) if @order.delivery_date %></div></td>
+	</tr>
+	<tr>
+		<td style="vertical-align: top;font-size:40px"><span style="font-weight:bold;"><u>Express:</u></span><span> <%= @order.express? ? 'Yes' : 'No' %></span></td>
+		<td style="vertical-align: top;font-size:40px"><span style="font-weight:bold;"><u>Premium:</u></span><span> <%= @order.premium? ? 'Yes' : 'No' %></span></td>
+	</tr> 
+        <tr><td colspan="2"><hr></td></tr>
+<!--	<tr>
+		<td style="vertical-align: top;"><span><u>Carbon:</u></td>
+		<td style="vertical-align: top;"><%= @order.carbon_footprint %></span></td>
+	</tr> 
+	<tr>
+		<td style="vertical-align: top;"><span><u>Water:</u></td>
+		<td style="vertical-align: top;"><%= @order.water_saved %></span></td>
+	</tr> -->
+	
+	
+	<tr>
+		<td style="vertical-align: top;">
+			<!--	<tr><td>	<span><u>Total Pieces:</u></td><td> <%= order.total_pieces %></span><br/>
+		</td>
+	</tr> -->
+	
+	<tr>
+		<td colspan="2" style="vertical-align: top;"><br>
+			<% if order.order_items.size > 0 %>
+				<div id="<%= type %>_<%= order.id %>_items">
+					<table cellspacing="0" class="padding5" width="100%">
+						<tr>
+							<th class="align-left" style="padding: 0 10px 1px 0;">Category<br><br></th>
+							<th class="align-left" style="padding: 0 10px 1px 0;">Item<br><br></th>
+							<th class="align-left" style="padding: 0 10px 1px 0;">Qty<br><br></th>
+							<th class="align-left" style="padding: 0 10px 1px 0;">Special<br><br></th>
+                                                        <th class="align-left" style="padding: 0 10px 1px 0;">Price<br><br></th>
+                                                </tr>
+                                                <% order.order_items.group_by(&:customer_item_type).sort.each do |service, items| %>
+						<tr>
+							<td style="vertical-align: top;padding: 0 10px 1px 0;text-decoration: underline" colspan="2"><%= service.services.first.name %></td><td colspan="4"></td></tr>
+                                                <tr>    <td></td>
+							<td style="vertical-align: top;padding: 0 10px 1px 0;"><%= service.name %>
+                                                               <%= service.services.first.name  == 'Wash and Fold' ? "(#{items[0].weight.to_i}lb)" : '' %></td>
+							<td style="vertical-align: top;padding: 0 10px 1px 0;"><%= items.size %></td>
+							<td style="vertical-align: top;padding: 0 10px 1px 0;">
+								<% for item in items %>
+									<% sp =  item.order.premium %>
+									<% if sp || item.customer_item.premium || item.premium %>
+										<div>Premium</div>
+                                                                        <% else %>
+                                                                                <div>&nbsp;</div>
+									<% end %>
+                                                                        <% if !(item.customer_item.extra_charge == 0.00) %>
+                                                                            <div>Upcharge: <%= item.customer_item.extra_charge_description %></div>
+                                                                        <% end %>
+								<% end %>
+							</td>
+                                                        <td style="vertical-align: top;padding: 0 10px 1px 0;">
+                                                          <% for item in items %>
+                                                            <div><%= number_to_currency(item.price) %></div>
+                                                            <% if !(item.customer_item.extra_charge == 0.00) %>
+                                                                <div><%= number_to_currency(item.customer_item.extra_charge) %></div>
+                                                            <% end %>
+                                                          <% end %>
+                                                        </td>
+						</tr>
+                                                <% end %>
+                                                <tr><td colspan="5" style="vertical-align: top;padding: 0 10px 1px 0;"><hr /></td></tr>
+						<tr>
+							<td style="vertical-align: top;padding: 0 10px 1px 0;" colspan="5">
+							<strong>Total Items:&nbsp;&nbsp;<%= order.order_items.size %></strong>
+							</td>
+						</tr>
+						<tr>
+                                                        <% if @order.order_products.size > 0 %>
+                                                        <td style="vertical-align: top;padding: 0 10px 1px 0;" colspan="5">
+                                                                <div><strong>Special Items:</strong></div>
+                                                                <table width="100%">
+                                                                    <tr>
+                                                                        <td style="font-weight:bold;">Product</td>
+                                                                        <td style="font-weight:bold;">Quantity</td>
+                                                                        <td style="font-weight:bold;">Amount</td>
+                                                                    </tr>
+                                                                    <% for product in @order.order_products %>
+                                                                      <tr>
+                                                                        <td><%= product.name %>(s) </td>
+                                                                        <td><%= product.quantity %> </td>
+                                                                        <td><%= number_to_currency(product.quantity * product.price) %></td>
+                                                                      </tr>
+                                                                    <% end %>
+                                                                </table>
+                                                                <br>
+                                                        </td>
+                                                        <% end %>
+                                                </tr>
+						<% if order.discount.to_f > 0.0 %>
+                                                <tr>
+							<td style="vertical-align: top;padding: 0 10px 1px 0;" colspan="5"><strong>Promotional Discount:&nbsp;&nbsp;<%= number_to_currency(order.discount.to_f) %></strong></td>
+                                                </tr>
+                                                <% end %>
+						<tr>
+							<td style="vertical-align: top;padding: 0 10px 1px 0;" colspan="2"><strong>Delivery Fee:&nbsp;&nbsp;<%= number_to_currency(order.shipping.to_f) %></strong></td>
+                                                </tr>
+                                                <tr>
+							<% if order.finalized == true %>
+							     <td style="vertical-align: top;padding: 0 10px 1px 0;" colspan="5"><strong>Order Total:&nbsp;&nbsp;<%= number_to_currency(order.total < 0.00 ? 0.00 : order.total) %></strong></td>
+
+							<% end %>
+
+							<% if order.finalized != true %>
+
+							     <td style="vertical-align: top;padding: 0 10px 1px 0;" colspan="5"><strong>Estimated Total:&nbsp;&nbsp;<%= number_to_currency(order.estimated_amount < 0.00 ? 0.00 : order.estimated_amount) %></strong></td>
+							<% end %>
+					         </tr>
+					         <% if order.customer.fresh_cash.to_f > 0.0 %>
+                                                <tr>
+							<td style="vertical-align: top;padding: 0 10px 1px 0;" colspan="5"><strong>Fresh Cash:&nbsp;&nbsp;<%= number_to_currency(order.customer.fresh_cash.to_f) %></strong></td>
+                                                </tr>
+                                                <% end %>
+					</table>
+				</div>
+			<% else %>
+				<div><strong>Total Items:</strong> 0</div>
+			<% end %>
+		</td>	
+	</tr>
+	<tr>
+		<td style="vertical-align: top;">
+			<br>
+			<div class="label" style="text-decoration: underline;">Payment:</div>
+			<div>
+				<% if order.payment %>
+					<div><strong><%= order.payment.cc_payment_method%></strong>: <%= order.payment.cc_number%></div>
+				<% end %>
+			</div>
+		</td>
+	</tr>
+	
+	<tr>
+		<td style="vertical-align: top;">
+			<br>
+			<div class="label" style="text-decoration: underline;">Handling:</div>
+			<div><%= order.instruction_notes %></div>
+		</td>
+	</tr>
+	
+	
+	<tr>
+		<td style="vertical-align: top;" colspan="2">
+			<br>
+			<div class="label" style="text-decoration: underline;">Notes:</div>
+			<div>
+				<% for note in order.notes %>
+					<div><strong><%= note.note_type %>:</strong> <%= note.body %></div>
+				<% end %>
+			</div>
+		</td>
+	</tr>
+</table>				
+<center><a href="JavaScript:window.print();" style="font-size: 55px;font-weight: bold;" >www.myonlinecleaner.com</a></center>

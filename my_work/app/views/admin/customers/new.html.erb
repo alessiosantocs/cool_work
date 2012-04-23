@@ -1,0 +1,97 @@
+<h1><%= params[:controller] %>#<%= params[:action] %>
+
+<%= error_messages_for(params) %>
+
+<% form_for :customer, @customer, :url => { :action => "create"} do |f| %>
+<h3>Identifying Information</h3>
+
+<p><label for="first_name">First Name:</label><br/>
+<%= text_field :user, :first_name %>
+</p>
+
+<p><label for="last_name">Last Name:</label><br/>
+<%= text_field :user, :last_name %>
+</p>
+
+<p><label for="company">Company:</label><br/>
+<%= f.text_field :company %>
+</p>
+
+<p><label for="title">Title:</label><br/>
+<%= f.text_field :title %>
+</p>
+
+<p><label for="sex">Sex:</label>
+<%= radio_button :customer, :sex, "M" %>M<%= radio_button :customer, :sex, "F" %>F</p>
+</p>
+
+<p><label for="dob">Date of Birth:</label>
+<%= date_select :customer, :dob, :order => [:year, :month, :day], :start_year => Time.now.year - 100, :end_year => Time.now.year %>
+
+<h3>Authenticating Information</h3>
+
+<p><label for="username">Username:</label>
+<%= text_field :user, :login %>
+</p>
+
+<p><label for="password">Password:</label>
+<%= password_field :user, :password %>
+</p>
+
+<p><label for="maiden">Mother's Maiden Name:</label>
+<%= text_field :user, :maiden %>
+</p>
+
+<h3>Contact Information</h3>
+
+<p><label for="home">Home Phone Number:</label>
+<%= f.text_field :home, :size => 10, :maxsize => 10 %>
+</p>
+<p><label for="cell">Cell Phone Number:</label>
+<%= f.text_field :cell, :size => 10, :maxsize => 10 %>
+</p>
+<p><label for="email">Email Address:</label>
+<%= text_field :user, :email %>
+</p>
+
+<h3>Account Information</h3>
+
+<p><label for="active">Active?:</label>
+<%= check_box :customer, :active, {} , true, false %>
+</p>
+<p><label for="points">Points:</label>
+<%= f.text_field :points %>
+</p>
+<p><label for="accepted_terms">Accepted Terms?:</label>
+<%= f.check_box :accepted_terms, {}, true, false %>
+
+<h3>Address Information</h3>
+  <p><label for="label">Label: (ie, 'home', 'work', 'etc.')</label><br/>
+  <%= text_field :address, :label %>
+  </p>
+  <p><label for="<%= "addr" %>">Address:</label><br/>
+  <%= text_field :location, :addr1 %> <br/>
+  <%= text_field :location, :addr2 %>
+  </p>
+  <p><label for="<%= "city" %>">City:</label><br/>
+  <%= text_field :location, :city %>
+  </p>
+  <p><label for="<%= "state" %>">State:</label><br/>
+  <%= text_field :location, :state, :maxsize => 2, :size => 2 %>
+  </p>
+  <p><label for="<%= "zip" %>">Zip:</label><br/>
+  <%= text_field :location, :zip, :maxsize => 5, :size => 5 %>
+  </p>
+  <p><label for="unit_designation">Unit Designation:</label><br/>
+  <%= text_field :address, :unit_number, :maxsize => 5, :size => 5 %>
+  </p>
+
+
+
+<p>
+  <%= f.submit "Save" %>
+</p>
+<% end %>
+
+<div class="view-menu" style="display:block;text-align:center;height:20px;">
+</div>

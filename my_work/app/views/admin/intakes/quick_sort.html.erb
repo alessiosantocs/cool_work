@@ -1,0 +1,52 @@
+<%= render :partial => '/admin/account_search' %>
+
+<div class="view-menu">
+	<span>Intake > Quick Sort Order ID <%= @order.identifier %></span>
+</div>
+
+<% if @order.payment.status == 'complete' %>
+	<h2>This Order has already been processed</h2>
+<% else %>
+<h2 class="green">Use the <%= link_to 'Detailed Sort', sort_admin_intake_path(@order) %> or quickly Itemize below</h2>
+<% form_for :order, :url => quick_sort_and_verify_admin_intake_path(@order) do |f| -%>
+		<table cellspacing=20>
+			<tr>
+				<td colspan=2>
+					<% for service in @services %>
+						<h2><%= service.name %></h2>
+						<table cellspacing=3>
+							<tr style="text-align: left;">
+								<% if service.weighable? %>
+									<th>Weight</th>
+								<% else %>
+									<th>Quantity</th>
+								<% end %>
+								<th>Type</th>
+							</tr>
+							<% for item_type in service.applicable_item_types %>
+								<% items = @order.items_from_type(item_type,service.id) %>
+								<tr>
+									<% if service.weighable? %>
+										<td><div class="item-weight"><input value="<%= items[0].weight if items[0] %>" type="text" size="6" id="weight_item_type_<%= item_type.id %>" name="weight_item_type_<%= item_type.id %>" OnKeyUp="numeric(this);" /> #</div></td>
+									<% else %>
+										<td><div class="item-quantity"><input value="<%= items.size %>" type="text" size="6" id="quantity_item_type_<%= item_type.id %>" name="quantity_item_type_<%= item_type.id %>" OnKeyUp="numeric(this);" /> #</div></td>
+									<% end %>
+									<td><%= item_type.name %></td>
+								</tr>
+							<% end %>
+						</table>
+						<br/>
+					<% end %>
+				</td>
+			</tr>
+		</table>
+
+		<br/><br/>
+	
+		<div>
+			<span><%= submit_tag 'Update & Verify All Items', :class =>"button" %></span>
+		</div>
+	<%- end %>
+    <div class="view-menu" style="display:block;text-align:center;height:20px;">
+</div>
+<% end %>

@@ -1,0 +1,53 @@
+# == Schema Information
+# Schema version: 98
+#
+# Table name: orders
+#
+#  id                :integer(11)   not null, primary key
+#  customer_id       :integer(11)   
+#  count             :integer(11)   
+#  shipping          :decimal(6, 2) 
+#  delivery_type     :integer(11)   
+#  created_at        :datetime      
+#  updated_at        :datetime      
+#  verified          :boolean(1)    
+#  status            :string(255)   
+#  amount            :decimal(8, 2) 
+#  processed         :boolean(1)    
+#  instructions_id   :integer(11)   
+#  tracking_number   :string(255)   
+#  recurring         :boolean(1)    
+#  finalized         :boolean(1)    
+#  tax               :decimal(9, 2) 
+#  carbon_cost       :decimal(9, 2) 
+#  water_cost        :decimal(9, 2) 
+#  point_value       :integer(11)   
+#  promotion_id      :integer(11)   
+#  discount          :decimal(9, 2) default(0.0)
+#  points_used       :integer(11)   default(0)
+#  recycling         :boolean(1)    
+#  clothing_donation :boolean(1)    
+#  express           :boolean(1)    
+#  free_shipping     :boolean(1)    
+#
+
+Stallmans_first_order:
+    id: 1
+    customer_id: 1
+    count: 5
+    shipping: 12.00
+    verified: true
+
+Stallmans_second_order:
+    id: 2
+    customer_id: 1
+    count: 7
+    shipping: 15.00
+    verified: true
+
+Sussmans_first_order:
+    id: 3
+    customer_id: 2
+    count: 3
+    shipping: 7.00
+    verified: true

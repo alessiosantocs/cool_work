@@ -1,0 +1,27 @@
+<%= render :partial => '/admin/account_search' %>
+
+<div class="view-menu">
+	<span>Sort Fold > Scan Bin || Scan Shelf</span>
+</div>
+
+<table class="sort-ticket">
+	<tr>
+		<td>
+			<div>ORDER ID XXXXXXXXXX</div>
+			<div>Item 1 of 25</div>
+		</td>
+		<td>
+			<div class="dark-green">Bag 1 of 4</div>
+			<div class="dark-green">Place Item In:</div>
+			<div class="red">Section 3 > Shelf 4 > Bin 001</div>
+		</td>
+	</tr>
+	<tr>
+		<td>&nbsp;</td>
+		<td>
+			<form method="post" action="/admin/sort">
+				<span><input type="submit" value="SCAN BIN" name="commit" class="button small-blue"/></span>
+			</form>
+		</td>
+	</tr>
+</table>

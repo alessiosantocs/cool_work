@@ -1,0 +1,62 @@
+<ul class="tabselector">
+    <li class="tab-selected">
+        <%= link_to_unless_current_heirarchy("SITE WIDE", "/admin/content/site") %>
+    </li>
+	<li class="tab-unselected">
+        <%= link_to_unless_current_heirarchy("HOME PAGE", "/admin/content/home") %>
+    </li>
+	<li class="tab-unselected">
+        <%= link_to_unless_current_heirarchy("NEWS", "/admin/content/news") %>
+    </li>
+        <li class="tab-unselected">
+        <%= link_to_unless_current_heirarchy ("TICKERS", "/admin/content/tickers") %>
+    </li>
+	<li class="tab-unselected">
+        <%= link_to_unless_current_heirarchy("PROMOTIONS", "/admin/content/promotions") %>
+    </li>
+	<li class="tab-unselected">
+        <%= link_to_unless_current_heirarchy("MAIL & SMS TEMPLATES", "/admin/notification_templates") %>
+    </li>
+</ul>
+<ul class="panes">
+    <li class="pane-selected">
+        <%= error_messages_for :content %>
+        <% form_for :content, :url => '/admin/content/update', :html => { :method => :put } do |f| %>
+        <p>
+            <b>Address</b>
+            <br/>
+            <%= f.text_area :address, :rows => 5 %>
+        </p>
+        <p>
+            <b>Phone</b>
+            <br/>
+            <%= f.text_field :phone %>
+        </p>
+        <p>
+            <b>Email</b>
+            <br/>
+            <%= f.text_field :email %>
+        </p>
+		<!--
+        <p>
+            <b>Eco value 1</b>
+            <br/>
+            <%= f.text_field :eco_value_1 %>
+        </p>
+        <p>
+            <b>Eco value 2</b>
+            <br/>
+            <%= f.text_field :eco_value_2 %>
+        </p>
+        <p>
+            <b>Eco value 3</b>
+            <br/>
+            <%= f.text_field :eco_value_3 %>
+        </p>
+		-->
+        <p>
+            <%= f.submit "Update" %>
+        </p>
+        <% end %>
+    </li>
+    <ul>

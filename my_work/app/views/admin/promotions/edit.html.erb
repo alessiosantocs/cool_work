@@ -1,0 +1,29 @@
+<h1>New Promotion</h1>
+<%= error_messages_for :promotion %>
+
+<% form_for @promotion do |f| %>
+<table>
+    <tr>
+	<td><b>Code</b><br /></td>
+	<td><%= f.text_field :code %></td>
+    </tr>
+    <tr>
+        <td><b>Times Usable</b><br /></td>
+	<td><%= f.text_field :times_usable %></td>
+    </tr>
+    <tr>
+        <td><b>Expiry</b><br /></td>
+	<td><%= f.date_select :expiry %></td>
+    </tr>
+        <td><b>Function</b><br /></td>
+        <td><%= f.select :function , Promotion.available %></td>
+    </tr>
+    <tr>
+      <td><b>Arguments</b><br /></td>
+      <td><%= f.text_area :arguments, :rows => 4 %></td>
+    </tr>
+    <tr><td>&nbsp;</td>
+        <td><%= f.submit "Update" %></td>
+    </tr>
+</table>
+<% end %>

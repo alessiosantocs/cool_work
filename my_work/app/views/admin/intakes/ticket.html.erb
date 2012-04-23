@@ -1,0 +1,107 @@
+<table class="order-ticket" cellspacing="3">
+	<tr>
+		<td colspan=2>Order ID: </td>
+		<td><%= @order.identifier %></td>
+	</tr>
+	<tr>
+		<td colspan=2>Date: </td>
+		<td><%= format_date(@order.created_at.to_date) %></td>
+	</tr>
+	<tr>
+		<td colspan=2>Customer: </td>
+		<td>
+			<div><%= @order.customer.account.name %></div>
+			<div><%= @order.customer.primary_address.formatted %></div>
+		</td>
+	</tr>
+		<td><span>Pickup Date: </span><%= format_date(@order.pickup_date) %> 
+		<td><span>Delivery Date: </span><%= format_date(@order.delivery_date) %></td>
+		<td>
+			<span>Express: <%= @order.express? ? 'yes' : 'no' %></span>,  
+			<span>Premium: <%= @order.premium? ? 'yes' : 'no' %></span>
+		</td>
+	</tr>
+	<tr>
+		<td colspan=3 style="font-size:17px;"><br/><strong>Order Detail:</strong></td>
+	</tr>
+        <% count = 1 %>
+	<% for service in @services %>
+		<% if @order.has_items_of_type?(service) %>
+                        <tr><td colspan="3">&nbsp;</td></tr>
+			<tr><td colspan=3><strong style="color: grey;font-size:17px;"><%= service.name %></strong></td></tr>
+		<% end %>
+		<% for item_type in service.applicable_item_types %>
+			<% items = @order.items_from_type(item_type,service.id) %>
+			<% if items.size > 0 %>
+                                <% for item in items %>
+                                        <tr>
+                                                <td><%= count %> - <%= item_type.name %></td>
+                                                <td>
+                                                                <% sp =  item.customer_item.special_handling %>
+                                                                <% if sp %>
+                                                                        <div><%= item.customer_item.special_handling %></div>
+                                                                <% end %>
+                                                </td>
+                                                <td><%= number_to_currency(item.price) %></td>
+                                        </tr>
+                                        <% if !(item.customer_item.extra_charge == 0.00) %>
+                                              <tr>
+                                                      <td style="padding-left:17px;">Upcharge:</td>
+                                                      <td> <%= item.customer_item.extra_charge_description %></td>
+                                                      <td><%= number_to_currency(item.customer_item.extra_charge) %></td>
+                                            </tr>
+                                        <% end %>
+                                        <% count = count + 1%>
+                                <% end %>
+			<% end %>
+		<% end %>
+	<% end %>
+	
+	<% order_products = @order.order_products %>
+	<% if order_products.size > 0 %>
+		<tr><td colspan=3><strong style="color: grey">Items</strong></td></tr>
+		<% for product in order_products %>
+			<tr>
+				<td colspan=2><%= product.quantity %> - <%= product.name %></td>
+				<td><%=  number_to_currency(product.quantity * product.price) %></td>
+			</tr>				
+		<% end %>
+	<% end %>
+	
+	<tr>
+		<td colspan=2><br/>Delivery Fee: </td>
+		<td><br/><%=  @order.shipping == 0.00 ? 'FREE' : number_to_currency(@order.shipping) %></td>
+	</tr>
+	<tr>
+		<td colspan=2>Tax: </td>
+		<td><%=  number_to_currency(@order.tax) %></td>
+	</tr>
+	<tr>
+		<td colspan=2>Discount: </td>
+		<td><%=  number_to_currency(@order.discount) %></td>
+	</tr>
+	<tr>
+		<td colspan=2><strong><br/>Total: </strong></td>
+		<td><strong><br/><%=  number_to_currency(@order.total < 0.00 ? 0.00 : order.total) %></strong></td>
+	</tr>
+	<tr>
+		<td colspan=2><br/>Carbon Footprint: </td>
+		<td><br/><%=  @order.carbon_footprint %></td>
+	</tr>
+	<tr>
+		<td colspan=2>Water Saved: </td>
+		<td><%= @order.water_saved %> gallons</td>
+	</tr>
+	<tr>
+		<td colspan=2>Recycle Bags: </td>
+		<td><%=  @order.recycling ? 'yes' : 'no' %></td>
+	</tr>
+	<tr>
+		<td colspan=2>Clothing Donations: </td>
+		<td><%= @order.clothing_donation ? 'yes' : 'no' %></td>
+	</tr>
+	<tr>
+		<td colspan=3><br/><div class="barcode"><%= @order.barcode %></div></td>
+	</tr>
+</table>
+			

@@ -1,0 +1,286 @@
+<p style="width: 760px;">
+	<strong>SIGN UP NOW</strong> and click your way to clean clothes. No credit card information is required until you place an order. Please note that we can only service you if you are within our <%= link_to "service area", servicearea_url, :onclick => "javascript:load_window('/servicearea', 'Service_Area'); return false;", :target => "_blank", :class => "green" %>.
+</p> 	 
+<div>  	
+	<span>Already have a password?</span><br/>
+	<span><%= link_to "Log In Now", login_url, :class => 'green' %></span>
+</div>
+
+
+<%= error_messages_for :user %>
+<%= error_messages_for :customer %>
+<%= error_messages_for :building %>
+<%= error_messages_for :address %>
+<!--<%= error_messages_for :credit_card %>!-->
+
+<% form_for :customer, :url => customers_path do |f| -%>
+<table cellspacing="10">
+	<tr>
+		<td width="100%" align="right" colspan="3"><img width="750" height="3" border="0" align="left" style="padding: 10px 0px;" src="/images/threequartsrule.jpg"/></td>
+    </tr>
+	<tr>
+		<td class="title" colspan="2"><font face="HelveticaRounded" color="#99cc33" style="font-size: 13pt;">
+      <img width="177" height="13" border="0" src="/images/MYNAME2.jpg"/></font></td>
+	</tr>
+	<tr>
+		<td class="label"><label for="customer_title">Title:</label></td>
+		<td><%= f.select :title, ['Mr.', 'Miss', 'Ms.', 'Mrs.', 'Dr.'] %></td>
+	</tr>
+	
+	<% fields_for :user do |u| %>  
+		<tr>
+			<td class="label"><label for="user_first_name">*First Name:</label></td>
+			<td><%= u.text_field :first_name, :live => true %></td>
+		</tr>
+		<tr>
+			<td class="label"><label for="user_last_name">*Last Name:</label></td>
+			<td><%= u.text_field :last_name, :live => true %></td>
+		</tr>
+	<% end %>
+	
+	<tr>
+		<td class="label">*Address Type:</td>
+		<td>
+			<input type="radio" onclick="$('building-company').hide()" name="customer[building_type]" value="true" id="customer_building_type_res" checked /><label for="customer_building_type_res"> Residential</label>
+			<input type="radio" onclick="$('building-company').show()" name="customer[building_type]" value="false" id="customer_building_type_com" /><label for="customer_building_type_com"> Commercial</label>
+		</td>
+	</tr>
+  	<tr id="building-company" style="display:none">
+		<td class="label"><label for="customer_company">Company Name:</label></td>
+		<td><%= f.text_field :company %></td>
+	</tr>
+	
+	<% fields_for :address do |a| %>
+		<tr>
+			<td class="label"><label for="address_label">Building Name:</label></td>
+			<td><%= a.text_field :label %></td>
+		</tr>
+	<% end %>
+	
+	<% fields_for :building do |b| %>
+		<tr>
+			<td class="label"><label for="building_addr1">*Street Address:</label></td>
+			<td><%= b.text_field :addr1 %></td>
+		</tr>
+		<tr>
+			<td class="label"><label for="building_addr2">Street Address:</label></td>
+			<td><%= b.text_field :addr2 %></td>
+		</tr>
+	<% end %>
+	
+	<% fields_for :address do |a| %>
+		<tr>
+			<td class="label"><label for="address_unit_number">Apt/Ste:</label></td>
+			<td><%= a.text_field :unit_number %></td>
+		</tr>
+	<% end %>
+	
+	<% fields_for :building do |b| %>
+		<tr>
+			<td class="label"><label for="building_state">State:</label></td>
+			<td><%= b.select :state, Building.supported_states %></td>
+		</tr>	
+		<tr>
+			<td class="label"><label for="building_city">*City:</label></td>
+			<td><%= b.text_field :city %></td>
+		</tr>
+		<tr>
+			<td class="label"><label for="building_zip">*Zip Code:</label></td>
+			<td><%= b.text_field :zip ,:live=>false%></td>
+	 		<%	all_zips = Building.supported_zips.join(",") %>
+			<script type="text/javascript">
+
+ 			var all_zips1= "<%= all_zips %>";
+    var validate_zips=all_zips1.split(",");
+			 var building_zip = new LiveValidation('building_zip', {onlyOnBlur: true});
+			 building_zip.add(Validate.Presence, {"validMessage":""});
+			 building_zip.add(Validate.Inclusion, {"failureMessage":"Your zip code is not currently serviced" ,"validMessage":"","within":validate_zips})
+
+			</script>
+		</tr>
+		<tr>
+			<td class="label"><label for="building_doorman">*Is this a doorman building?</label></td>
+			<td>
+				<%= b.radio_button :doorman, true %><label for="building_doorman_true">  Yes</label>
+				<%= b.radio_button :doorman, false, :checked => true %><label for="building_doorman_false">  No</label>
+			</td>
+		</tr>
+	<% end %>
+	
+	<tr>
+		<td class="label"><label for="customer_home">*Home Phone:</label></td>
+  		<td><%= f.text_field :home, :size => 10, :maxsize => 10 %> <span class="small_text"><i>(please use <b>ONLY</b> numbers) e.g. 2121234567</i></span></td>
+	</tr>
+	<tr>
+		<td class="label"><label for="customer_cell">*Mobile Phone:</label></td>
+  		<td><%= f.text_field :cell, :size => 10, :maxsize => 10 %> <span class="small_text"><i>(please use <b>ONLY</b> numbers) e.g. 2121234567</i></span></td>
+  	</tr>
+	
+
+	<tr>
+		<td width="100%" align="right" colspan="3"><img width="750" height="3" border="0" align="left" style="padding: 10px 0px;" src="/images/threequartsrule.jpg"/></td>
+    </tr>
+	<tr>
+		<td class="title" colspan="2"><img width="139" height="13" border="0" align="left" src="/images/mysiteaccess.jpg"/></td>
+	</tr>
+	
+	<% fields_for :user do |u| %>
+		<tr>
+			<td class="label"><label for="user_email_confirmation">*Email:</label></td>
+			<td><%= u.text_field :email_confirmation %></td>
+		</tr>
+		<tr>
+			<td class="label"><label for="user_email">*Repeat Email:</label></td>
+			<td><%= u.text_field :email %></td>
+		</tr>
+		<tr>
+			<td class="label"><label for="user_password_confirmation">*Password:</label></td>
+			<td><%= u.password_field :password_confirmation %></td>
+		</tr>
+		<tr>
+			<td class="label"><label for="user_password">*Repeat Password:</label></td>
+			<td><%= u.password_field :password %></td>
+		</tr>
+	
+	<tr>
+		<td width="100%" align="right" colspan="3"><img width="750" height="3" border="0" align="left" style="padding: 10px 0px;" src="/images/threequartsrule.jpg"/></td>
+	</tr>
+	<!--<tr>
+		<td class="title"><img width="139" height="13" border="0" src="/images/mypayments.jpg"/></td>
+	</tr>
+	
+	<% fields_for :credit_card do |cc| %>  
+		<tr>
+			<td id="payment-info" colspan="2">
+				<table cellspacing="10">
+					<tr>
+						<td>Payment Method: </td>
+							<td>
+								<%= cc.select :payment_method, ['Visa','Mastercard', 'American Express', 'Discover'], {}, {:onchange => 'changeSecCodeValidation(this.options[selectedIndex].value)'} %>
+							</td>
+						</tr>
+						<tr>
+							<td>Card Number:</td>
+							<td><%= cc.text_field :number %></td>
+						</tr>
+						<tr>
+							<td>Expiration Date:</td>
+							<td>
+								<%= select_tag 'exp_month', options_for_select(['01','02','03','04','05','06','07','08','09','10','11','12'], Date.today.month.to_s), :onchange => "checkDate('exp_month', 'exp_year');" %> &nbsp; / &nbsp; 
+								<%= select_tag 'exp_year', options_for_select(Range.new(Date.today.year, Date.today.year + 15).map {|yr| yr.to_s[2,3] }, Date.today.year), :onchange => "checkDate('exp_month', 'exp_year');" %>
+							</td>
+						</tr>
+						<tr>
+							<td>Security Code: </td>
+							<td><%= cc.text_field :security_code, :size => 4, :maxlength => 4 %></td>
+						</tr>
+				</table>
+			</td>
+		</tr>
+		<tr><td id="payment-address" colspan="2"></td></tr>
+		<%= javascript_tag ("changeSecCodeValidation($F('credit_card_security_code'));") %>
+		<%= javascript_tag ("populateCreditCard('No', 'VISA')") %>
+	<% end %>
+	<tr>
+		<td width="100%" align="right" colspan="3"><img width="750" height="3" border="0" align="left" style="padding: 10px 0px;" src="/images/threequartsrule.jpg"/></td>
+    </tr>!-->
+	<tr>
+		<td class="title"><img width="139" height="13" border="0" src="/images/myanswers.jpg"/></td>
+		<td class="small_text green">Optional</td>
+	</tr>
+	
+	<tr>
+		<td>
+          	How did you hear about us?
+		</td>
+		<td>
+          <select size="1">
+          <option selected="">Please Select</option>
+          <option>Friend</option>
+          <option>Doorman</option>
+          <option>Web Advertisement</option>
+          <option>Promotional Event</option>
+          <option>Employee</option>
+          <option>Truck</option>
+          </select>
+		</td>
+	</tr>
+	
+	<tr>
+		<td>
+          	How often do you do laundry?
+		</td>
+		<td>
+          <select size="1">
+          <option selected="selected">Please Select</option>
+          <option>&gt; once a week</option>
+          <option>Every week</option>
+          <option>Every two weeks</option>
+          <option>Every three weeks</option>
+          <option>Every month</option>
+          </select>
+		</td>
+	</tr>
+	
+	<tr>
+          <td>Services I am interested in:</td>
+          <td>
+          	<div>
+	          <input type="checkbox" tabindex="22" value="YES" name="DC"/> Dry Cleaning
+			  <input type="checkbox" tabindex="23" value="YES" name="LS"/> Laundered  Shirts
+			  <input type="checkbox" tabindex="24" value="YES" name="WNF"/> Wash &amp; Fold
+			  <input type="checkbox" tabindex="25" value="YES" name="Shoes"/> Shoes
+			</div>
+          </td>
+  </tr>
+	<% if @user.invitation %>
+	<tr>
+		<td>
+			<div style="width: 200px;">
+				If you were referred by a friend add their email address - Each referring customer earns $1 FRESH CASH to be used for future MFS service!:
+			</div>
+		</td>
+		<td style="vertical-align:middle;">
+			<%= u.text_field :referrer %>
+		</td>
+	</tr>
+  <% end %>
+	<% end %>
+	<tr>
+		<td width="100%" align="right" colspan="3"><img width="750" height="3" border="0" align="left" style="padding: 10px 0px;" src="/images/threequartsrule.jpg"/></td>
+    </tr>	
+	<tr>
+		<td class="title" colspan="2"><img width="209" height="13" border="0" src="/images/custoagreem.jpg"/></td>
+	</tr>
+	
+	<tr>
+		<td>&nbsp;</td>
+		<td>
+          <iframe TabIndex=200 width="428" height="65" frameborder="1" marginheight="1" marginwidth="7" style="font-size: 10pt; color: rgb(0, 0, 51);" src="/agreement">
+          	Your browser does not support inline frames or is currently configured not to display inline frames.
+		  </iframe>
+		</td>
+	</tr>
+	<tr>
+		<td>&nbsp;</td>
+		<td>
+			<div>
+				<%= f.check_box :accepted_terms, {}, true, false %>
+				<label class="small_text" for="customer_accepted_terms">
+					By providing your information and continuing, you are agreeing to the My Fresh Shirt Terms of Use and Privacy Policy.
+				</label>
+			</div>
+			<div>
+				<%= link_to 'click here for printable version', agreement_url + '?print=true', :class =>'green small_text', :popup => true %>
+			</div>
+		</td>
+	</tr>
+</table>
+
+<div class="submit-buttons">
+	<span><font face="HelveticaRounded"><%= image_submit_tag 'signup_btn.png', :class =>"align-button" %></font></span>
+	<span><%= link_to '<font face="HelveticaRounded">CANCEL / RESET</font>', signup_url %></span>
+</div>
+
+<% end -%>
+

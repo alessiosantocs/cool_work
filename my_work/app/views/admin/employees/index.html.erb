@@ -1,0 +1,28 @@
+<%= render :partial => '/admin/account_search' %>
+
+<div class="view-menu">
+	<span class="float-right"><%= link_to 'Add Employee', new_admin_employee_path, :class => 'action new' %></span>
+	<span>Employees > Dashboard</span>
+</div>
+
+<table cellspacing="1" cellpadding="5" width="100%">
+	<tr>
+	  	<th>Name</th>
+		<th>Fresh Dollars</th>
+		<th>Permisions</th>
+		<th>&nbsp;</th>
+  </tr>
+<% for employee in @employees %>
+  <tr   class="<%= cycle('light-blue', 'light-green', :name => "order_class") %>">
+  	<td><%= employee.user.name %></td>
+	<td><%= employee.user.fresh_dollars %></td>
+    <td><%= link_to 'Edit', edit_admin_employee_path(employee) %></td>
+    <td><%= link_to 'Destroy', admin_employee_path(employee), :confirm => 'Are you sure?', :method => :delete %></td>
+  </tr>
+<% end %>
+</table>
+<div class="view-menu" style="display:block;text-align:center;height:20px;">
+  <%= will_paginate @orders %>
+</div> 
+<br />
+

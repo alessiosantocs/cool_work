@@ -1,0 +1,5 @@
+<%= error_messages_for :note %>
+
+<% form_for :note, :url => note_path(@note), :html => { :method => :put } do |f| %>
+	<%= render :partial => 'form', :locals => { :create => false, :f => f } %>
+<% end %>

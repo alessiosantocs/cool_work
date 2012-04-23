@@ -1,0 +1,30 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<style type="text/css">
+<!--
+body p{
+font-family: Verdana, Geneva, sans-serif;
+}
+-->
+</style>
+</head>
+
+<body>
+	<% email_content do %></p>
+	<p>Dear <%= @user.first_name %>,</p>
+
+	<p>Welcome to My Fresh Shirt, New York City's first eco-friendly personal valet service!</p>
+
+	<p>Your new membership will enable you to click your way to clean clothes while doing your part in helping save the environment.</p>
+
+	<p>Remember, time is our most precious commodity. Charles Buxton said, You will never find time for anything. If you want time you must make it. So, My Fresh Shirt will help you make time to enjoy life!</p>
+<p>Use of the My Fresh Shirt service and Web site constitutes acceptance of our Terms of Use and Privacy Policy .</p>
+<% end %>
+<%= render :partial => 'signature' %>  
+
+</body>
+
+</html>

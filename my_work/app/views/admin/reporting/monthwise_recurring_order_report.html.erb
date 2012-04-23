@@ -1,0 +1,129 @@
+<%= render :partial => 'date_section' %>
+
+<table cellspacing=10 width="100%">
+  <% if @recurring_order_weekly.blank? and @recurring_order_other_week.blank? and @recurring_order_month.blank? %>
+      <tr><td>"No Record Found"</td></tr>
+  <% else %>
+      <tr class="<%= cycle('light-blue', 'drag-green', :name => "price_class") %>">
+            <th>Customer</th>
+              <th>Recurring Type</th>
+            <th>Pickup </th>
+            <th>Delivery </th>
+      </tr>  
+   <% @recurring_order_weekly.each do |recurring_order|%>
+				<%last_recurring_order = recurring_order.starting_on.to_date+69 %>
+				<% current_recurring_order_pickup = recurring_order.last_order.requests.first.stop.date%>
+			  <% current_recurring_order_delivery = recurring_order.last_order.requests.last.stop.date%>
+				<% while current_recurring_order_pickup <= last_recurring_order do %>
+					<% if current_recurring_order_pickup.strftime("%m").to_i == @month.to_i%>
+						      <%unless recurring_order.last_order.nil?%>
+                      <% request_object = recurring_order.last_order.requests %>
+                      <tr style="text-align: left;" class="<%= cycle('light-blue', 'drag-green', :name => "price_class") %>" valign="middle">
+                      <td>
+                              <%= recurring_order.customer.user.first_name %> <%= recurring_order.customer.user.last_name %>
+                      </td>
+                      <td>
+                              <%="Weekly" if recurring_order.interval == 7%>
+                      </td>
+                      <td>
+                        <%= current_recurring_order_pickup.strftime("%A") %>,  <%=current_recurring_order_pickup%><br/>
+                         <%unless request_object.first.stop.window.nil? %>
+                          <%= request_object.first.stop.window.start.strftime('%I:%M %p') %> -- <%= (request_object.first.stop.window.end + 1.second).strftime('%I:%M %p') %>
+                        <%end%>
+                      </td>
+                      <td> 
+                        <%unless request_object.last.stop.window.nil? %>
+                              <% if recurring_order.delivery_day>recurring_order.pickup_day
+                                    day_between =recurring_order.delivery_day-recurring_order.pickup_day 
+                              else
+                                     day_between =recurring_order.pickup_day-recurring_order.delivery_day
+                              end%>
+                               <%= current_recurring_order_delivery.strftime("%A")  %>,<%= current_recurring_order_delivery %> <br/>
+                          <%= request_object.last.stop.window.start.strftime('%I:%M %p') %> -- <%= (request_object.last.stop.window.end + 1.second).strftime('%I:%M %p') %>
+                        <%end%>
+                    </td>
+                  </tr>
+                <%end%>
+					<%end%>
+					<% current_recurring_order_pickup +=7%><% current_recurring_order_delivery +=7%>
+				<%end%>
+			<%end%>
+      <% @recurring_order_other_week.each do |recurring_order|%>
+				<%last_recurring_order = recurring_order.starting_on.to_date+132 %>
+				<% current_recurring_order_pickup = recurring_order.last_order.requests.first.stop.date%>
+			  <% current_recurring_order_delivery = recurring_order.last_order.requests.last.stop.date%>
+				<% while current_recurring_order_pickup <= last_recurring_order do %>
+					<% if current_recurring_order_pickup.strftime("%m").to_i == @month.to_i%>
+						      <%unless recurring_order.last_order.nil?%>
+                      <% request_object = recurring_order.last_order.requests %>
+                      <tr style="text-align: left;" class="<%= cycle('light-blue', 'drag-green', :name => "price_class") %>" valign="middle">
+                      <td>
+                              <%= recurring_order.customer.user.first_name %> <%= recurring_order.customer.user.last_name %>
+                      </td>
+                      <td>
+                              <%="Every Other Week" if recurring_order.interval == 14%>
+                      </td>
+                      <td>
+                        <%= current_recurring_order_pickup.strftime("%A") %>,  <%=current_recurring_order_pickup%><br/>
+                         <%unless request_object.first.stop.window.nil? %>
+                          <%= request_object.first.stop.window.start.strftime('%I:%M %p') %> -- <%= (request_object.first.stop.window.end + 1.second).strftime('%I:%M %p') %>
+                        <%end%>
+                      </td>
+                      <td> 
+                        <%unless request_object.last.stop.window.nil? %>
+                              <% if recurring_order.delivery_day>recurring_order.pickup_day
+                                    day_between =recurring_order.delivery_day-recurring_order.pickup_day 
+                              else
+                                     day_between =recurring_order.pickup_day-recurring_order.delivery_day
+                              end%>
+                               <%= current_recurring_order_delivery.strftime("%A")  %>,<%= current_recurring_order_delivery %> <br/>
+                          <%= request_object.last.stop.window.start.strftime('%I:%M %p') %> -- <%= (request_object.last.stop.window.end + 1.second).strftime('%I:%M %p') %>
+                        <%end%>
+                    </td>
+                  </tr>
+                <%end%>
+					<%end%>
+					<% current_recurring_order_pickup +=14%><% current_recurring_order_delivery +=14%>
+				<%end%>
+			<%end%>
+
+   <% @recurring_order_month.each do |recurring_order|%>
+				<%last_recurring_order = recurring_order.starting_on.to_date+258 %>
+				<% current_recurring_order_pickup = recurring_order.last_order.requests.first.stop.date%>
+			  <% current_recurring_order_delivery = recurring_order.last_order.requests.last.stop.date%>
+				<% while current_recurring_order_pickup <= last_recurring_order do %>
+					<% if current_recurring_order_pickup.strftime("%m").to_i == @month.to_i%>
+						      <%unless recurring_order.last_order.nil?%>
+                      <% request_object = recurring_order.last_order.requests %>
+                      <tr style="text-align: left;" class="<%= cycle('light-blue', 'drag-green', :name => "price_class") %>" valign="middle">
+                      <td>
+                              <%= recurring_order.customer.user.first_name %> <%= recurring_order.customer.user.last_name %>
+                      </td>
+                      <td>
+                              <%="Monthly" if recurring_order.interval == 28%>
+                      </td>
+                      <td>
+                        <%= current_recurring_order_pickup.strftime("%A") %>,  <%=current_recurring_order_pickup%><br/>
+                         <%unless request_object.first.stop.window.nil? %>
+                          <%= request_object.first.stop.window.start.strftime('%I:%M %p') %> -- <%= (request_object.first.stop.window.end + 1.second).strftime('%I:%M %p') %>
+                        <%end%>
+                      </td>
+                      <td> 
+                        <%unless request_object.last.stop.window.nil? %>
+                              <% if recurring_order.delivery_day>recurring_order.pickup_day
+                                    day_between =recurring_order.delivery_day-recurring_order.pickup_day 
+                              else
+                                     day_between =recurring_order.pickup_day-recurring_order.delivery_day
+                              end%>
+                               <%= current_recurring_order_delivery.strftime("%A")  %>,<%= current_recurring_order_delivery %> <br/>
+                          <%= request_object.last.stop.window.start.strftime('%I:%M %p') %> -- <%= (request_object.last.stop.window.end + 1.second).strftime('%I:%M %p') %>
+                        <%end%>
+                    </td>
+                  </tr>
+                <%end%>
+					<%end%>
+					<% current_recurring_order_pickup +=28%><% current_recurring_order_delivery +=28%>
+				<%end%>
+			<%end%>
+<% end %>
+</table>

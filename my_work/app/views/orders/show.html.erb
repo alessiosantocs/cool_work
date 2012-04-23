@@ -1,0 +1,202 @@
+<%= render :partial => '/admin/account_search' %>
+
+<div class="view-menu">
+	<span><strong>Accounts > Order Details</strong></span>
+</div>
+<table style="border: 1px solid black;" cellspacing="0">
+	<tr>
+		<td style="background-color: #EAD7B6; color: white; padding-left: 15px;" colspan="4">
+			<b><%= "#{@order.created_at.strftime('%B %d, %Y at %I:%M')} - Order Number #{@order.tracking_number}" %></b>
+		</td>
+	</tr>
+	<tr style="background-color: #EDEDED; border: 1px solid black;" >
+		<td>
+			<table cellspacing=15>
+				<tr style="text-align: left;">
+					<th><div class="green"><b>Order Details</b></div></th>
+					<th><div class="green"><b>Status</b></div></th>
+					<th><div class="green"><b>Primary Information</b></div></th>
+					<th><div class="green"><b>Preferences</b></div></th>
+				</tr>
+				<tr>
+					<td>
+						<div><b>Order #: <%= @order.identifier %></b></div>
+						<div><b>Placed on: <%= @order.created_at.strftime('%B %d, %Y') %></b></div>
+						<div><b>Pickup: <%= format_date(@order.pickup_date) + ', ' if @order.pickup_date %><%= time_window(@order.pickup_window) if @order.pickup_date %></b></div>
+						<div><b>Delivery: <%= format_date(@order.delivery_date) + ', ' if @order.delivery_date %><%= time_window(@order.delivery_window) if @order.delivery_date %></b></div>
+						<div><b>Express: <%= @order.express %></b></div>
+						<div><b>Premium: <%= @order.premium %></b></div>
+					</td>
+					<td>
+						<div><%= @order.status %></div>
+					</td>
+					<td>
+						<% form_for :customer, :url => customer_path(@customer), :html => {:method => :put} do |f| -%>
+							<table cellspacing="10">
+								<% fields_for :user do |u| %>
+									<tr>
+										<td class="label"><label for="user_first_name">First Name:</label></td>
+										<td><%= u.text_field :first_name, :live => true %></td>
+									</tr>
+									<tr>
+										<td class="label"><label for="user_last_name">Last Name:</label></td>
+										<td><%= u.text_field :last_name, :live => true %></td>
+									</tr>
+								<% end %>
+																
+								<% fields_for :address do |a| %>
+									<tr>
+										<td class="label"><label for="address_label">Building Name:</label></td>
+										<td><%= a.text_field :label %></td>
+									</tr>
+								<% end %>
+								
+								<% fields_for :building do |b| %>
+									<tr>
+										<td class="label"><label for="building_addr1">Street Address:</label></td>
+										<td><%= b.text_field :addr1 %></td>
+									</tr>
+									<tr>
+										<td class="label"><label for="building_addr2">Street Address:</label></td>
+										<td><%= b.text_field :addr2 %></td>
+									</tr>
+								<% end %>
+								
+								<% fields_for :address do |a| %>
+									<tr>
+										<td class="label"><label for="address_unit_number">Apt/Ste:</label></td>
+										<td><%= a.text_field :unit_number %></td>
+									</tr>
+								<% end %>
+								
+								<% fields_for :building do |b| %>
+									<tr>
+										<td class="label"><label for="building_city">City:</label></td>
+										<td><%= b.text_field :city %></td>
+									</tr>
+									<tr>
+										<td class="label"><label for="building_state">State:</label></td>
+										<td><%= b.select :state, Building.supported_states %></td>
+									</tr>
+									<tr>
+										<td class="label"><label for="building_zip">Zip code:</label></td>
+										<td><%= b.text_field :zip %></td>
+									</tr>
+								
+								<% end %>
+							</table>
+							
+							<div class="submit-buttons">
+								<span><font face="HelveticaRounded"><%= image_submit_tag 'save_btn.png', :class =>"align-button" %></font></span>
+							</div>
+							<% end -%>
+					</td>
+					<td>
+						<div id="customer_preferences">
+							<% form_remote_for :customer_preferences, :url => customer_preference_path(@customer_preferences), :loading => "$('flash').update('<span class=\"notice\">Saving...<\/span>')", :complete => "$('flash').update('<span class=\"notice\">Preferences Saved!<\/span>')", :html => { :method => :put } do |f| -%>
+								<table cellspacing="5">
+									<tr>
+										<td>
+											<h4>Laundered Shirts</h4><br/>
+											<%= f.radio_button :ls_starch, true %> Yes <%= f.radio_button :ls_starch, false %> No
+										</td>
+									</tr>
+									<tr>
+										<td>
+											<h4>Dry Cleaning</h4><br/>
+											<%= f.radio_button :dc_starch, true %> Yes <%= f.radio_button :dc_starch, false %> No
+										</td>
+									</tr>
+								</table>
+								<div class="submit-buttons">
+									<font face="HelveticaRounded"><%= image_submit_tag 'save_btn.png', :class =>"align-button" %></font>
+								</div>
+							<% end -%>
+</div>
+					</td>
+				</tr>
+			</table>			
+		</td>
+	</tr>	
+</table>
+
+<br/><br/>
+
+<table style="border: 1px solid black;" cellspacing="0" >
+	<tr>
+		<td style="background-color: #C7E09D; color: white; padding: 0px 10px;" colspan="4">
+			<b><%= "Order Number #{@order.identifier} - Services & Items" %></b>
+		</td>
+	</tr>
+	<tr style="border: 1px solid black;">
+		<td>
+			<table>
+				<% @order.order_items.group_by(&:customer_item_type).sort.each do |service, items| %>
+					<tr>
+						<td>
+							<table style="margin-left: 15px;">
+								<tr>
+									<td class="green"><h2><%= service.services.first.name %></h2></td>
+								</tr>
+								<tr>
+									<td>
+										<table  cellspacing=5>
+											<tr style="text-align: left;">
+												<th>Item ID</th>
+												<th>Item</th>
+												<% if service.services.first.weighable? %>
+													<th>weight</th>
+												<% else %>
+													<th>Brand</th>
+													<th>Color</th>
+													<th>Size</th>
+													<th>Premium</th>
+													<th>Special</th>
+												<% end %>
+											</tr>
+											<% for item in items %>
+												<tr>
+													<td><%= item.id %></td>
+													<td><%= service.name %></td>
+													<% if item.is_weighable? %>	
+														<td><%= item.weight %></td>
+													<% else %>
+														<td><%= item.brand %></td>
+														<td><%= item.color %></td>
+														<td><%= item.size %></td>
+														<td><%= item.premium %></td>
+														<td><%= item.customer_item.instruction_text %></td>
+													<% end %>
+												</tr>
+											<% end %>
+										</table>
+									</td>
+								</tr>
+							</table>
+						</td>
+					</tr>
+				<% end %>
+			</table>			
+		</td>
+	</tr>	
+</table>
+
+<br/><br/>
+
+
+<table style="border: 1px solid black;" cellspacing="0">
+	<tr>
+		<td style="background-color: #3A695D; color: white; padding: 0px 8px;" colspan="4">
+			<b><%= "Order Number #{@order.identifier} - Reschedule Order" %></b>
+		</td>
+	</tr>
+	<tr>
+		<td>
+			<table cellspacing=15 align="center" width="100%">
+				<tr>
+					<td><%= link_to "RESCHEDULE PICKUP OR DELIVERY", reschedule_customer_order_path(@order.customer, @order), :class => "green" %></td>
+				</tr>
+			</table>			
+		</td>
+	</tr>	
+</table>

@@ -1,0 +1,57 @@
+<% already_delivery_address = String.new %>
+<% if current_user.employee? %>
+<div style="float:left;"><%= link_to 'Previous Week', 'javascript:void(0)', :onclick => "changePickUpDelivery('#{(@from_date.to_date-7).to_s}', '', 6, '', false)"%></div>
+<div style="text-align:right;"><%= link_to 'Next Week', 'javascript:void(0)', :onclick => "changePickUpDelivery('#{(@from_date.to_date+7).to_s}', '', 6, '', false)"%></div>
+<% end %>
+<table class="pickup-delivery" style="width:<%= (schedules.size) * 100.4 %>px">
+<thead >
+	<tr>
+		<% (0..schedules.size-1).each do |day| %>
+		<th>
+			<div class="day"><%= schedules[day].to_s("%a").upcase %></div>
+			<div class="date"><%= schedules[day].to_s("%b %d") %></div>
+    	</th>
+		<% end %>
+	</tr>
+</thead>
+<tbody>
+	<% @windows.each_with_index do |window,i| %>
+	<tr>
+		<% (0..schedules.size-1).each do |day| %>
+		<td>
+			<% if schedules[day][i].nil? || schedules[day][i].negative? %>
+				<div>&nbsp;</div>
+			<% elsif @windows.to_a.last == window && !@order.customer.doorman_building? %>
+				<div>&nbsp;</div>
+			<% elsif schedules[day][i].available_or_concords_with(@order.customer.primary_address) == false %>
+				<div class="pickup-delivery-choice">
+					<span class="slot-full">x</span>
+					<% if @windows.to_a.last == window %>
+							Doorman
+						<% else %>
+							<%= time_window(window) %>
+						<% end %> 
+				</div>
+			<% else %>
+                                <% if schedules[day][i].concords_with(@order.customer.primary_address)
+                                    already_delivery_address << schedules[day].to_s('%Y-%m-%d') + '_' + i.to_s + "====="
+                                  end
+                               %>
+				<div class="pickup-delivery-choice <%= 'bg_green' if schedules[day][i].concords_with(@order.customer.primary_address) %>">
+					<input <%= checked_window('delivery', @order, schedules[day].date, window.start.hour) %> type="radio" name="<%= pickup == true ? 'pickup' : 'delivery' %>" value="<%= schedules[day].to_s('%Y-%m-%d') + '_' + i.to_s %>" onclick="changePickUpDelivery('', '<%= schedules[day].to_s('%A')%>', <%= window.start.hour %>, <%= window.end.hour+1.second %>, <%= pickup %>)" />
+					<label>
+						<% if @windows.to_a.last == window %>
+							Doorman
+						<% else %>
+							 <%= time_window(window) %>
+						<% end %>
+					</label>  
+				</div>
+			<% end %>
+		</td>
+		<% end %>
+	</tr>
+	<% end %>
+<input type="hidden" name="stop_id_for_delivery" value="<%=already_delivery_address%>">
+</tbody>
+</table>

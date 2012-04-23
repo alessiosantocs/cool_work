@@ -1,0 +1,13 @@
+<p>
+  <b>Promotion:</b>
+  <%=h @promotion_zip.promotion_id %>
+</p>
+
+<p>
+  <b>Serviced zip:</b>
+  <%=h @promotion_zip.serviced_zip_id %>
+</p>
+
+
+<%= link_to 'Edit', edit_promotion_zip_path(@promotion_zip) %> |
+<%= link_to 'Back', promotion_zips_path %>

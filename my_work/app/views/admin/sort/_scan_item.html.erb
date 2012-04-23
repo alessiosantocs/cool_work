@@ -1,0 +1,11 @@
+<br/><br/><br/><br/>
+<div style="width: 300px; margin: auto;">
+	<form method="post" action="/admin/sort/scanned">
+		<p>BARCODE: <input type="text" size="30" name="barcode" id="barcode"/></p>
+		<%= "<input type=\"hidden\" value=\"#{@area}\" name=\"area\" />" if defined? @area and @area %>
+		<%= "<input type=\"hidden\" value=\"#{@context}\" name=\"context\" />" if defined? @context and @context %>
+		<p><input type="submit" value="SCAN ITEM" name="commit" class="button blue"/></p>
+		<%= "<p>#{notes}</p>" if defined? notes and notes %>
+	</form>
+</div>
+<%= javascript_tag "$('barcode').focus();" %>

@@ -1,0 +1,7 @@
+<%= error_messages_for :truck %>
+
+<% form_for :truck, :url => truck_path(@truck), :html => { :method => :put } do |f| %>
+	<%= render :partial => 'form', :locals => { :create => false, :f => f } %>
+<% end %>
+
+<%= link_to 'Delete', truck_path(@truck), :class => 'admin', :confirm => 'Are you sure?', :method => :delete %>

@@ -1,0 +1,30 @@
+<%= render :partial => '/admin/account_search' %>
+<div class="view-menu">Manifest for <strong><%= calendar_day.strftime("%a %m/%d/%Y") %></strong></div>
+<% if current_user.has_role?("manifest")%>
+  <%= stylesheet_link_tag "zpcal/themes/winxp.css", "zpcal/doc/css/zpcal.css", "zpcal/doc/css/template.css" %>
+  <%= javascript_include_tag "zpcal/src/utils.js", "zpcal/src/calendar.js", "zpcal/lang/calendar-en.js", "zpcal/src/calendar-setup.js" %>
+    <table  cellspacing="10" style="background-color: rgb(240, 240, 240); border: 1px solid rgb(192, 192, 192);text-align:center;width:100%">
+      <tr>
+          <td>
+              <lable><b>Select Date</b>&nbsp;</lable>
+              <%= text_field_tag :date,"", { :size=>"10", :disabled=>"", :onchange=>"document.getElementById('submit').onclick = function() { window.location.href = '/admin/manifest?date='+$F('date');}"}%>
+              <%= submit_tag("...", { :name => 'button', :id => 'select_date', :type => "button" }) %>
+              <input type="button" name="submit" id="submit" value="View Manifest">
+          </td>
+      </tr>
+    </table>
+  <script type="text/javascript">
+      Zapatec.Calendar.setup({
+              inputField     :    "date",     // id of the input field
+              ifFormat       :    "%Y-%m-%d",     // format of the input field
+              button         :    "select_date",  // What will trigger the popup of the calendar
+              showsTime      :     false      //don't show time, only date
+      });
+  </script>
+  <br/>
+<% end %>
+<form name="trucks_select" method="get" action="">
+	<table id="manifest" cellspacing="10">
+		<%= render :partial => 'manifest_table' %>
+	</table>
+</form>

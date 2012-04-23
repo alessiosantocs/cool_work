@@ -1,0 +1,37 @@
+<p>
+	<span><strong>Name: </strong></span>
+	<span><%= f.text_field :name %></span>
+</p>
+
+<p>
+	<span><strong>Capacity: </strong></span>
+	<span><%= f.text_field :capacity %></span>
+</p>
+
+<p>
+	<span><strong>Active: </strong></span>
+	<span><%= f.check_box :active %></span>
+</p>
+
+<p>
+	<span><strong>Rate: </strong></span>
+	<span><%= f.text_field :rate_mod %></span>
+</p>
+
+<p>
+	<span><strong>Decommissioned: </strong></span>
+	<span><%= f.check_box :decommissioned %></span>
+</p>
+
+<p>
+	<span><strong>Color: </strong></span>
+	<span><%= color_picker('truck', 'hex_color', @truck.hex_color) %></span>
+</p>
+<p>
+	<% if create %>
+        <%= f.submit "Create" %>
+    <% else %>
+        <%= f.submit "Update" %>
+    <% end %>
+</p>
+

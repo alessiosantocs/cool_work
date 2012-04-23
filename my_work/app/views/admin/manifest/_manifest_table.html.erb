@@ -1,0 +1,138 @@
+<tr>
+	<th class="normal">
+		<div>Show all times OR </div>
+		<% if @selected_serviced_zips.empty? %>
+			<div class="red">Displaying: All Routes</div>
+		<% else %>
+			<div class="red">Displaying: (<%= @selected_serviced_zips.collect { |s| s.zip }.join(', ') %>)</div>
+		<% end %>
+	</th>
+	<% for truck in @selected_trucks %>
+		<th class="normal">
+			<div><%= truck.name %></div>
+			<div>Max Capacity: <%= truck.capacity %></div>
+			<div class="red">Open Today: <%= truck.open_on_date(calendar_day) %></div>
+		</th>
+	<% end %>
+	<th class="normal">
+		<div><%= link_to_function 'Add/Remove Truck(s)', '$("trucks").toggle()', :class => 'action new' %></div>
+		<div id="trucks" style="display:none">
+			<%= select_tag 'trucks[]', options_from_collection_for_select(@trucks, :id, :name, @selected_trucks.collect { |t| t.id.to_i }), :multiple => true, :size => 5, :style => 'min-width: 60px' %>
+			<input type="submit" value="Show"/>
+		</div>
+	</th>
+	
+</tr>
+<tr>
+	<td id="order-info" class="order-info">
+		<div style="text-align:left">
+			<span class="float-right"><%= link_to_function 'Add/Remove Route(s)', '$("zips").toggle()', :class => 'action new' %></span>
+			<span><strong>Orders to be Assigned</strong></span>
+		</div>
+		<div id="zips" style="display:none">
+			<%= select_tag 'zips[]', options_from_collection_for_select(@serviced_zips, :id, :zip, @selected_serviced_zips.collect { |t| t.id.to_i }), :multiple => true, :size => 6, :style => 'min-width: 90px' %>
+			<input type="submit" value="Show"/>
+		</div>
+		<br />
+		<% zips = @selected_serviced_zips.empty? ? @serviced_zips : @selected_serviced_zips %>
+		<% for zip in zips %>
+			<div class="<%= cycle("drag-light", "drag-green") -%>">
+				<div class="red"><%= zip.zip %></div>
+				<% for request in zip.requests_for_date(calendar_day) %>
+					<% order = request.order %>
+					<% if !request.assigned? && order && order.confirmed? %>
+						<div id="request_<%= request.id %>" class="request">
+							<strong><%= "P -- #{time_window(order.pickup_window)}" if request.for_pickup? %><%= "D -- #{time_window(order.delivery_window)}" if request.for_delivery? %></strong><%= " -- #{order.customer.primary_address.to_s}" %>
+							<%= draggable_element "request_#{request.id}", :revert => true %>
+						</div>
+					<% end %>
+				<% end %>
+			</div>
+		<% end %>
+	</td>
+	<% for truck in @selected_trucks %>
+		<td id="truck_<%= truck.id %>"  class="order-info">
+			<% for assignment in truck.assignments_for_date_and_locations(calendar_day, @selected_serviced_zips) %>
+				<% for request in assignment.requests %>
+                                        <% order = request.order %>
+					<% if request.assigned? && order && order.confirmed? %>
+						<div id="request_<%= request.id %>" class="request"><strong><%= "P -- #{time_window(order.pickup_window)}" if request.for_pickup? %><%= "D -- #{time_window(order.delivery_window)}" if request.for_delivery? %></strong><%= " -- #{order.customer.primary_address.to_s}" %></div>
+					<% end %>
+				<% end %>
+			<% end %>
+		</td>
+	<% end %>
+	<td class="normal">&nbsp;</td>
+</tr>
+<tr>
+	<td class="normal">&nbsp;</td>
+	<% for truck in @selected_trucks %>
+		<td class="normal"><%= link_to "Print Manifests", "/admin/manifest/truck_manifest?id=#{truck.id}&amp;date=#{calendar_day.to_s}", :popup => true %></td>	
+	<% end %>
+	<td class="normal">&nbsp;</td>
+</tr>
+
+<% for truck in @selected_trucks %>
+	<%= sortable_element "truck_#{truck.id}",
+	    :tag => 'div',
+	    :dropOnEmpty => true, 
+	    :constraint => false,
+		:containment => containment(@selected_trucks),
+		:loading => "$('flash').update('<span class=\"notice\">Moving...<\/span>');",
+     	:success => "$('flash').update('<span class=\"notice\">Saved!<\/span>');",
+		:failure => "$('flash').update('<span class=\"error\">Failed!<\/span>');",
+	    :url => { :action => "order", :current_truck_id => "#{truck.id}"} %>
+		
+	<script type="text/javascript">
+		//<![CDATA[
+			Droppables.add("truck_<%= truck.id %>", {
+		        hoverclass: 'hover',
+		        onDrop: function(element, drop_element){
+		            new Ajax.Request('/admin/manifest/assign_truck', {
+		                asynchronous: true,
+		                evalScripts: true,
+		                onLoading: function(request){
+		                    $('flash').update('<span class=\"notice\">Saving...<\/span>');
+		                    Droppables.drops = [];
+		                    Draggables.drags = [];
+		                },
+		                onSuccess: function(request){
+		                    $('flash').update('<span class=\"notice\">Saved!<\/span>');
+		                },
+		                onFailure: function(request){
+							$('flash').update('<span class=\"error\">A problem occurred while saving. Please <a href=\'javascript:window.location=window.location\'>refresh<\/a> the page.<\/span>');
+		                },
+		                parameters: 'id=' + encodeURIComponent(element.id) + '&drop_id=' + encodeURIComponent(drop_element.id)
+		            })
+		        }
+		    });
+		//]]>
+		</script>
+
+<% end %>
+
+<script type="text/javascript">
+//<![CDATA[
+	Droppables.add("order-info", {
+        hoverclass: 'hover',
+        onDrop: function(element, drop_element){
+            new Ajax.Request('/admin/manifest/unassign_truck', {
+                asynchronous: true,
+                evalScripts: true,
+                onLoading: function(request){
+                    $('flash').update('<span class=\"notice\">Saving...<\/span>');
+                    Droppables.drops = [];
+                    Draggables.drags = [];
+                },
+                onSuccess: function(request){
+                    $('flash').update('<span class=\"notice\">Saved!<\/span>');
+                },
+                onFailure: function(request){
+					$('flash').update('<span class=\"error\">A problem occurred while saving. Please <a href=\'javascript:window.location=window.location\'>refresh<\/a> the page.<\/span>');
+                },
+                parameters: 'id=' + encodeURIComponent(element.id) + '&drop_id=' + encodeURIComponent(drop_element.id)
+            })
+        }
+    });
+//]]>
+</script>

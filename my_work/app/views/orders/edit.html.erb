@@ -1,0 +1,207 @@
+<%= error_messages_for :order %>
+
+<div>
+	<%= image_tag('order_hdn.png') %>
+</div>
+
+<br/>
+
+<div>
+	<% form_for :order, :url => customer_order_path(@order.customer, @order) + '?redirect_to=' + params[:redirect_to].to_s, :html => { :method => :put } do |f| %>
+		<table cellspacing="5">
+			<tr>
+				<td>Do you prefer <%= link_to_function 'Premium Service', "javascript:load_window('/prices#Premium', 'Prices')", :class => 'green'%> for all of your items? &nbsp;</td>
+				<td>
+					<%= radio_button 'premium', 'yes', true, :checked => @order.premium? %> Yes 
+					<%= radio_button 'premium', 'yes', false, :checked => !@order.premium? %> No	
+					<%= link_to_function 'Price List', "javascript:load_window('/prices', 'Prices')", :class => 'green'%>
+				</td>
+			</tr>
+			<tr>
+				<td colspan="2">
+					<div style="width: 450px" class="small_text">You can decide if you need premium service for individual items by indicating that an item needs special handling by customizing your order.</div>
+				</td>
+			<tr>
+	        	<td colspan="2">
+	            	<hr class="grey" />
+	        	</td>
+	    	</tr>
+			<tr>
+				<td colspan="2" class="title">MY DIRTY LAUNDRY</td>
+			</tr>
+			<tr>
+				<td>Choose what you have</td>
+				<td style="padding-right: 220px;">
+					<table>
+						<% i=0 %>
+						<% for service in @services %>
+							<%= i%3 == 0 ? "<tr><td>" : "<td>" %>
+								<div style="margin: 10px;">
+									<div onclick="toggle_service_types(<%= service.id %>, '<%= service.image_url %>')" >
+										<input style="visibility:hidden; display:none" type="checkbox" id="service_<%= service.id %>" name="service_<%= service.id %>" />
+										<%= image_tag service.image_url, :id => "service_#{service.id}_image", :style => "cursor:pointer;" %>
+									</div>
+									<div style="text-align: center; width: 60px;"><%= service.name %></div>
+								</div>
+							<%= i%3 == 2 ? "</tr></td>" : "</td>" %>
+							<% i=i+1 %>
+						<% end %>
+					</table>
+				</td>
+			</tr>
+			<tr>
+	        	<td colspan="2">
+	            	<hr class="grey" />
+	        	</td>
+	    	</tr>
+			<tr>
+				<td colspan="2" class="title">MY ITEMIZATION</td>
+			</tr>
+			<tr>
+				<td>Do you want to itemize?</td>
+				<td>
+					<span class="dashboard-options">
+						<%= link_to_function image_tag('customize_order_btn.png'), 'toggle_slide_element("customize_order")', :class => 'align-button' %>
+					</span>
+				</td>
+			</tr>
+		</table>
+		<div id="customize_order" style="display: none">
+			<table cellspacing="5">
+				<tr>
+		        	<td colspan="2">
+		            	<hr class="grey" />
+		        	</td>
+	    		</tr>
+				<tr>
+					<td class="title" colspan="2">CUSTOMIZE</td>
+				</tr>
+				<tr>
+					<td class="small_text" colspan="2">
+						If an item needs special handling, please click the hand icon next to the item type.<br/>
+						If two or more items of the same type need special handling, add additional item details. 
+					</td>
+				</tr>
+
+				<tr>
+					<td colspan="2">
+						<div class="item">
+							<div class="item-name green">ITEM</div>
+							<div class="item-quantity green">QTY / WEIGHT</div>
+							<div class="green">NEEDS SPECIAL HANDLING</div>
+						</div>
+						
+						<% for service in @services %>
+						<div id="service_types_<%= service.id %>" style="display: none">
+							<h3 class="green"><br/><%= service.name %></h3>
+							<% if service.itemizeable? %>
+								<% for item_type in service.applicable_item_types %>
+                                                                  <% if item_type.is_active.to_i == 1 %>
+								<div class="item">
+									<div class="item-name"><%= item_type.name %>:</div>
+									<% items = @order.items_from_type(item_type,service.id) %>
+									<% if service.weighable? %>
+										<% if items.size > 0 %>
+											<input type="hidden" name="item[<%= items[0].id %>]" value="on" />
+											<% weight = items.empty? ? 0 : items[0].weight %>
+											<div class="item-weight"><%= tooltip 'A minimum of 10 lbs will be charged to your order – Exact weight and relative charges will be confirmed upon receipt of your order by our garment specialists' %></div>
+											<!-- commented out 11/05/08 by Justin per MFS request
+											<div class="item-weight"><input type="text" size="3" name="weight_item_type_<%= item_type.id %>" OnKeyUp="numeric(this)" value="<%= weight %>"/> lbs</div> -->
+											<input type="hidden" id="quantity_item_type_<%= item_type.id %>" name="quantity_item_type_<%= item_type.id %>" value="1" />
+										<% else %>
+											<div class="item-weight"><input type="text" size="3" name="weight_item_type_<%= item_type.id %>" OnKeyUp="numeric(this)" value="<%= weight %>"/> lbs</div>
+											<input type="hidden" id="quantity_item_type_<%= item_type.id %>" name="quantity_item_type_<%= item_type.id %>" value="1" />
+										<% end %>
+									<% else %>
+										<% qty = items.empty? ? 0 : items.size %>
+										<div class="item-quantity"><input type="text" size="2" id="quantity_item_type_<%= item_type.id %>" name="quantity_item_type_<%= item_type.id %>" OnKeyUp="numeric(this); additional_details(this, <%= item_type.id %>)"  value="<%= qty %>"/> #</div>									
+									<% end %>
+									<% if service.detailable? %>
+										<div class="item-special-link">
+											<img src="/images/hand.gif" onclick="$('item_special_handling_<%= item_type.id %>').toggle();toggle_hand(this);quantity_check('quantity_item_type_<%= item_type.id %>')" alt="Needs Special handling"/>
+										</div>
+										<% if items.size > 0 %>
+											<div id="item_special_handling_<%= item_type.id %>" class="item-handling" style="display:block;">
+												<% for item in items %>
+													<div id="item_<%= item.id %>">
+														<div class="special-handling">
+															<input type="hidden" name="item[<%= item.id %>]" value="on" />
+															<input type="hidden" name="item_details_<%= item_type.id %>[1]" value="1" />
+															Color: <input size=12 type="text" name="item_<%= item.id %>[color]" value="<%= item.color %>"/>
+															Brand: <input size=12 type="text" name="item_<%= item.id %>[brand]" value="<%= item.brand %>"/>
+															Size: <input size=12 type="text" name="item_<%= item.id %>[size]" value="<%= item.size %>"/>
+															<div class="item-instructions">
+																Instructions: <textarea name="instructions_item_<%= item.id %>[text]" cols=34 rows=3><%= item.customer_item.instructions.text if item.customer_item.instructions %></textarea>
+															</div>
+															<div>
+																<%= tooltip 'Select an option if you want to alter this items specific service level to that of the main order.' %>
+																<%= link_to 'Premium Service', '#', :class=>'green' %>
+																<%= radio_button "item_#{item.id}", 'premium', true, :checked => item.premium == true %> Yes 
+																<%= radio_button "item_#{item.id}", 'premium', false, :checked => item.premium == false %> No
+															</div>
+															<div class="special-title green"><a onclick="$('item_<%= item.id %>').remove(); additional_details($('quantity_item_type_<%= item_type.id %>'), <%= item_type.id %>); return false;" href="#" style="float: right;">Remove</a>Special Handling</div>
+														</div>
+														<br/>
+													</div>
+												<% end %>
+												<div id="item_type_<%= item_type.id %>_<%= items.size %>" class="item_class_<%= item_type.id %>">
+													<div id="item_add_details_<%= item_type.id %>" style="display: none" class="item-handling">
+													<br/>
+														<a href='#' onclick='javascript:addAditionalDetails("<%= item_type.id %>", "<%= items.size %>"); return false;'>Add additional item details</a>
+													</div>
+												</div>
+											</div>
+										<% else %>
+											<div id="item_special_handling_<%= item_type.id %>" style="display: none;" class="item-handling" >
+												<div class="special-handling" >
+													<input type="hidden" name="item_details_<%= item_type.id %>[1]" value="1" />
+													Color: <input size=12 type="text" name="customer_item_type_<%= item_type.id %>_1[color]" />
+													Brand: <input size=12 type="text" name="customer_item_type_<%= item_type.id %>_1[brand]" />
+													Size: <input size=12 type="text" name="customer_item_type_<%= item_type.id %>_1[size]" />
+													<div class="item-instructions">
+														Instructions: <textarea name="instructions_item_type_<%= item_type.id %>_1[text]" cols=40 rows=3></textarea>
+													</div>
+													<div>
+														<%= tooltip 'Select an option if you want to alter this items specific service level to that of the main order.' %>
+														<%= link_to_function 'Premium Service', "javascript:load_window('/prices#Premium', 'Prices')", :class => 'green' %>
+														<%= radio_button "customer_item_type_#{item_type.id}_1", 'premium', true %> Yes 
+														<%= radio_button "customer_item_type_#{item_type.id}_1", 'premium', false %> No
+													</div>
+													<div class="special-title green">Special Handling</div>
+												</div>
+												<div id="item_type_<%= item_type.id %>_2" class="item_class_<%= item_type.id %>">
+													<div id="item_add_details_<%= item_type.id %>" style="display: none" class="item-handling">
+													<br/>
+														<a href='#' onclick='javascript:addAditionalDetails("<%= item_type.id %>", 2); return false;'>Add additional item details</a>
+													</div>
+												</div>
+											</div>
+										<% end %>
+									<% end %>
+								</div>
+								<br />
+                                                                  <%end%>
+								<% end %>
+							<% end %>
+						</div>
+						<% end %>
+					</td>
+				</tr>
+			</table>
+		</div>
+		
+		<br />
+		<div class="float-right">
+				<font face="HelveticaRounded"><%= image_submit_tag 'update_order_arrow.png' %></font>
+		</div>
+		<br />
+	<% end -%>
+</div>
+
+
+<% for service in @services %>
+	<% if @order.has_service?(service) %> 
+		<%= javascript_tag "toggle_service_types(#{service.id}, '#{service.image_url}')" %>	
+	<% end %>
+<% end %>
+<%= javascript_tag "toggle_slide_element('customize_order')" %>

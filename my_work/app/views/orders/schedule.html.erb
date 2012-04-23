@@ -1,0 +1,213 @@
+<%= render :partial => 'orders/order_status', :locals=>{ :p => 2 }  %>
+
+<p>
+	<%= image_tag('schedule_hdn.png', :style=>'height:25px;') %>
+</p>
+<p>
+	<%= link_to image_tag('to_order_desc_btn.png'), edit_customer_order_path(@order.customer, @order), :class => 'align-button' %>
+</p>
+<% 
+	@schedules = {}
+	@start_date = @order.pickup_date || @order.earliest_pickup_date
+	@start_date.upto(@start_date + 6) do |day|	
+		@schedules[day] = Schedule.for(@selected_location, day)
+	end
+%>
+
+<% 
+	@delivery_schedules = Schedule.for_week_of(@selected_location, @order.earliest_deliverable(@start_date), nil)
+%>
+
+<% form_for :order, :url => make_request_customer_order_path(@customer, @order)+ '?redirect_to=' + params[:redirect_to].to_s do |f| -%>
+	<% if !@order.customer.building_pickup.nil? && !@order.customer.building_delivery.nil? %>
+	<hr class="grey"/>
+	<p>
+		<table>
+			<tr>
+				<td>
+					<span>Will we be picking up and leaving your laundry with the doorman?</span>
+					<br/>
+					<span class="small_text"><%= link_to_function 'Learn how', "javascript:load_window('/ecologic', 'Eco_Logic')", :class => 'green', :style => 'font-size: 11px;' %> how you can help us be eco-conscious</span>
+				</td>
+				<td>
+					<div style="margin-left: 25px;">
+						<%= radio_button 'doorman', 'yes', true, :onclick => "$('registered-building').show();" %> Yes 
+						<%= radio_button 'doorman', 'yes', false, :onclick => "$('registered-building').hide();" %> No
+					</div>
+				</td>
+			</tr>
+		</table>
+	</p>
+	<br/>
+	<% end %>
+	<div id="registered-building" style="display: none;">
+		<% if !@order.customer.building_pickup.nil? && !@order.customer.building_delivery.nil? %>
+		<% pickup_day = @order.customer.building_pickup.date %>
+		<% delivery_day = @order.customer.building_delivery.date %>
+			<h2>YOUR BUILDING HAS BEEN REGISTERED WITH MY FRESH SHIRT</h2>
+			<div>Your building has a special pickup and delivery date!</div>
+			<table class="pickup-delivery" style="width; 200px; float: left;">
+				<thead>
+					<tr>
+						<th>
+							<div class="day"><%= pickup_day.strftime("%a") %></div>
+							<div class="date"><%= pickup_day.strftime("%b %d") %></div>
+				    	</th>
+						<th>
+							<div class="day"><%= delivery_day.strftime("%a") %></div>
+							<div class="date"><%= delivery_day.strftime("%b %d") %></div>
+				    	</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td>
+							<div class="pickup-delivery-choice bg_green">
+								<%= @order.customer.building_pickup.date.window.prior_to_s %>
+							</div>
+						</td>
+						<td>
+							<div class="pickup-delivery-choice bg_green">
+								<%= @order.customer.delivery_pickup.date.window.after_to_s %>
+							</div>
+						</td>
+					</tr>
+				</tbody>
+			</table> 
+			<div>
+				Picking these times will help use to be more efficient and friendly to the environment by allowing us to make less trips and less stops, as a reward, you will receive 100 points.
+				<br/>
+				Learn more about our doorman service.
+			</div>
+		<% end %>
+	</div>
+	<hr class="grey"/>
+	<p>
+		<table>
+			<tr>
+				<td>Would you like  Express Service?</td>
+				<td>
+					<div>
+						<%= radio_button 'express', 'yes', true, :checked => @order.express?, :onclick => "toggle_express(true)" %> Yes 
+						<%= radio_button 'express', 'yes', false, :checked => !@order.express?, :onclick => "toggle_express(false)" %> No
+						<span class="small_text"><%= link_to_function 'Price List', "javascript:load_window('/delivery_fees ', 'Delivery_Fees')", :class => 'green', :style => 'font-size: 11px;' %></span>
+					</div>
+				</td>
+			</tr>
+			<tr>
+				<td colspan=2> Express Service: Drop your clothes off with us before 10am and receive it <span style="color:red">next</span> day. May not be available in all areas.</td>
+			</tr>
+		</table>
+	</p>
+<div style="display:<%= ['delivered', 'processing', 'missed delivery', 'cancelled', 'picked up'].include?(@order.status) ? 'none' : '' %>">
+	<hr class="grey" />
+	<p>
+		<h2 class="green">MY PICK UP</h2>
+		<h3><%= @order.customer.primary_address.to_s %></h3>
+		<hr class="grey"/>
+		<div>
+			<%= render :partial => 'pickup', :locals => {:pickup => true, :schedules => @schedules} %>
+                       <span id="free_pic" style="display:block;color:red;">Special Note: Doorman buildings avoid service charge by selecting "doorman" hours for both pickup and delivery</span>
+		</div>
+		<br />
+		<p id="order_pickup">
+			Time windows highlighted in green are our <span class="green">"Green Leaf"</span> delivery windows. If Possible, choosing those timeslots will pool your pick up and delivery with a neighbor and allow us to make less stops and travel back and forth less.
+			All this is in our efforts to help the environment. <%= link_to "Click Here", "/my_ecologic", :class=>"green" %> to learn more.
+			<br/>
+			x = Delivery slot full
+		</p>
+	</p>
+</div>
+
+	<hr class="grey"/>
+
+	<div id="delivery-block" <%= "style='display: none;'" if !@order.delivery_date %> >
+		<h2 class="green">MY DELIVERY</h2>
+		<div>Schedule my delivery later <input type="checkbox" id="defer_delivery" name="defer_delivery" onclick="toggle_delivery(this)"/></div>
+		<h3><%= @order.customer.primary_address.to_s %></h3>
+		<hr class="grey"/>
+		<div id="order_delivery">
+			<%= render :partial => 'delivery', :locals => {:pickup => false, :schedules => @delivery_schedules} %>
+		</div>
+    <span id="free_pic" style="display:block;color:red;">Special Note: Doorman buildings avoid service charge by selecting "doorman" hours for both pickup and delivery</span>
+		<br/>
+		<p id="order_pickup">
+			Time windows highlighted in green are our <%= link_to "Green Leaf", "javascript:load_window('/my_ecologic',%20'My_Ecologic')", :class=>"green" %> delivery windows. If Possible, choosing those timeslots will pool your pick up and delivery with a neighbor and allow us to make less stops and travel back and forth less.
+			All this is in our efforts to help the environment. <%= link_to "Click Here", "javascript:load_window('/my_ecologic',%20'My_Ecologic')", :class=>"green" %> to learn more.
+			<br/>
+			x = Delivery slot full
+		</p>
+	<br />
+	<hr class="grey"/>
+	</div>
+	<p><div style="display:block;">
+		<h2 class="green">MY RECURRING ORDERS</h2>
+		<table>
+			<tr>
+				<td colspan="2">I would like to order a recurring order based on the scheduled times selected in <b>My Pick Up & My Delivery</b> <i>(above)</i>:
+                                      <% if @customer.is_renew %>
+                                         <span><input type="checkbox" value="renew">Renew</span> 
+                                      <% else %>
+					<span>
+						<select name="recurring" size="1" onchange="toggle_rec_div(this)">
+                                                    <option <%= 'selected="selected"' if !@order.recurring %> >No Thanks</option>
+                                                    <option value="weekly">Every week</option>
+                                                    <option value="two_weeks">Every other week</option>
+                                                    <option value="four_weeks">Every month</option>
+                                         <!--<option value="weekly" <%= 'selected="selected"' unless RecurringOrder.find(:last, :conditions => ["customer_id = ? AND starting_on >= ? AND recurring_orders.interval = 7 ", @customer.id, Date.today - 70.day]).blank? %>>Every week</option>
+                                          <option value="two_weeks" <%= 'selected="selected"' unless RecurringOrder.find(:last, :conditions => ["customer_id = ? AND starting_on >= ? AND recurring_orders.interval = 14 ", @customer.id, Date.today - 140.day]).blank? %>>Every other week</option>
+                                        <option value="four_weeks" <%= 'selected="selected"' unless RecurringOrder.find(:last, :conditions => ["customer_id = ? AND starting_on >= ? AND recurring_orders.interval = 28 ", @customer.id, Date.today - 280.day]).blank? %>>Every month</option>-->
+				         <!-- <option value="two_weeks" <%= 'selected="selected"' if @order.recurring && @order.parent_recurring_order && @order.parent_recurring_order.interval == 14 %>>2 Weeks</option>
+				          <option value="three_weeks" <%= 'selected="selected"' if @order.recurring && @order.parent_recurring_order && @order.parent_recurring_order.interval == 21 %>>3 Weeks</option>
+				          <option value="four_weeks" <%= 'selected="selected"' if @order.recurring && @order.parent_recurring_order && @order.parent_recurring_order.interval == 28 %>>4 Weeks</option>!-->
+                                                </select>
+
+                                          <input type="hidden" name="previous_selected" value=<%= RecurringOrder.find(:last, :conditions => ["customer_id = ? AND starting_on >= ? ", @customer.id, Date.today - 70.day]).blank? ? '' : 'agree'%>>
+                                          <input type="hidden" name="mail_for_reschedule" value=<%=@mail_for_reschedule if @mail_for_reschedule %>>
+					</span>
+                                        <% end %>
+				</td>
+			</tr>
+			<tr>
+				<td colspan=2>
+					<table id="recurring_div" style='display: none;'>
+						<tr>
+							<td colspan=2>
+								<br/>
+								If you choose, you can cancel this at anytime by visiting your My Preferences page.  In addition, if you need to order an additional service on top of your recurring order, you will still be able to do so.
+							</td>
+						</tr>
+					</table>
+				</td>
+			</tr>
+		</table>
+    </div>
+	</p>
+
+	<hr class="grey"/>
+	
+	<!--
+	<p>
+		<h2 class="green">REMEMBER FOR NEXT TIME</h2>
+		<table>
+			<tr>
+				<td>The next time I visit this page, I would like to go straight to:</td>
+				<td>
+					<div style="margin-left: 25px">
+						<%= radio_button 'schedule_next_url', 'goto_url', 'order_desc', :checked => @customer.goto_url != 'scheduling' %> Order Description 
+						<%= radio_button 'schedule_next_url', 'goto_url', 'scheduling', :checked => @customer.goto_url == 'scheduling' %> Scheduling
+						<br/><span class="small_text" style="font-style: italic">Of course you can always change your mind</span>
+					</div>
+				</td>
+			</tr>
+		</table>
+	</p>
+	-->
+	<br /><br />
+	<div class="float-right">
+		<span><font face="HelveticaRounded"><%= image_submit_tag 'confirm_btn.png', :class =>"align-button" %></font></span>
+	</div>
+	<br /><br />
+	
+	<%= javascript_tag("toggle_express(true)") %>
+<% end -%>

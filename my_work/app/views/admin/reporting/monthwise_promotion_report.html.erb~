@@ -1,0 +1,39 @@
+<%= render :partial => 'date_section' %>
+
+<table cellspacing=10 width="100%">
+  <% if @result.blank? %>
+      <tr><td>"No Record Found"</td></tr>
+  <% else %>
+      <% promotions = Promotion.find(:all) %>
+      <tr class="<%= cycle('light-blue', 'drag-green', :name => "price_class") %>">
+            <th><a href="/admin/reporting/<%= params[:action] %>?orderby=<%=@orderby%>">Promotion</th>
+            <th><a href="/admin/reporting/<%= params[:action] %>?sort=unit&orderby=<%=@orderby%>">#Units</th>
+            <th><a href="/admin/reporting/<%= params[:action] %>?sort=total_plant&orderby=<%=@orderby%>">Total Plant $</th>
+            <th><a href="/admin/reporting/<%= params[:action] %>?sort=total_retail&orderby=<%=@orderby%>">Total Retail $</th>
+            <th><a href="/admin/reporting/<%= params[:action] %>?sort=total_margin&orderby=<%=@orderby%>">Margin $</th>
+            <th><a href="/admin/reporting/<%= params[:action] %>?sort=margin_percent&orderby=<%=@orderby%>">Margin %</th>
+      </tr>
+      <% @result.each do |result|%>
+            <% if !result.keys[0].blank?  %>
+              <tr style="text-align: left;" class="<%= cycle('light-blue', 'drag-green', :name => "price_class") %>" valign="middle">
+                  <th><%= result.keys[0] %></th>
+                  <td><%= result[result.keys[0]][:unit].to_i %></td>
+                  <td><%= number_to_currency(result[result.keys[0]][:total_plant].to_f, options = {:unit => ""}) %></td>
+                  <td><%= number_to_currency(result[result.keys[0]][:total_retail].to_f, options = {:unit => ""}) %></td>
+                  <% margin = result[result.keys[0]][:total_margin].to_f %>
+                  <td class = <%= margin < 0.00 ? "red" : '' %>><%= number_to_currency(margin.abs, options = {:unit => ""}) %></td>
+                  <td class = <%= margin < 0.00 ? "red" : '' %>><%= number_to_currency(margin != 0.00 ? ((margin.abs*100)/result[result.keys[0]][:total_plant]) : 0.00, options = {:unit => ""}) %></td>
+              </tr>
+            <% end %>
+      <% end %>
+      <tr style="text-align: left;" class="<%= cycle('light-blue', 'drag-green', :name => "price_class") %>">
+          <th>Total</th>
+          <td><%= @result["total"][:unit].to_i %></td>
+          <td><%= number_to_currency(@result["total"][:total_plant], options = {:unit => ""}) %></td>
+          <td><%= number_to_currency(@result["total"][:total_retail], options = {:unit => ""}) %></td>
+          <% margin = @result["total"][:total_margin].to_f %>
+          <td class = <%= margin < 0.00 ? "red" : '' %>><%= number_to_currency(margin.abs, options = {:unit => ""}) %></td>
+          <td class = <%= margin < 0.00 ? "red" : '' %>><%= number_to_currency(margin != 0.00 ? ((margin.abs * 100)/@result["total"][:total_plant]) : 0.00, options = {:unit => ""}) %></td>
+      </tr>
+    <% end %>
+</table>

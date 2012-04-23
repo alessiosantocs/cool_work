@@ -1,0 +1,111 @@
+<ul class="tabselector">
+    <li class="tab-unselected">
+        <%= link_to_unless_current_heirarchy("SITE WIDE", "/admin/content/site") %>
+    </li>
+	<li class="tab-unselected">
+        <%= link_to_unless_current_heirarchy("HOME PAGE", "/admin/content/home") %>
+    </li>
+	<li class="tab-unselected">
+        <%= link_to_unless_current_heirarchy("NEWS", "/admin/content/news") %>
+    </li>
+        <li class="tab-unselected">
+        <%= link_to_unless_current_heirarchy ("TICKERS", "/admin/content/tickers") %>
+    </li>
+	<li class="tab-selected">
+        <%= link_to_unless_current_heirarchy("PROMOTIONS", "/admin/content/promotions") %>
+    </li>
+	<li class="tab-unselected">
+        <%= link_to_unless_current_heirarchy("MAIL & SMS TEMPLATES", "/admin/notification_templates") %>
+    </li>
+</ul>
+<ul class="panes">
+    <li class="pane-selected">
+    	<table>
+    		<tr style="vertical-align: top;">
+    			<td>
+    				<h1>New Promotion</h1>
+							<%= error_messages_for :promotion %>
+							
+							<% form_for :promotion, :url => '/promotions' do |f| %>
+							  <p>
+							    <b>Code</b><br />
+							    <%= f.text_field :code %>
+							  </p>
+							  <p>
+							    <b>Times Usable</b><br />
+							    <%= f.text_field :times_usable %>
+							  </p>
+							  <p>
+							    <b>Expiry</b><br />
+							    <%= f.date_select :expiry %>
+							  </p>
+							   <p>
+							    <b>Function</b><br />
+							    <%= f.select :function , Promotion.available %>
+							  </p>
+							   <p>
+							    <b>Arguments</b><br />
+								 e.g <b>5.00</b> for amount off order<br />
+								 or <b>9.99, 100.00</b> for amount off order over<br />
+								 or <b>10</b> for percent off order<br />
+							    <%= f.text_area :arguments, :rows => 4 %>
+							  </p>
+							
+							    <%= f.submit "Create" %>
+							  </p>
+							<% end %>
+    			</td>
+				<td style="padding-left: 50px;">
+					<h1>Previous Promotions</h1>
+					<table>
+						<tr>
+							<td>
+							    <b>Code</b>
+							</td>
+							<td>
+								<b>Times Usable</b>
+							</td>
+							<td>
+								<b>Expiry</b>
+							</td>
+							<td>
+								<b>Function</b>
+							</td>
+							<td>
+								<b>Arguments</b>
+							</td>
+							<td>
+								&nbsp;
+							</td>
+						</tr>
+			    	<% for promotion in @promotions %>
+						<% form_for(promotion) do |f| %>
+						<tr>
+							<td>
+							    <%= f.text_field :code, :size => 10 %>
+							</td>
+							<td>
+								<%= f.text_field :times_usable, :size => 6 %>
+							</td>
+							<td>
+								<%= f.date_select :expiry %>
+							</td>
+							<td>
+								<%= f.select :function , Promotion.available %>
+							</td>
+							<td>
+								<%= f.text_area :arguments , :rows => 2, :cols => 20 %>
+							</td>
+							<td>
+								 <%= f.submit "Update" %><br/>
+								<%= link_to '&nbsp;', promotion, :confirm => 'Are you sure?', :method => :delete, :class => 'action delete' %>
+							</td>
+						</tr>						
+						<% end %>
+					<% end %>
+					</table>
+				</td>
+    		</tr>
+    	</table>
+    </li>
+<ul>

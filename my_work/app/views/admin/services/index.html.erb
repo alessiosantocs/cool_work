@@ -1,0 +1,30 @@
+<%= render :partial => '/admin/account_search' %>
+
+<div class="view-menu">
+	<span>Service > Dasboard</span>
+</div>
+<table cellspacing=10 width="100%">
+  <tr style="text-align: left;">
+  	<th>Service Name</th>
+	<th>Description</th>
+	<th>Image</th>
+	<th>Active</th>
+        <th>&nbsp;</th>
+        <th>&nbsp;</th>
+  </tr>
+
+<% for service in @services %>
+  <tr class="<%= cycle('light-blue', 'light-green', :name => "service_class") %>">
+      <td><%= service.name %></td>
+      <td><%= service.description %></td>
+      <td width="60px"><%= image_tag("#{service.image_url}", :width => "60px", :height => "60px") %></td>
+      <td id="is_active_<%= service%>"><%= service.is_active ? "Yes" : "No" %></td>
+      <td><%= link_to_remote "Change", :update => "is_active_#{service}", :url => admin_service_url(:id => service), :confirm => "Do you want to change?", :method => :put %></td>
+      <td><%= link_to "Details", "/admin/services/#{service.id}/prices", :method => :get%></td>
+  </tr>
+<% end %>
+</table>
+
+<div class="view-menu" style="display:block;text-align:center;">
+  <%= will_paginate @services %>
+</div>

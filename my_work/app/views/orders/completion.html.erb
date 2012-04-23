@@ -1,0 +1,363 @@
+<%= render :partial => 'orders/order_status', :locals=>{ :p => 4 }  %>
+
+<p>
+	<%= image_tag('new/order_comp_hdn.jpg', :style=>"width:229px;height:30px;") %>
+</p>
+
+<hr class="grey"/>
+
+<% if @order.approved? %>
+
+<% form_for :order, :url => confirm_customer_order_path(@order.customer, @order) do |f| -%>
+	<table cellspacing="5">
+			<tr>
+				<td colspan="2" class="title">ORDER SUMMARY</td>
+			</tr>
+			<tr>
+				<td>My Order</td>
+				<td>
+					<strong class="green"><%= @order.identifier %></strong>
+					<% order_items = @order.order_items %>
+					<% if order_items.size > 0 %>
+						<table cellspacing="8">
+							<tr>
+								<th class="align-left">Service</th>
+								<th class="align-left">Item</th>
+								<th class="align-left">Quantity</th>
+								<th class="align-left">Special Handling</th>
+							
+								<th class="align-left">Sub-Total</th>
+							</tr>
+						<% for service in @services %>
+							<% for item_type in service.applicable_item_types %>
+								<% items = @order.items_from_type(item_type,service.id) %>
+								<% if items.size > 0 %>
+									<tr>
+										<td><%= service.name %></td>
+										<td><%= item_type.name %></td>
+										<td><%= items.size %></td>
+										<td>
+											<% for item in items %>
+												<div><%= (item.premium || item.customer_item.premium || @order.premium) ? "Premium" : '' %></div>
+											<% end %>
+										</td>
+										<% item_total = items.collect {|item| item.price}.sum %>
+										<td><%= number_to_currency(item_total) %></td>
+									</tr>				
+								<% end %>
+							<% end %>
+						<% end %>
+					</table>
+					<br/>
+					<div><b>You are almost finished!</b>, we will confirm the contents of your order and supply you a detailed confirmation and receipt once it has been itemized by our garment specialists.</div>
+					<br/><b style="color: red">Please complete your order by clicking submit at the bottom of the page</b><br/>
+					
+						<span>DELIVERY FEE: </span><%= number_to_currency(@order.estimated_shipping_amount) %></span><br/>
+						<b>
+						<% if @order.discount.to_f > 0.0 %>
+							<span>PROMOTIONAL DISCOUNT: </span>
+							<span class="green"><%= number_to_currency(@order.discount.to_f) %></span>
+						<% end %>		
+						<span>ESTIMATED ORDER TOTAL: </span>
+						<span class="green"><%= number_to_currency(@order.estimated_amount < 0.00 ? 0.00 : @order.estimated_amount) %></span>
+					</b>
+					<br/>
+					<% else %>
+						<div><b>You are almost finished!</b>, as you have chosen not to itemize your order, our garment specialists take care of this and send you a detailed confirmation of the contents of your order.
+						<br/><b style="color: red">Please complete your order by clicking submit at the bottom of the page<b><br/>
+						</div>
+					<% end %>
+				</td>
+			</tr>
+			<tr>
+				<td>&nbsp;</td>
+				<td><div><%= link_to "CHANGE MY ORDER", edit_customer_order_path(@order.customer, @order) + '?redirect_to=' + completion_customer_order_path(@order.customer, @order), :class => "green" %></div></td>
+			</tr>
+			<tr>
+				<td>&nbsp;</td>
+				<td>
+						<table>
+							<% order_products = @order.order_products %>
+							<% if order_products.size > 0 %>
+								<tr><td colspan=3><strong style="color: grey">Other Items</strong></td></tr>
+								<% for product in order_products %>
+									<tr>
+										<td colspan=2><%= product.quantity %> - <%= product.name %></td>
+										<td>&nbsp;&nbsp;<%= number_to_currency(product.quantity * product.price) %></td>
+									</tr>				
+								<% end %>
+							<% end %>
+						</table>
+					</td>
+			</tr>
+			
+			<tr>
+	        	<td colspan="2">
+	            	<hr class="grey" />
+	        	</td>
+	    	</tr>
+			<tr>
+				<td colspan="2" class="title">SPECIAL ITEMS</td>
+			</tr>
+			<tr>
+				<td>
+					<%= image_tag "MFS_Laundrybag.jpg", :width => 128, :height => 160 %>
+				</td>
+				<td>
+					<div>Reusable Laundry Bag <br/>$15.00</div>
+					<br/>
+					<div>
+						Quantity:
+						<select onchange="updateCompletion(<%= @order.estimated_amount %>, 'laundry', this);" name="Reusable_laundry_bag" id="Reusable_laundry_bag" size="1">
+				          <option>0</option>
+				          <option>1</option>
+				          <option>2</option>
+				          <option>3</option>
+				          <option>4</option>
+				          <option>5</option>
+			          </select> 
+					</div> <br/>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<%= image_tag "MFS_Garmentbag.jpg", :width => 128, :height => 160 %>
+				</td>
+				<td>
+					<div>Reusable Garment Bag <br/>$15.00</div>
+					<br/>
+					<div>
+						Quantity:
+						<select onchange="updateCompletion(<%= @order.estimated_amount %>, 'garment', this);" name="Reusable_garmet_bag" id="Reusable_garmet_bag" size="1">
+				          <option>0</option>
+				          <option>1</option>
+				          <option>2</option>
+				          <option>3</option>
+				          <option>4</option>
+				          <option>5</option>
+			          </select> 
+					</div>  
+				</td>
+			</tr>
+			
+			<tr>
+	        	<td colspan="2">
+	        		<br />
+	            	<table width="80%" styl="margin: auto;">
+	            		<tr style="text-align: left;">
+	            			<th>Quantity</th>
+							<th>Item</th>
+							<th>Price</th>
+							<th>Subtotal</th>
+	            		</tr>
+						<tr>
+							<td id="laundry-quantity">0</td>
+							<td>Reusable Laundry Bag</td>
+							<td>$15.00</td>
+							<td id="laundry-subtotal">$0.00</td>
+						</tr>
+						<tr>
+							<td id="garment-quantity">0</td>
+							<td>Reusable Garmet Bag</td>
+							<td>$15.00</td>
+							<td id="garment-subtotal">$0.00</td>
+						</tr>
+						<tr style="display:none">
+							<td id="detergent-quantity">0</td>
+							<td>MY FRESH Detergent 100fl. oz</td>
+							<td>$17.99</td>
+							<td id="detergent-subtotal">$0.00</td>
+						</tr>
+						<tr>
+							<td colspan=3>&nbsp;</td>
+							<td style="border-top: 1px solid black;">&nbsp;</td>
+						</tr>
+						<tr>
+							<td colspan=2>&nbsp;</td>
+							<td style="text-align: right;"><b>SUB: </b></td>
+							<td id="completion-sub">$0.00</td>
+						</tr>
+						<tr>
+							<td colspan=2>&nbsp;</td>
+							<td style="text-align: right;"><b>TAX: </b></td>
+							<td id="completion-tax">$0.00</td>
+						</tr>
+						<tr>
+							<td colspan=2>&nbsp;</td>
+							<td style="text-align: right;"><b>TOTAL: </b></td>
+							<td style="font-weight: bold;" id="completion-total" class="green">$0.00</td>
+						</tr>
+	            	</table>
+					<br />
+	        	</td>
+	    	</tr>
+			<tr>
+	        	<td colspan="2">
+	            	<hr class="grey" />
+	        	</td>
+	    	</tr>
+			<tr>
+				<td colspan="2" class="title">MY PREFERENCES</td>
+			</tr>
+			<tr>
+				<td>Laundered Shirt - Starch</td>
+				<td><%= @order.customer.preferences.ls_starch ? 'Yes' : 'No' %></td>
+			</tr>
+			<tr>
+				<td>Dry Cleaning - Starch</td>
+				<td><%= @order.customer.preferences.dc_starch ? 'Yes' : 'No' %></td>
+			</tr>
+			<tr>
+				<td>&nbsp;</td>
+				<td><div><%= link_to 'CHANGE MY PREFERENCES', preferences_customer_path(@order.customer)+ '?redirect_to=' + completion_customer_order_path(@order.customer, @order), :class => 'green' %></div></td>
+			</tr>
+			<tr>
+	        	<td colspan="2">
+	            	<hr class="grey" />
+	        	</td>
+	    	</tr>
+			<% if !@order.pickup_date.blank? %>
+			<tr>
+				<td colspan="2" class="title">PICKUP & DELIVERY SUMMARY</td>
+			</tr>
+			<tr>
+				<td>Pickup</td>
+				<td><%= "<span class='green'><b>#{@order.pickup_date.strftime('%A').upcase}</b></span> #{format_date(@order.pickup_date)}, <span class='green'><b>#{time_window(@order.pickup_window)}</b></span>" if @order.pickup_date %></td>
+			</tr>
+			<tr>
+				<td>Delivery</td>
+				<td><%= "<span class='green'><b>#{@order.delivery_date.strftime('%A').upcase}</b></span> #{format_date(@order.delivery_date)}, <span class='green'><b>#{time_window(@order.delivery_window)}</b></span>" if @order.delivery_date %></td>
+			</tr>
+			<% if @order.parent_recurring_order %>
+			<tr>
+				<td>Recurring</td>
+				<td><%= @order.parent_recurring_order.interval_string %></td>
+			</tr>
+			<% end %>
+			<tr>
+				<td>&nbsp;</td>
+				<td><div><%= link_to "RESCHEDULE MY PICKUP OR DELIVERY", reschedule_customer_order_path(@order.customer, @order)+ '?redirect_to=' + completion_customer_order_path(@order.customer, @order), :class => "green" %></div></td>
+			</tr>
+			<tr>
+	        	<td colspan="2">
+	            	<hr class="grey" />
+	        	</td>
+	    	</tr>
+			<% end %>
+			<tr>
+				<td colspan="2" class="title">PAYMENT SUMMARY</td>
+			</tr>
+			<% if @order.discount.to_f > 0.0 %>
+			<tr>
+				<td><span class="green large_text">PROMOTIONAL DISCOUNT</span></td>
+				<td>
+					<div class="green" style="font-size: 30px; font-weight: bold; margin-top:10px;"><%= number_to_currency(@order.discount.to_f) %></div>
+					<div>&nbsp;&nbsp;</div>
+				</td>
+			</tr>
+			<% end %>
+			<tr>
+				<td><span class="green large_text">ESTIMATED TOTAL</span></td>
+				<td>
+					<div class="green" style="font-size: 70px; font-weight: bold; margin-top:20px;" id="est-complete-total"><%= number_to_currency(@order.estimated_amount < 0.00 ? 0.00 : @order.estimated_amount) %></div>
+					<br/><br/>
+				</td>
+			</tr>
+			<tr>
+				<td><span class="green large_text">MY FRESH CASH</span></td>
+				<td>
+					<div class="green" style="font-size: 30px; font-weight: bold; margin-top:10px;"><%= number_to_currency(@order.customer.fresh_dollars) %></div>
+					<div>Any remaining balance will be paid with my chosen method below</div>
+				</td>
+			</tr>
+			<tr>
+				<td>Payment Method: </td>
+				<td><%= "<strong>#{@order.payment.cc_payment_method}</strong>: #{@order.payment.cc_number}" if @order.payment %></td>
+			</tr>
+			<tr>
+				<td>Expiration Date:</td>
+				<td><%= @order.payment.cc_expiration if @order.payment %></td>
+			</tr>
+			<tr>
+				<td>&nbsp;</td>
+				<td><div><%= link_to "CHANGE PAYMENT", payment_customer_order_path(@order.customer, @order), :class => "green" %></div></td>
+			</tr>
+			<tr>
+	        	<td colspan="2">
+	            	<hr class="grey" />
+	        	</td>
+	    	</tr>
+			<tr>
+				<td colspan="2" class="title">GREEN</td>
+			</tr>
+			<tr>
+			<% if @order.has_purchased_carbon? %>
+				<td>&nbsp;</td>
+				<td>Appears as though you have already offset carbon for this order.</td>
+			<% else %>
+				<td>
+					Est Carbon Footprint for this order is: <span class="green"><%= @order.carbon_footprint %>.</span>
+					Offset this footprint? Est cost: <span class="green"><%= number_to_currency(@order.est_carbon_price) %></span>
+				</td>
+				<td>
+            		<input value="true" name="buy_carbon" type="radio"> Yes&nbsp;&nbsp;&nbsp;
+            		<input value="false" name="buy_carbon" checked="checked" type="radio"> No
+				</td>
+			<% end %>
+			</tr>
+			<tr>
+				<% if @order.has_purchased_water? %>
+					<td>&nbsp;</td>
+					<td>Appears as though you have already offset water for this order.</td>
+				<% else %>
+				<td>
+					Est Gallons of Water for this order is: <span class="green"><%= @order.water_saved %></span>.
+					Offset this water? Est cost: <span class="green"><%= number_to_currency(@order.est_water_price) %></span>
+				</td> 
+				<td>
+					<input value="true" name="buy_water" type="radio"> Yes&nbsp;&nbsp;&nbsp;
+            		<input value="false" name="buy_water" checked="checked" type="radio"> No
+				</td>
+				<% end %>
+			</tr>
+			<tr>
+				<td>Recycle your bags with us? <span class="green">25 eco points</span></td>
+				<td>
+            		<input value="true" name="recycle" <%= 'checked="checked"' if @order.recycling %> type="radio"> Yes&nbsp;&nbsp;&nbsp;
+            		<input value="false" name="recycle" <%= 'checked="checked"' if !@order.recycling %> type="radio"> No 
+				</td>
+			</tr>
+			<tr>
+				<td>Donate your old clothes with us? <span class="green">25 eco points</span></td>
+				<td>
+					<input value="true" name="clothes" <%= 'checked="checked"' if @order.clothing_donation %> type="radio"> Yes&nbsp;&nbsp;&nbsp;
+            		<input value="false" name="clothes" <%= 'checked="checked"' if !@order.clothing_donation %> type="radio"> No </td>
+				</td>
+			</tr>
+			<tr>
+				<td>Donate canned goods? <span class="green">25 eco points</span></td>
+				<td>
+					<input value="true" name="canned_goods"  type="radio"> Yes&nbsp;&nbsp;&nbsp;
+            		<input value="false" name="canned_goods" <%= 'checked="checked"'  %> type="radio"> No </td>
+				</td>
+			</tr>
+	</table>
+	
+	<br/><br/><br/>
+	<hr class="grey"/>
+	<div class="float-right">
+		<span><font face="HelveticaRounded"><%= image_submit_tag 'confirm_btn.png', :name => nil, :class =>"align-button" %></font></span>
+	</div>
+	<% end -%>
+<script type="text/javascript">
+  window.onload = set_product_value(<%= @order.estimated_amount %>);
+</script>
+<% else %>
+	<h1 class="red">Payment Incomplete!</h1>
+	<p>Your Order ID: <strong><%= @order.identifier %></strong></p>
+	<p>Your payment details for this order have not been approved, to finalise payment, please go to your <%= link_to 'order payment', payment_customer_order_path(@order.customer, @order), :class=>'green' %>. Thank you!</p>
+	<hr class="grey"/>
+	<div class="float-right">
+		<span><%= link_to image_tag('to_dashboard_btn.png'), dashboard_customer_path(@order.customer), :class=>'align-button' %></span>
+	</div>
+<% end %>

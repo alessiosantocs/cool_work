@@ -1,0 +1,42 @@
+<h1>New Item</h1>
+<%= error_messages_for :promotion %>
+
+<% form_for @price, :url => admin_service_prices_path(params[:service_id]), :html => {:method => 'post'} do |f| %>
+<table>
+    <tr>
+	<td><b>Item Type</b><br /></td>
+	<td><%= text_field_tag 'item_type[name]' %></td>
+    </tr>
+    <tr>
+        <td><b>Water Cost</b><br /></td>
+	<td><%= f.text_field :water, :size => 20, :onkeyup => "numeric(this);" %></td>
+    </tr>
+    <tr>
+        <td><b>Carbon Cost</b><br /></td>
+	<td><%= f.text_field :carbon, :size => 20, :onkeyup => "numeric(this);" %></td>
+    </tr>
+    <tr>
+        <td><b>Point Value</b><br /></td>
+	<td><%= f.text_field :point_value, :size => 20, :onkeyup => "numeric(this);" %></td>
+    </tr>
+    <tr>
+        <td><b>Price</b><br /></td>
+        <td><%= f.text_field :price, :size => 20, :onkeyup => "numeric(this);" %></td>
+    </tr>
+    <tr>
+        <td><b>Premium</b><br /></td>
+        <td><%= f.text_field :premium, :size => 20, :onkeyup => "numeric(this);" %></td>
+    </tr>
+    <tr>
+        <td><b>Plant Price</b><br /></td>
+        <td><%= f.text_field :plant_price, :size => 20, :onkeyup => "numeric(this);" %></td>
+    </tr>
+    <tr>
+        <td><b>Plant Premium Price</b><br /></td>
+        <td><%= f.text_field :plant_premium_price, :size => 20, :onkeyup => "numeric(this);" %></td>
+    </tr>
+    <tr><td>&nbsp;</td>
+        <td><%= f.submit "Create" %></td>
+    </tr>
+</table>
+<% end %>

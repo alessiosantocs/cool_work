@@ -1,0 +1,55 @@
+# Filters added to this controller apply to all controllers in the application.
+# Likewise, all the methods added will be available for all controllers.
+
+class ApplicationController < ActionController::Base
+  include AuthenticatedSystem
+  # You can move this into a different controller, if you wish.  This module gives you the require_role helpers, and others.
+  include RoleRequirementSystem
+  include SslRequirement
+  include ExceptionNotification::Notifiable
+#   alias_method :rescue_action_locally, :rescue_action_in_public
+  
+  #include SslRequirement # Uncomment to enforce SSL requirements for secure pages
+  
+  helper :all # include all helpers, all the time
+  
+  # See ActionController::RequestForgeryProtection for details
+  # Uncomment the :secret if you're not using the cookie session store
+  
+  # Default layout for HTML views; can be overridden
+  layout :user_layout
+  SIGN_UP_MESSAGE = "Thank you for signing up. In order to better serve you, we ask many questions up front to better serve you. Once you have set your preferences, you will no longer need to define or describe each order. However, the option will always be available."
+  protected
+  
+  def body_id
+    @body_id || controller_name + "_body"
+  end
+  
+  def body_classes
+    @body_classes
+  end
+  helper_method :body_id, :body_classes
+  
+  # Allows you to override the body id for a given controller
+  # with a one-liner in the controller class, e.g. "body_id 'new_id'"
+  def self.body_id(id_text)
+    define_method("body_id") do
+      id_text.to_s
+    end
+  end
+
+  def render_optional_error_file(status_code) 
+    status = interpret_status(status_code)[0,3]
+    if status == "500"
+        render :template => "errors/500", :status => 500, :layout => false
+    end
+  end 
+  
+  def user_layout
+    if logged_in? && current_user.employee?
+      "employee"
+    else
+      "default"
+    end
+  end
+end

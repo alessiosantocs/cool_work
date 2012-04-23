@@ -1,0 +1,204 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<style type="text/css">
+<!--
+body p{
+font-family: Verdana, Geneva, sans-serif;
+}
+-->
+</style>
+</head>
+
+<body>
+	<% email_content do %>
+<div><p>Dear <%= @customer.first_name %>,</p></div>
+
+<p>Your clothing is at our cleaning facility, we've scanned all of your items and below is your itemization. Please remember, this is not a bill
+If you have last-minute updates or additions to your order, go to your account to make changes before: <%= (@order.delivery_date - 1.day).strftime("%m/%d/%Y") if @order.delivery_date %>.
+We hope you enjoy the My Fresh Shirt experience!</p>
+
+<h2>ORDER INFORMATION for ORDER NUMBER <%= @order.tracking_number %></h2>
+<% alterations = false%>
+<table class="order-ticket" cellspacing="4">
+	<% order = @order; customer = order.customer %>
+	<tr>
+		<td class="id" colspan="2">Order ID# <%= order.identifier %></td>
+	</tr>
+	<tr>
+		<td>
+			<div class="label">Customer:</div></td>
+			<td>
+			<div><%= order.customer.name %></div>
+		</td>
+	</tr>			
+	<tr>
+		<td>
+			<div class="label">Address:</div></td>
+			<td>
+			<div><%= order.customer.primary_address.formatted %></div>
+		</td>
+	</tr>
+	
+	<tr>
+		<td><span><u>Pickup Date:</u> </td>
+		<td></span><%= format_date(@order.pickup_date) %><%= ', ' + time_window(@order.pickup_window) if @order.pickup_date %></td>
+	</tr>
+	<tr>
+		<td><span><u>Delivery Date:</u> </td>
+		<td><%= format_date(@order.delivery_date) %><%= ', ' + time_window(@order.delivery_window) if @order.delivery_date %></span></td>
+	</tr>
+	<tr>
+		<td><span><u>Express:</u></td>
+		<td> <%= @order.express? ? 'yes' : 'no' %></span></td>
+	</tr>
+	<tr>
+		<td><span><u>Premium:</u></td>
+		<td><%= @order.premium? ? 'yes' : 'no' %></span></td>
+	</tr> 
+	<tr>
+		<td><span><u>Est Carbon Footprint:</u></td>
+		<td><%= @order.carbon_footprint %></span></td>
+	</tr> 
+	<tr>
+		<td><span><u>Est Water:</u></td>
+		<td><%= @order.water_saved %></span></td>
+	</tr> 
+	
+	
+	<tr>
+		<td>
+				<tr><td><span><u>Total Pieces:</u></td><td> <%= order.total_pieces %></span><br/>
+		</td>
+	</tr>
+	
+	<tr>
+	
+		<td colspan="2"><br>
+			<% if order.order_items.size > 0 %>
+				<div id="<%= type %>_<%= order.id %>_items">
+					<table cellspacing="0" class="padding5" border="1px solid" cellpadding="5px">
+						<tr>
+							<th class="align-left">Category</th>
+							<th class="align-left">Item</th>
+							<th class="align-left">Quantity</th>
+							<th class="align-left">Special Handling</th>
+							<th class="align-left">Sub-Total</th>
+						</tr>
+					<% order.order_items.group_by(&:customer_item_type).sort.each do |service, items| %>
+						<tr>
+							<td><%= service.services.first.name %><% alterations = true if service.services.first.name == "Alterations"%></td>
+							<td><%= service.name %></td>
+							<td><%= items.size %></td>
+							<td>
+								<% for item in items %>
+									<% sp =  item.customer_item.special_handling %>
+									<% if (item.order.premium || item.customer_item.premium || item.premium) %>
+										<div>Premium</div>
+         <% else %>
+                              <div>&nbsp;</div>
+									<% end %>
+                                                                        <% if !(item.customer_item.extra_charge == 0.00) %>
+                                                                            <div>Upcharge: <%= item.customer_item.extra_charge_description %></div>
+									<% end %>
+								<% end %>
+								
+							</td>
+					
+							<td>	
+         <% no_of_items = items.size%><% no_of_items_size= no_of_items.to_s << "pcs x "%>
+         <div> <% item_total = items.collect {|item| item.price}.sum %><%= no_of_items_size %><%= number_to_currency(item_total/items.size) %><%= " = "%><%= number_to_currency(item_total) %></div>
+							</td>
+						</tr>
+					<% end %>
+						<tr>
+							<td colspan="5">
+							<strong>Total Items:</strong>
+							<strong>&nbsp;&nbsp;<%= order.order_items.size %></strong>
+							</td>
+						</tr>
+						<tr>
+		<% if @order.order_products.size > 0 %>
+		<td colspan="5">
+			<div><strong>Special Items:</strong></div>
+			<% for product in @order.order_products %>
+				<%= product.quantity %> <%= product.name %>(s)<br/>
+			<% end %>
+			<br>
+		</td>
+		<% end %>
+	</tr>			
+					<% if order.discount.to_f > 0.0 %>
+					<tr>
+							<td colspan="5"><strong>Promotional Discount:</strong><strong>&nbsp;&nbsp;<%= number_to_currency(order.discount.to_f) %></strong></td>
+					</tr>
+					<% end %>
+					<tr>
+						<td colspan="5"><strong>Delivery Fee:</strong><strong>&nbsp;&nbsp;<%= number_to_currency(order.shipping.to_f) %></strong></td>
+                                        </tr>
+					<tr>
+							<% if order.finalized == true %>
+
+							<td colspan="5"><strong>Order Total:</strong><strong>&nbsp;&nbsp;<%= number_to_currency(order.amount < 0.00 ? 0.00 : order.amount) %></strong></td>
+
+							<% end %>
+
+							<% if order.finalized != true %>
+
+							<td colspan="5"><strong>Estimated Total:</strong><strong>&nbsp;&nbsp;<%= number_to_currency(order.estimated_amount < 0.00 ? 0.00 : order.estimated_amount) %></strong></td>
+							<% end %>
+					</tr>
+					
+					</table>
+					
+					<% if alterations%>
+					<div style="color: red;"><br/>* We've noticed you have alterations with this order - Please allow 2-3 days extra
+for our professionals to process your request.  All other items with this order will be returned as scheduled.</div>
+     <%end%>
+				</div>
+			<% else %>
+				<div><strong>Total Items:</strong> 0</div>
+			<% end %>
+		</td>	
+	</tr>
+	<tr>
+		<td>
+			<br>
+			<div class="label">Payment Method:</div>
+			<div>
+				<% if order.payment %>
+					<strong><%= order.payment.cc_payment_method%></strong>: <%= order.payment.cc_number%>
+				<% end %>
+			</div>
+		</td>
+	</tr>
+	
+	<tr>
+		<td>
+			<br>
+			<div class="label">Special Handling Instructions:</div>
+			<div><%= order.instruction_notes %></div>
+		</td>
+	</tr>
+	
+	
+	<tr>
+		<td>
+			<br>
+			<div class="label">Notes:</div>
+			<div>
+				<% for note in order.notes %>
+					<div><strong><%= note.note_type %>:</strong> <%= note.body %></div>
+				<% end %>
+			</div>
+		</td>
+	</tr>
+</table>				
+
+<% end %>
+<%= render :partial => 'signature' %>  
+</body>
+
+</html>

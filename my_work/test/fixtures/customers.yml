@@ -1,0 +1,51 @@
+# == Schema Information
+# Schema version: 98
+#
+# Table name: customers
+#
+#  id                    :integer(11)   not null, primary key
+#  title                 :string(255)   
+#  company               :string(255)   
+#  sex                   :string(1)     
+#  dob                   :date          
+#  primary_address_id    :integer(11)   
+#  work                  :string(10)    
+#  home                  :string(10)    
+#  cell                  :string(10)    
+#  active                :boolean(1)    
+#  accepted_terms        :boolean(1)    
+#  points                :integer(11)   default(0)
+#  created_on            :datetime      
+#  updated_on            :datetime      
+#  carbon_credits        :float         
+#  water_credits         :float         
+#  work_extension        :string(10)    
+#  is_building           :boolean(1)    
+#  authdotnet_profile_id :string(255)   
+#  goto_url              :string(255)   
+#  free_shipping         :boolean(1)    
+#
+
+cStallman:
+    id: 1
+    sex: M
+    title: Guru
+    company: Free Software Foundation
+    dob: 19620314
+    primary_address_id: 1
+    work: 5555551212
+    active: true
+    accepted_terms: true
+    points: 0
+
+cSussman:
+    id: 2
+    sex: M
+    title: Professor
+    company: Massachusetts Institute of Technology
+    dob: 19580315
+    primary_address_id: 2
+    work: 5555551313
+    active: true
+    accepted_terms: true
+    points: 0

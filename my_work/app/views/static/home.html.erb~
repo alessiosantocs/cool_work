@@ -1,0 +1,129 @@
+<td align="center" valign="top" width="250">
+	<% if logged_in? %><br>
+	<div>
+		<div><%= link_to 'Back to your Dashboard >>', dashboard_customer_path(current_user.account) if current_user.account && !current_user.employee? %></div>
+		<div><%= link_to 'Back to the Admin Panel >>', '/admin' if current_user.employee? %></div>
+		<br/><br/><br/><br/><br/><br/><br/>
+	</div>
+	<% else %>
+	<div>
+		<% form_tag session_path, :id => 'login-form' do -%>
+			<table>
+				<tr>
+					<td style="text-align: left;"><span class="main_copy_font">Username</span></td>
+				</tr>	
+				<tr>
+					<td style="text-align: left;"><%= text_field_tag 'login', @login, {:class => "input", :size => 30} %></td>
+				</tr>
+				<tr>
+					<td style="text-align: left;"><span class="main_copy_font">Password</span></td>
+				</tr>			
+				<tr>
+					<td style=" text-align: left;"><%= password_field_tag 'password' , @password, {:class => "input", :size => 30} %></td>
+				</tr>
+			</table>
+			<div style="text-align: center;">
+				<font face="HelveticaRounded"><%= image_submit_tag 'login_btn.png' %></font>
+				<%= link_to image_tag('signup_white_btn.png'), reg_url %>
+			</div>
+<div class="addthis_toolbox addthis_default_style addthis_32x32_style" style="width:185px">
+<a class="addthis_button_preferred_1"></a>
+<a class="addthis_button_preferred_2"></a>
+<a class="addthis_button_preferred_3"></a>
+<a class="addthis_button_preferred_4"></a>
+<a class="addthis_button_compact"></a>
+</div>
+<script type="text/javascript">var addthis_config = {"data_track_clickback":true};</script>
+<script type="text/javascript" src="https://s7.addthis.com/js/250/addthis_widget.js#pubid=ra-4d89fd8e39a5532b"></script>
+<script type="text/javascript" src="https://s7.addthis.com/js/250/addthis_widget.js#pub=xa-4ac61e0801642c41"></script>
+
+		<% end -%>
+
+		<%= javascript_tag "$('login').focus()" %>
+
+	</div>
+	<% end %>
+</td>
+                  </tr> </table>
+             </td>
+</tr>
+<tr><td colspan="5" valign="bottom">                            </td></tr>
+<tr>
+
+    <td width="210">
+
+        <table cellspacing="0" border="0">
+            <tr>
+                <td valign="middle" style="padding:10px 5px 0px 0px">
+                <%= link_to image_tag("embose-effect-images/25-free-trial.jpg"), logged_in? && !current_user.employee? ? fresh_order_customer_path(current_user.account) : '/zip'%></td>
+            </tr>
+            <tr>
+                <td valign="middle" style="padding:10px 5px 0px 0px">
+                <%= link_to image_tag("embose-effect-images/concenient-pick-up.jpg"), "/pickup" %>
+              </td>
+            </tr>
+            <tr>
+                <td valign="middle" style="padding:10px 5px 0px 0px"><%= link_to image_tag("embose-effect-images/eco-logic.jpg"), "/my_environment" %></td>
+            </tr>
+        </table>
+    </td>
+    <td colspan="6" valign="top">
+
+        <table border="0" cellpadding="0" cellspacing="5px" width="785">
+            <tbody>
+                <tr>
+                    <td align="center" height="290" colspan="3"><br>
+                          <div class="subtitleGreen, blueHeading">CLICK YOUR WAY TO CLEAN CLOTHES</div><br>
+
+                          <div class="headingText">Welcome to New York City's first and only online, eco-friendly,</div><div class="headingText">personal dry cleaning and valet laundry service.</div><br>
+                          
+                          <div class="headingPoint">1. Create your order</div>
+                          <div class="headingPoint">2. Schedule your Pick Up & Delivery</div>
+                          <div class="headingPoint">3. Enjoy Convenience</div>
+                          
+                          <div class="green, subtitleGreen, placeOrder"><%= link_to "PLACE ORDER NOW!", logged_in? && !current_user.employee? ? fresh_order_customer_path(current_user.account) : '/zip', :style =>"text-decoration:none; font-size: 25px;" %></div><br>
+                    </td>
+                </tr>
+                <tr align="default" valign="top">
+                    <td colspan="3" align="center">
+                        <p style="margin-bottom:10px;">
+                            <img src="/images/faster_personal_cleaner.gif" height="35" width="494">
+                        </p>
+                    </td>
+                </tr>
+                <tr><td colspan="3"><table border="0" cellspacing="6" cellpadding="0">
+				<tbody>
+				    <tr>
+					<td>
+					   <div style="position:relative;width:785px;height:25px;overflow:hidden;border-top:1px solid; border-bottom:1px solid;padding-top:5px;">
+                                              <div style="position:absolute;width:785px;height:25px;" onmouseover="copyspeed=pausespeed" onmouseout="copyspeed=marqueespeed">
+                                                  <div id="iemarquee" style="position: absolute; top: 0px; left: -177px; ">
+						      <nobr>
+							<font face="Arial">
+							   <% @tickers.each do |ticker| %>
+							       <span style="color:#FF8040;text-transform:uppercase;font-weight:bold;font-size:17px;"><%= ticker.title %></span>
+							       <span style="color:rgb(0,0,50);font-size:15px;"><%= ticker.body %></span>
+							       <span style="font-size:15px;">expires on : <%= ticker.expiry.strftime("%m/%d/%Y")%>|</span>
+							   <% end %>
+							</font>
+						      </nobr>
+						  </div>
+					       </div>
+					   </div>
+					</td>
+				    </tr>
+				</tbody>
+			     </table></td></tr>
+                <tr align="default" valign="top" >
+                    <td align="center" valign="middle">
+                      <%= link_to image_tag("embose-effect-images/quality.jpg"), "/our_cleaning" %>
+                    </td>
+                    <td align="center" valign="middle">
+                      <%= link_to image_tag("embose-effect-images/my-promotion.jpg"), "/fresh_promotions" %></td>
+                    <td><%= image_tag("embose-effect-images/polo.jpg") %></td>
+                </tr>
+            </tbody>
+        </table>
+        <br/>
+</td>
+<%= javascript_include_tag "ticker.js"%>

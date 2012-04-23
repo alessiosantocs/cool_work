@@ -1,0 +1,24 @@
+# == Schema Information
+# Schema version: 98
+#
+# Table name: notification_templates
+#
+#  id         :integer(11)   not null, primary key
+#  name       :string(255)   
+#  mail_body  :text          
+#  sms_body   :text          
+#  created_at :datetime      
+#  updated_at :datetime      
+#
+
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+
+one:
+  name: MyString
+  mail_body: MyText
+  sms_body: MyText
+
+two:
+  name: MyString
+  mail_body: MyText
+  sms_body: MyText

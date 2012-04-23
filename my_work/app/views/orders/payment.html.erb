@@ -1,0 +1,197 @@
+<%= render :partial => 'orders/order_status', :locals=>{ :p => 3 }  %>
+
+<%= error_messages_for :credit_card %>
+<%= error_messages_for :order %>
+<div>
+  <%= image_tag('payment_hdn.png', :style=>'height:25px;') %>
+</div>
+<% form_for :order, :url => make_payment_customer_order_path(@order.customer, @order)+"?admin=#{params[:admin]}&mpi=#{params[:mpi]}" do |f| -%>
+
+	<table cellspacing="10">
+    <tr>
+        <td colspan="2">
+            <hr class="grey" />
+        </td>
+    </tr>
+		<tr>
+			<td colspan="2" class="title">MY FRESH CASH</td>
+		</tr>
+		<tr>
+			<td>
+				<div>Please use <%= link_to 'MY FRESH CASH', '#', :class => 'green' %> to pay for my laundry:</div>
+				<div class="small_text">Any remaining balance will be paid with my chosen method below. To learn more about our referall program, <%= link_to 'Click Here', '#', :class => 'green' %>.</div> 
+			</td>
+			<td>
+				<input type="radio" name="pay_by_fresh_cash" value="true" /><label> Yes </label>
+				<input type="radio" name="pay_by_fresh_cash" value="false" checked /><label> No </label>
+			</td>
+		</tr>
+		<tr>
+			<td colspan="2"><h3>CURRENT BALANCE:</h3></td>
+		</tr>
+		<tr>
+			<td colspan="2">
+				<div class="float-left">
+					<%= image_tag("fresh_cash.jpg") %>
+				</div>
+				<div style="margin-left: 90px;">
+					<h1 class="fresh-payment-value"><%= number_to_currency(@customer.fresh_dollars, options = {:unit => ""}) %></h1>
+					<h2 class="green">DOLLARS</h2>
+				</div>
+			</td>
+		</tr>
+		<!--<tr>
+	        <td colspan="2">
+	            <hr class="grey" />
+	        </td>
+	    </tr>
+		<tr>
+			<td colspan="2" class="title">MY PAYMENT</td>
+		</tr>
+		
+		<% fields_for :credit_card do |cc| %>  
+			<tr>
+				<td>Choose Payment Method: </td>
+				<td>
+					<select name="quick_payment_method">
+						<option selected="selected">Visa</option>
+						<option>Mastercard</option>
+						<option>American Express</option>
+						<option>Discover</option>
+					</select>
+				</td>
+			</tr>
+			<tr>
+				<td>Enter Security Code: </td>
+				<td>
+					<div><input type="text" name="quick_security_code" size="4"/></div>
+					<div><%= link_to 'What is this', '#', :class => 'green' %></div>
+				</td>
+			</tr>
+		-->
+		</table>
+		<table cellspacing="10">
+			<tr>
+		        <td colspan="2">
+		            <hr class="grey" />
+		        </td>
+		    </tr>
+			<tr>
+				<td colspan="2" class="title">MY PAYMENT INFORMATION</td>
+			</tr>
+			<tr>
+				<td>Use Previous Card?: </td>
+				<td>
+					<select id="existing_card" name="existing_card" onchange="populateCreditCard(this.options[selectedIndex].text, '')">
+						<option>No</option>
+						<% for card in @order.customer.credit_cards %>
+							<%="<option value='#{card.id}'" %><%= 'selected' if @order.payment && (@order.payment.cc_number == card.number || @order.payment.cc_number == card.last_four_digits) %><%= ">#{card.number ||card.last_four_digits}</option>" %>
+						<% end %>
+					</select>
+          <script type='text/javascript'>
+          <% for card in @order.customer.credit_cards %>
+            <%= "addss.#{card.number} = { 'address': '#{card.address}', 'city': '#{card.city}', 'state': '#{card.state}', 'zip': '#{card.zip}' }; " %>
+         <% end -%>
+          <%= "addss['No'] = { 'address': '#{@customer.primary_address}', 'city': '#{@customer.primary_address.city}', 'state': '#{@customer.primary_address.state}', 'zip': #{@customer.primary_address.zip} };" %>
+         </script>
+				</td>
+			</tr>
+			<tr>
+				<td id="payment-info" colspan="2">
+					<table cellspacing="10">
+						<tr>
+							<td>Payment Method: </td>
+								<td>
+									<%= cc.select :payment_method, ['Visa','Mastercard', 'American Express', 'Discover'], {}, {:onchange => 'changeSecCodeValidation(this.options[selectedIndex].value)'} %>
+								</td>
+							</tr>
+							<tr>
+								<td>Card Number:</td>
+								<td><%= cc.text_field :number, :live => false %></td>
+							</tr>
+							<tr>
+								<td>Expiration Date:</td>
+								<td>
+									<% mnth = @credit_card.expiration[0..1] if @credit_card.expiration %>
+									<% year = @credit_card.expiration[2..3] if @credit_card.expiration %>
+									<%= select_tag 'exp_month', options_for_select(['01','02','03','04','05','06','07','08','09','10','11','12'], mnth), :onchange => "checkDate('exp_month', 'exp_year');" %> &nbsp; / &nbsp; 
+									<%= select_tag 'exp_year', options_for_select(Range.new(Date.today.year, Date.today.year + 15).map {|yr| yr.to_s[2,3] }, year), :onchange => "checkDate('exp_month', 'exp_year');" %>
+								</td>
+							</tr>
+							<tr>
+								<td>Security Code: </td>
+								<td><%= cc.text_field :security_code, :live => false, :size => 4, :maxlength => 4 %></td>
+							</tr>
+							<!--
+							<tr>
+								<td>Save Credit Card? </td>
+								<td><input type="checkbox" name="save_card" id="save_card" checked="checked"/></td>
+							</tr>
+							-->
+					</table>
+				</td>
+			</tr>
+      <tr>
+      <td id="payment-address" colspan="2">
+          <table cellspacing="10">
+      			<tr>
+      				<td colspan="2">
+      					<strong class="green">Billing Information</strong>
+      				</td>
+      			</tr>
+      			<tr>
+      				<td>First Name: </td>
+      				<td><%= cc.text_field :first_name, :live => true %></td>
+      			</tr>
+      			<tr>
+      				<td>Last Name: </td>
+      				<td><%= cc.text_field :last_name, :live => true %></td>
+      			</tr>
+      			<% address = @customer.primary_address %>
+      			<tr>
+      				<td>Address: </td>
+      				<td><%= cc.text_field :address, :live => true %></td>
+      			</tr>
+      			<tr>
+      				<td>City: </td>
+      				<td><%= cc.text_field :city, :live => true %></td>
+      			</tr>
+      			<tr>
+      				<td>State: </td>
+      				<td><%= cc.text_field :state, :live => true %></td>
+      			</tr>
+      			<tr>
+      				<td>Zip Code: </td>
+      				<td><%= cc.text_field :zip, :live => true %></td>
+      			</tr>
+      			<tr>
+      		        <td colspan="2">
+      		            <hr class="grey" />
+      		        </td>
+      	   		 </tr>
+          </table>
+        </td>
+    </tr>
+		<% end %>
+
+		<tr>
+			<td colspan="2" class="title">MY PROMOTION</td>
+		</tr>
+		<tr>
+			<td>If you have a promotion code,<br/> please enter it now: </td>
+			<td><input type="text" name="promotion_code" value="<%= @promotion_code %>"/></td>
+		</tr>
+		<tr>
+	        <td colspan="2">
+	            <hr class="grey" />
+	        </td>
+   		 </tr>
+	</table>
+	
+	<br/>
+	<div class="float-right">
+		<span><font face="HelveticaRounded"><%= image_submit_tag 'take_to_confirm_btn.png', :name => nil, :class =>"align-button" %></font></span>
+	</div>
+	<div style="margin-left: 22px;">Please note that your credit card is not charged until after delivery.</div>
+<% end -%>
+<script>populateCreditCard($F('existing_card'), '<%= @credit_card.payment_method %>');</script>

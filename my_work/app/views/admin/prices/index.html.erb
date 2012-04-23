@@ -1,0 +1,47 @@
+<%= render :partial => '/admin/account_search' %>
+
+<div class="view-menu">
+        <span class="float-right"><%= link_to_lightbox 'Add Item', new_admin_service_price_path(params[:service_id]), :class => 'action new' %></span>
+	<span>Price > Service > Dasboard</span>
+</div>
+<% unless @prices.blank? %>
+  <% form_for :price, :url => "/admin/services/#{@prices[0].service_id}/prices/#{@prices[0].id}", :html => { :method => :put } do |f| %>
+    <table cellspacing=10 width="100%">
+      <tr style="text-align: left;">
+            <th>Item_type</th>
+            <th>Wc</th>
+            <th>Cc</th>
+            <th>Pv</th>
+            <th>Price</th>
+            <th>Premium</th>
+            <th>Additional Standard</th>
+            <th>Additional Premium</th>
+            <th>Plant Price</th>
+            <th>Plant Premium Price</th>
+            <th width="37">Delete</th>
+      </tr>
+      <% if !@prices.blank? %>
+        <% for price in @prices %>
+          <tr class="<%= cycle('light-blue', 'light-green', :name => "price_class") %>">
+              <td><%= price.item_type.name %><%= f.hidden_field :price, :value => price.id, :name => "price[id][]", :size => 5, :onkeyup => "numeric(this);" %></td>
+              <td><%= price.water %></td>
+              <td><%= price.carbon %></td>
+              <td><%= price.point_value %></td>
+              <td width="62px"><%= f.text_field :price, :value => price.price, :name => "price[price][]", :size => 5, :onkeyup => "numeric(this);" %></td>
+              <td width="62px"><%= f.text_field :price, :value => price.premium, :name => "price[premium][]", :size => 5, :onkeyup => "numeric(this);" %></td>
+              <td width="62px"><%= f.text_field :price, :value => price.each_additional_standard, :name => "price[each_additional_standard][]", :size => 5, :onkeyup => "numeric(this);" %></td>
+              <td width="62px"><%= f.text_field :price, :value => price.each_additional_premium, :name => "price[each_additional_premium][]", :size => 5, :onkeyup => "numeric(this);" %></td>
+              <td width="62px"><%= f.text_field :price, :value => price.plant_price, :name => "price[plant_price][]", :size => 5, :onkeyup => "numeric(this);" %></td>
+              <td width="62px"><%= f.text_field :price, :value => price.plant_premium_price, :name => "price[plant_premium_price][]", :size => 5, :onkeyup => "numeric(this);" %></td>
+              <td align="center"><%= link_to '&nbsp;', admin_service_price_path(params[:service_id], price.id), :confirm => 'Are you sure?', :method => :delete, :class => 'action delete' %></td>
+          </tr>
+        <% end %>
+      <% else %>
+        <tr><TD colspan="9" align="center">
+          &quot;No Record Found&quot;
+        </TD></tr>
+      <% end %>
+    </table>
+    <div style="text-align:center;"><font face="HelveticaRounded"><input type="submit" value="SAVE" name="commit" class="button"></font></div>
+  <% end %>
+<% end %>

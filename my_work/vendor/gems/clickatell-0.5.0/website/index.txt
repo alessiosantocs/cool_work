@@ -1,0 +1,117 @@
+h1. Clickatell Ruby API
+
+h3. What is it?
+
+A Ruby interface to the "Clickatell":http://www.clickatell.com SMS gateway API.
+
+h3. Installing
+
+<p><strong>Please note:</strong> this gem has been tested on *nix based systems including Linux, BSD and OSX. The <code>sms</code> utility was written with these systems in mind and will not work out of the box on Windows. The API should still work but has not been tested at this time. If you would like Windows support, please submit patches.</p>
+
+<p>Download the <a href="http://rubyforge.org/projects/clickatell">latest version of gem</a> or install using RubyGems.</p>
+
+<pre><code>$ sudo gem install clickatell</code></pre>
+
+h4. Clickatell on GitHub
+
+The source repository for clickatell has been <a href="http://github.com/lukeredpath/clickatell/">moved to GitHub</a>.
+
+<pre><code>git clone git://github.com/lukeredpath/clickatell.git</code></pre>
+
+You can still access the old subversion repository although this is unlikely to be updated:
+
+<pre><code>$ svn co svn://lukeredpath.co.uk/var/svn/opensource/clickatell/trunk clickatell-trunk</code></pre>
+
+You can view the <a href="/rdoc">RDoc documentation</a> and the <a href="/specs.html">code specs</a>.
+
+h3. The basics
+
+To use this gem, you will need sign up for an account at "the Clickatell website":http://www.clickatell.com. 
+Once you are registered and logged into your account centre, you should add 
+an HTTP API connection to your account. This will give you your API_ID.
+
+h3. Demonstration of usage
+
+You can now use the library directly. You will need your API_ID as well as your
+account username and password.
+
+<pre><code class="ruby">
+require 'rubygems'
+require 'clickatell'
+
+api = Clickatell::API.authenticate('your_api_id', 'your_username', 'your_password')
+api.send_message('447771234567', 'Hello from clickatell')
+</code></pre>
+
+Full documentation for the API is available in the <a href="rdoc/">RDocs</a>.
+
+For debugging purposes, the API allows you to view gateway URIs as they are requested, printed to $stdout. You can enable this by turning on +debug_mode+.
+
+<pre><code class="ruby">
+Clickatell::API.debug_mode = true
+</code></pre>
+  
+h4. Command-line SMS Utility
+
+The Clickatell gem also comes with a command-line utility that will allow you
+to send an SMS directly from the command-line. 
+
+You will need to create a YAML configuration file in your home directory, in a 
+file called .clickatell that resembles the following:
+
+<pre><code>
+# ~/.clickatell
+api_key: your_api_id
+username: your_username
+password: your_password
+</code></pre>
+
+You can then use the +sms+ utility to send a message to a single recipient:
+
+<pre><code>
+$ sms 447771234567 'Hello from clickatell'
+</code></pre>
+
+Alternatively, you can specify your authentication details manually by passing in options to the +sms+ command.
+
+<pre><code>
+$ sms -u your_username -p your_password -k your_api_key 447771234567 'Hello from clickatell'
+</code></pre>
+
+These values will take presedence over any values in your ~/.clickatell file.
+
+You can also specify a custom Sender ID - the name or number that will appear in the "From" label on the recipients phone. You can either add a "from" key to your .clickatell file or manually using the --from option:
+
+<pre><code>
+$ sms --from 'Luke Redpath' 447771234567 'Hello from clickatell'
+</code></pre>
+
+The "from" option can either be a 16 digit number or an 11 character alpha-numeric string.
+
+<strong>Important note about custom sender IDs:</strong> Since November 2007, Clickatell have implemented a policy whereby all Sender IDs must be registered in your account centre before they can be used (the mobile number that you signed up with will have automatically been registered). If you try to specify a custom sender ID that has not been registered, the SMS will not be delivered. 
+
+In addition, if you do not specify a sender ID, a default Clickatell number will be used instead. If you are using the sms utility to send messages from your own number, make sure you have added the 'from' field to your .clickatell file otherwise you will need to specify it every time you send a message.
+
+You can also use the +sms+ utility to check your Clickatell account balance:
+
+<pre><code>
+$ sms --show-balance
+</code></pre>
+
+Whenever you send a message with the +sms+ utility, it will return an alpha-numeric message ID. You can use this message ID to retrieve the message's current status using the --status option:
+
+<pre><code>
+$ sms --status 30b7d15bffb38695ba26e77c9c20f4ec
+</code></pre>
+
+This will return a message status and message status code.
+
+Run +sms+ without any arguments for a full list of options.
+
+h3. License
+
+This code is free to use under the terms of the MIT license. 
+
+h3. Contact
+
+Comments are welcome. Send an email to "Luke Redpath":mailto:contact@lukeredpath.co.uk email.

@@ -1,0 +1,108 @@
+<table cellspacing=0 class="admin-orders" style="width:100%;margin-bottom:10px;">
+	<tr style="text-align: left;">
+		<th><a href="/admin/base/<%= params[:action] %>?sort=updated_at&orderby=<%=@orderby%>">PickUp / Delivery</a></th>
+		<th><a href="/admin/base/<%= params[:action] %>?sort=tracking_number&orderby=<%=@orderby%>">Order #</th>
+		<th><a href="/admin/base/<%= params[:action] %>?sort=customer_id&orderby=<%=@orderby%>">Customer Info</th>
+		<th> Details : <%= @total_orders.inject(0){ |sum,item| sum += item.order_items.size} %>/<%= @total_orders.inject(0){ |sum,item| sum += item.order_products.size } %></th>
+		<% if current_user.admin? %><th><%= number_to_currency(@total_orders.inject(0){ |sum,item| sum += item.amount() > 0.00 ? item.amount() : 0.00  })%></th><% end %>
+		<th><a href="/admin/base/<%= params[:action] %>?sort=status&orderby=<%=@orderby%>">Status</th>
+		<%= "<th>Re-Schedule</th>" if current_user.has_role?('reschedule')%>
+		<th>Payment Info</th>
+		<%= "<th>Notes</th>"  if current_user.has_role?('note') %>
+		<th>Print</th>
+		<%= "<th>Cancel</th>" if current_user.account_type.blank? %>
+	</tr>
+	
+	<% for order in orders %>
+                <tr class="<%= cycle('light-blue', 'light-green', :name => "order_class") %>">
+			<td>
+				<div>
+					<%= order.pickup_date.blank? ? "" : order.pickup_date.strftime("%a %d %b") + ' : '+ time_window(order.pickup_window) %>
+				</div>
+				<div>
+					<%= order.delivery_date.blank? ? "" :  order.delivery_date.strftime("%a %d %b") + ' : '+ time_window(order.delivery_window)%>
+				</div>	
+			</td>
+			<td><%= link_to order.identifier, customer_order_path(order.customer, order) %></td>
+			<td>
+				<div><%= link_to order.customer.account.blank? ? "" : order.customer.account.name, admin_customer_path(order.customer) %></div>
+				<div><%= order.customer.primary_address %></div>
+			</td>
+			<td>
+				<div>
+					<% if order.order_items.size > 0 %>
+						<%= link_to_function "#{order.order_items.size} items", "$('#{order.tracking_number}_items').toggle()" %>
+							<table id="<%=order.tracking_number%>_items" cellspacing="0" class="admin-orders" style="display:none;margin-bottom:10px;">
+								<tr>
+									<th class="align-left">Category</th>
+									<th class="align-left">Item</th>
+									<th class="align-left">Quantity</th>
+									<th class="align-left">Special Handling</th>
+								</tr>
+							<% order.order_items.group_by(&:customer_item_type).sort.each do |service, items| %>
+								<tr style="background-color:<%= cycle('gray', 'white', :name => "row_class") %>">
+									<td><%= service.services.first.name %></td>
+									<td><%= service.name %></td>
+									<td><%= items.size %></td>
+									<td>
+										<% for item in items %>
+                                                                                   <% if (item.order.premium || item.customer_item.premium || item.premium) %>
+											<span style="color:blue">Premium</span>
+                                                                                   <% end %>
+										<% end %>
+									</td>
+								</tr>
+							<% end %>
+							</table>
+					<% else %>
+			  0 Items
+					<% end %>
+				</div>
+				<div>
+					<% if order.order_products.size > 0 %>
+						<%= link_to_function "#{order.order_products.size} products", "$('#{order.tracking_number}_products').toggle()" %>
+							<table id="<%=order.tracking_number%>_products" cellspacing="0" class="admin-orders" style="display:none;margin-bottom:10px;">
+								<tr>
+									<th class="align-left">Product</th>
+									<th class="align-left">Quantity</th>
+								</tr>
+							<% order.order_products.each do |items| %>
+								<tr style="background-color:<%= cycle('gray', 'white', :name => "row_class") %>">
+									<td><%= items.name %></td>
+									<td><%= items.quantity %></td>
+								</tr>
+							<% end %>
+							</table>
+					<% else %>
+			  0 Products
+					<% end %>
+				</div>	
+			</td>
+			<% if current_user.admin? %><td><%= number_to_currency(order.amount < 0.00 ? 0.00 : order.amount ) %></td><% end %>
+			<td>
+				<form method="post" action="/admin/base/change_state">
+					<input type="hidden" name="order" value="<%= order.id %>">
+					<select name="state" id="state" style="width:120px;" onchange="this.form.submit();">
+						<!-- <option value="0">Change State</option> -->
+						<%= "<option value='current' #{order.status == 'awaiting pickup' ? 'selected' : ''} >Awaiting PickUp</option>" if tab == 'current' %>
+						<%= "<option value='picked up' #{order.status == 'picked up' ? 'selected' : ''} >Picked Up</option>" if tab == 'current'%>
+						<%= "<option value='current' >Make Current</option>" if tab != 'current' && tab != 'complete' && tab != 'cancelled' && tab != 'missed_delivery'%>
+						<%= "<option value='pending' >Make Pending</option>" if order.approved? && tab != 'pending' &&  tab != 'cancelled' &&  tab != 'current' %>
+						<%= "<option value='complete' #{order.status == 'delivered' ? 'selected' : ''} > Delivered </option>" if (order.approved? && order.total && tab == 'pending') || (order.approved? && order.total && tab == 'missed_delivery') || (order.approved? && order.total && tab == 'complete') %>
+						<%= "<option value='missed pickup' #{ order.status == 'missed pickup' ? 'selected' : ''} >Missed Pickup</option>" if tab == 'current' ||  tab == 'missed_pickup' %>
+						<%= "<option value='missed delivery' #{ order.status == 'missed delivery' ? 'selected' : ''} >Missed Delivery</option>" if (order.approved? && order.total && tab == 'pending') || (order.approved? && order.total && tab == 'missed_delivery') %>
+						<%= "<option value='cancelled' #{order.status == 'cancelled' ? 'selected' : ''} >Cancelled</option>" if tab == 'cancelled' %>
+						<%= "<option value='pending' #{order.status == 'processing' ? 'selected' : ''} >Processing</option>" if order.approved? && tab == 'pending' %>
+					</select>
+				</form>
+			</td>
+			<%= "<td>#{link_to "reschedule", reschedule_customer_order_path(order.customer, order), :class => "green"}</td>"  if current_user.has_role?('reschedule')%>	
+			<td>
+				<span class="red" style="text-decoration:none;"><%= order.approved? ? "aut - #{number_to_currency(order.amount < 0.00 ? 0.00 : order.amount)} - #{number_to_currency(order.discount)} - #{number_to_currency(order.estimated_shipping_amount)}" : link_to ('Make Payment Info', payment_customer_order_path(order.customer_id, order.id) + "?mpi=true", :class=>'red', :style=>"text-decoration") %></span>
+			</td>
+			<%= "<td>#{link_to_lightbox 'Add', new_note_path + '?o_id='+order.id.to_s+'&c_id='+order.customer.id.to_s}</td>" if current_user.has_role?('note')%>
+			<td><%= link_to 'print ticket', receipt_customer_order_path(order.customer, order), :popup => true %></td>
+			<td><%= link_to 'cancel', customer_order_path(order.customer, order)+"?from_admin=true", :confirm => 'Are you sure you want to delete this order?', :method => :delete unless (type == 'previous' || order.finalized || !current_user.account_type.blank?) %></td>
+		</tr>
+	<% end %>
+</table>

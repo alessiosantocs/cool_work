@@ -1,0 +1,10 @@
+<%= error_messages_for :state %>
+
+<% form_for :state, :url => state_path(@state), :html => { :method => :put } do |f| %>
+	<%= render :partial => 'form', :locals => { :create => false, :f => f } %>
+<% end %>
+
+<!--
+<hr align='center' />
+<%= link_to 'Delete', state_path(@state), :class => 'admin', :confirm => 'Are you sure?', :method => :delete %>
+-->

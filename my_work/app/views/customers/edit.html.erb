@@ -1,0 +1,134 @@
+<div>
+  <%= image_tag('account_hdn.png') %>
+</div>
+ 
+<%= error_messages_for :user %>
+<%= error_messages_for :customer %>
+<%= error_messages_for :building %>
+<%= error_messages_for :address %>
+
+<% form_for :customer, :url => customer_path(@customer), :html => {:method => :put} do |f| -%>
+<table cellspacing="10">
+  <tr>
+      <td colspan="2">
+          <hr class="grey" />
+      </td>
+  </tr>
+	<tr>
+		<td class="title" colspan="2">MY ADDRESS</td>
+	</tr>
+	
+	<tr>
+		<td class="label">Address Type:</td>
+		<td>
+			<input type="radio" onclick="$('building-company').hide()" name="customer[building_type]" value="true" id="customer_building_type_res" <%= 'checked' if @customer.building_type == true %> /><label for="customer_building_type_res"> Residential</label>
+			<input type="radio" onclick="$('building-company').show()" name="customer[building_type]" value="false" id="customer_building_type_com" <%= 'checked' if @customer.building_type == false %> /><label for="customer_building_type_com"> Commercial</label>
+		</td>
+	</tr>
+  	<tr id="building-company" <%= "style='display:none;'" if @customer.building_type == true %>>
+		<td class="label"><label for="customer_company">Company Name:</label></td>
+		<td><%= f.text_field :company %></td>
+	</tr>
+	
+	<% fields_for :address do |a| %>
+		<tr>
+			<td class="label"><label for="address_label">Building Name:</label></td>
+			<td><%= a.text_field :label %></td>
+		</tr>
+	<% end %>
+	
+	<% fields_for :building do |b| %>
+		<tr>
+			<td class="label"><label for="building_addr1">Street Address:</label></td>
+			<td><%= b.text_field :addr1 %></td>
+		</tr>
+		<tr>
+			<td class="label"><label for="building_addr2">Street Address:</label></td>
+			<td><%= b.text_field :addr2 %></td>
+		</tr>
+	<% end %>
+	
+	<% fields_for :address do |a| %>
+		<tr>
+			<td class="label"><label for="address_unit_number">Apt/Ste:</label></td>
+			<td><%= a.text_field :unit_number %></td>
+		</tr>
+	<% end %>
+	
+	<% fields_for :building do |b| %>
+		<tr>
+			<td class="label"><label for="building_city">City:</label></td>
+			<td><%= b.text_field :city %></td>
+		</tr>
+		<tr>
+			<td class="label"><label for="building_state">State:</label></td>
+			<td><%= b.select :state, Building.supported_states %></td>
+		</tr>
+		<tr>
+			<td class="label"><label for="building_zip">Zip code:</label></td>
+			<td><%= b.text_field :zip %></td>
+		</tr>
+		<tr>
+			<td class="label"><label for="building_doorman">Is this a doorman building?</label></td>
+			<td>
+				<%= b.radio_button :doorman, true %><label for="building_doorman_true">  Yes</label>
+				<%= b.radio_button :doorman, false %><label for="building_doorman_false">  No</label>
+			</td>
+		</tr>
+	<% end %>
+	
+	<tr>
+		<td class="label"><label for="customer_home">Home Phone:</label></td>
+  		<td><%= f.text_field :home, :size => 10 %> <span class="small_text"><i>(please use <b>ONLY</b> numbers) e.g. 2121234567</i></span></td>
+	</tr>
+	<tr>
+		<td class="label"><label for="customer_cell">Mobile Phone:</label></td>
+  		<td><%= f.text_field :cell, :size => 10 %> <span class="small_text"><i>(please use <b>ONLY</b> numbers) e.g. 2121234567</i></span></td>
+  	</tr>
+	
+	<tr>
+		<td class="title" colspan="2">MY SITE ACCESS</td>
+	</tr>
+	
+	<% fields_for :user do |u| %>
+		<tr>
+			<td class="label"><label for="user_first_name">First Name:</label></td>
+			<td><%= u.text_field :first_name, :live => true %></td>
+		</tr>
+		<tr>
+			<td class="label"><label for="user_last_name">Last Name:</label></td>
+			<td><%= u.text_field :last_name, :live => true %></td>
+		</tr>
+		<tr>
+			<td class="label">Username:</td>
+			<td><%= u.text_field :login, :disabled => true, :value=>current_user.email %></td>
+		</tr>
+		<tr id="email-toggle">
+			<td>&nbsp;</td>
+			<td><a href="javascript:toggle_emails();" class="green">Change Email &amp; Username</a></td>
+		</tr>
+		<tr id="current_email" style="display: none">
+		</tr>
+		<tr id="email" style="display: none">
+		</tr>
+		<tr id="email_confirm" style="display: none">
+		</tr>
+		<tr id="pass-toggle">
+			<td>&nbsp;</td>
+			<td><a href="javascript:toggle_passwords();" class="green">Change Password</a></td>
+		</tr>
+		<tr id="old_pass" style="display: none">
+		</tr>
+    <tr id="old_pass" style="display: none">
+    </tr>
+		<tr id="pass" style="display: none">
+		</tr>
+		<tr id="pass_confirm" style="display: none">
+		</tr>
+	<% end %>
+</table>
+
+<div class="submit-buttons">
+	<span><font face="HelveticaRounded"><%= image_submit_tag 'sub_save_btn.png', :class =>"align-button" %></font></span>
+</div>
+<% end -%>

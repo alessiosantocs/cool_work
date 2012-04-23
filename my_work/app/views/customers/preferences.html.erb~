@@ -1,0 +1,43 @@
+<% if current_user.employee? %>
+<div class="view-menu">
+	<span class="float-right"><%= link_to_lightbox 'Add Note', new_note_path + '?c_id='+ @customer.id.to_s, :class => 'action new' %></span>
+	<span><strong>Accounts > Account Details: </strong></span>
+	<span style="font-size: 20px; color: #B24F45"><strong><%= @customer.name %></strong></span>
+</div>
+<ul class="tabselector" id="tabcontrol1">
+    <li class="tab-unselected">
+        <%= link_to_unless_current_heirarchy ("MY DASHBOARD",dashboard_customer_path(@customer)) %>
+    </li>
+    <li class="tab-unselected">
+        <%= link_to_unless_current_heirarchy ("Order Historyhgfhgfhg", customer_orders_path(@customer)) %>
+    </li>
+	<li class="tab-unselected">
+        <%= link_to_unless_current_heirarchy ("Account Info", admin_customer_path(@customer)) %>
+    </li>
+    <li class="tab-unselected">
+        <%= link_to_unless_current_heirarchy ("Payment Info", customer_credit_cards_path(@customer)) %>
+    </li>
+        <li class="tab-unselected">
+        <%= link_to_unless_current_heirarchy ("Eco-Logics", ecologic_customer_path(@customer)) %>
+    </li>
+        <li class="tab-selected">
+        <%= link_to_unless_current_heirarchy ("Preferences", preferences_customer_path(@customer)) %>
+    </li>
+</ul>
+<br><br>
+<% end %>
+<div>
+	<%= image_tag('pref_hdn.png') %>
+</div>
+
+<div id="customer_preferences">
+	<% if params[:redirect_to] %>
+		<% form_for :customer_preferences, :url => customer_preference_path(@customer_preferences)+ '?redirect_to=' + params[:redirect_to].to_s, :loading => "$('flash').update('<span class=\"notice\">Saving...<\/span>')", :complete => "$('flash').update('<span class=\"notice\">Preferences Saved!<\/span>')", :html => { :method => :put } do |f| -%>
+			<%= render :partial => 'my_preferences', :locals => {:f => f} %>
+		<% end -%>
+	<% else %>
+		<% form_remote_for :customer_preferences, :url => customer_preference_path(@customer_preferences), :loading => "$('flash').update('<span class=\"notice\">Saving...<\/span>')", :complete => "$('flash').update('<span class=\"notice\">Preferences Saved!<\/span>')", :html => { :method => :put } do |f| -%>
+			<%= render :partial => 'my_preferences', :locals => {:f => f} %>
+		<% end -%>
+	<% end %>
+</div>

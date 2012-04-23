@@ -1,0 +1,113 @@
+<table cellspacing="10">
+	<!--<tr>
+        <td colspan="2">
+            <hr class="grey" />
+        </td>
+    </tr>
+	<tr>
+		<td colspan="2" class="title">MY PAYMENT</td>
+	</tr>
+	
+	<% fields_for :credit_card do |cc| %>  
+		<tr>
+			<td>Choose Payment Method: </td>
+			<td>
+				<select name="quick_payment_method">
+					<option selected="selected">Visa</option>
+					<option>Mastercard</option>
+					<option>American Express</option>
+					<option>Discover</option>
+				</select>
+			</td>
+		</tr>
+		<tr>
+			<td>Enter Security Code: </td>
+			<td>
+				<div><input type="text" name="quick_security_code" size="4"/></div>
+				<div><%= link_to 'What is this', '#', :class => 'green' %></div>
+			</td>
+		</tr>
+	-->
+		<tr>
+	        <td colspan="2">
+	            <hr class="grey" />
+	        </td>
+	    </tr>
+		<tr>
+			<td colspan="2" class="title">MY PAYMENT INFORMATION</td>
+		</tr>
+		<tr>
+			<td id="payment-info" colspan="2">
+				<table cellspacing="10">
+					<tr>
+						<td>Payment Method: </td>
+							<td>
+								<%= cc.select :payment_method, ['Visa','Mastercard', 'American Express', 'Discover'], {}, {:onchange => 'changeSecCodeValidation(this.options[selectedIndex].value)'} %>
+							</td>
+						</tr>
+						<tr>
+							<td>Card Number:</td>
+							<td><%= cc.text_field :number %></td>
+						</tr>
+						<tr>
+							<td>Expiration Date:</td>
+							<td>
+								<% mnth = @credit_card.expiration[0..1] if @credit_card.expiration %>
+								<% year = @credit_card.expiration[2..3] if @credit_card.expiration %>
+								<%= select_tag 'exp_month', options_for_select(['01','02','03','04','05','06','07','08','09','10','11','12'], mnth), :onchange => "checkDate('exp_month', 'exp_year');" %> &nbsp; / &nbsp; 
+								<%= select_tag 'exp_year', options_for_select(Range.new(Date.today.year, Date.today.year + 15).map {|yr| [yr.to_s, yr.to_s[2,3]] }, year), :onchange => "checkDate('exp_month', 'exp_year');" %>
+							</td>
+						</tr>
+						<tr>
+							<td>Security Code: </td>
+							<td><%= cc.text_field :security_code, :size => 4, :maxlength => 4 %></td>
+						</tr>
+				</table>
+			</td>
+		</tr>
+		<tr>
+			<td colspan="2">
+				<strong class="green">Billing Information</strong>
+			</td>
+		</tr>
+		<tr>
+			<td>First Name: </td>
+			<td><%= cc.text_field :first_name, :live => true %></td>
+		</tr>
+		<tr>
+			<td>Last Name: </td>
+			<td><%= cc.text_field :last_name, :live => true %></td>
+		</tr>
+		<% address = @customer.primary_address %>
+		<tr>
+			<td>Address: </td>
+			<td><%= cc.text_field :address, :live => true %></td>
+		</tr>
+		<tr>
+			<td>City: </td>
+			<td><%= cc.text_field :city, :live => true %></td>
+		</tr>
+		<tr>
+			<td>State: </td>
+			<td><%= cc.text_field :state, :live => true %></td>
+		</tr>
+		<tr>
+			<td>Zip Code: </td>
+			<td><%= cc.text_field :zip, :live => true %></td>
+		</tr>
+		<tr>
+	        <td colspan="2">
+	            <hr class="grey" />
+	        </td>
+   		 </tr>
+	<% end %>
+</table>
+	    
+<p>
+	<% if create %>
+        <%= f.submit "Create" %>
+    <% else %>
+        <%= f.submit "Update" %>
+    <% end %>
+</p>
+<%= javascript_tag ("changeSecCodeValidation($F('credit_card_payment_method'));") %>

@@ -1,0 +1,13 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+
+one:
+  card_number: MyString
+  payment_card_method: MyString
+  order_id: 1
+  customer_id: 1
+
+two:
+  card_number: MyString
+  payment_card_method: MyString
+  order_id: 1
+  customer_id: 1

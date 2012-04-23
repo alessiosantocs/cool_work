@@ -1,0 +1,36 @@
+<%= render :partial => '/admin/account_search' %>
+
+<div class="view-menu">
+	<span><strong>Administrator > Dashboard</strong></span>
+</div>
+
+<%= render :partial => '/admin/base/search' %>
+
+<ul class="tabselector" id="tabcontrol1">
+	<li class="tab-unselected">
+		<%= link_to_unless_current_heirarchy ("Current", "/admin") %>
+	</li>
+	<li class="tab-unselected">
+		<%= link_to_unless_current_heirarchy ("Pending", "/admin/base/pending") %>
+	</li>
+	<li class="tab-unselected">
+		<%= link_to_unless_current_heirarchy ("Complete", "/admin/base/complete") %>
+	</li>
+	<li class="tab-unselected">
+		<%= link_to_unless_current_heirarchy ("Cancelled", "/admin/base/cancelled") %>
+	</li>
+	<li class="tab-unselected">
+		<%= link_to_unless_current_heirarchy ("Missed PickUp", "/admin/base/missed_pickup") %>
+	</li>
+		<li class="tab-selected">
+		<%= link_to_unless_current_heirarchy ("Missed Delivery", "/admin/base/missed_delivery") %>
+	</li>
+</ul>
+<ul class="panes" id="panecontrol1">
+	<li class="pane-selected">
+		<%= render :partial => '/admin/base/orders', :locals => {:orders => @orders, :tab => :missed_delivery} %>
+	</li>
+<ul>
+<div class="view-menu" style="text-align:center;">
+  <%= will_paginate @orders %>
+</div>

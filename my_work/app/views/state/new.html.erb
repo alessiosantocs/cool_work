@@ -1,0 +1,5 @@
+<%= error_messages_for :state %>
+
+<% form_for :state, :url => state_index_path(@state) do |f| %>
+	<%= render :partial => 'form', :locals => { :create => true, :f => f } %>
+<% end %>

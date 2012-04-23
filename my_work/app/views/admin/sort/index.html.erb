@@ -1,0 +1,18 @@
+<%= render :partial => '/admin/account_search' %>
+
+<div class="view-menu">
+	<span>Sort > Login to Terminal</span>
+</div>
+
+ 
+<table class="sort-login" cellspacing=15>
+	<tr>
+		<td class="green"><h3>Scan Items For Finishing</h3></td>
+	</tr>
+	<% form_tag :action => 'terminal' do |form| %> 
+	Location: <%= select_tag( :area, 
+	                          options_for_select(@terminals),
+	                          { :multiple => false } )%> 
+	<%= submit_tag "log in to terminal" %>
+	<% end %> 
+</table>

@@ -1,0 +1,28 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<style type="text/css">
+<!--
+body p{
+font-family: Verdana, Geneva, sans-serif;
+}
+-->
+</style>
+</head>
+
+<body>
+		<% email_content do %></p>
+Dear <%= @order.customer.first_name.capitalize %></p>
+
+<p>We have received your request for cancellation. Unfortunately your order #<%= @order.tracking_number %> has already entered the treatment process and may not be cancelled.</p>
+
+<p>Your order is scheduled to return to you on <%= @order.delivery_date.strftime("%m/%d/%Y") %>.</p>
+
+<p>For any questions please contact us at www.myonlinecleaner.com, or email customerservice@myfreshshirt.com,</p>
+
+<% end %>
+<%= render :partial => 'signature' %>  
+</body>
+</html>

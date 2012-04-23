@@ -1,0 +1,46 @@
+<% @stop = stop %>
+<table class="schedule-window">
+<% if stop.closed? %>
+	<tr>
+		<td>
+			<%= link_to_lightbox image_tag('cancelled_time_window.png'), edit_stop_path(stop), :title => "Edit Time Window" %>
+		</td>
+	</tr>	
+<% elsif stop.error? %>
+	<tr>
+		<td>
+			<%= stop.request_count %> <%= stop.slots %> <%= stop.concordant_request_count %>
+			<%= link_to_lightbox image_tag('scheduling_error.png'), edit_stop_path(stop), :title => "Edit Time Window" %>
+		</td>
+	</tr>	
+<% else %>
+		<tr>
+			<td>
+				<span class="mfs-scheduled-order"><%= stop.request_count %></span>
+				<span class="same-building-order"><%= stop.concordant_request_count %></span>
+			</td>
+			<td>
+				<div>
+					<table>
+						<tr>
+							<td rowspan="2">
+								<%= render :partial => 'edit_in_place', :locals => {:stop => @stop} %>
+							</td>
+							<td class="slots-up-down">
+								<%= link_to_remote image_tag('arrow-up.gif'), :url => add_slot_stop_path(stop), :method => :post %>
+							</td>
+						</tr>
+						<tr>
+							<td class="slots-up-down">
+								<%= link_to_remote image_tag('arrow-down.gif'), :url => remove_slot_stop_path(stop), :method => :post %>
+							</td>						
+						</tr>
+					</table>
+				</div>
+				<div>
+					<div id="slots_left_<%= stop.id %>" class="slots-left"><%= stop.slots_left %></div>
+				</div>
+			</td>
+		</tr>
+<% end %>
+</table>

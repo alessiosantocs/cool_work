@@ -1,0 +1,18 @@
+<%= render :partial => '/admin/account_search' %>
+
+<div class="view-menu"><% date = Date.civil(@from_year.to_i, @from_month.to_i) + 1.month ; from_month = date.month ; from_year = date.year%>
+	<span class="float-right"><b>Report from <%=Date::MONTHNAMES[from_month].to_s + " " + from_year.to_s + " to " + Date::MONTHNAMES[@to_month.to_i] + " " + @to_year %></b></span>
+        <%= render :partial => 'report_drop_down' %>
+</div>
+<table  cellspacing="10" style="background-color: rgb(240, 240, 240); border: 1px solid rgb(192, 192, 192);text-align:center;width:100%">
+  <tr>
+      <td><form method="POST">
+          <lable><b>From</b>&nbsp;</lable>
+          <%= date_select :from_date , :select, {:discard_day => true, :order => [:month, :year], :default => { :month => (from_month.to_s), :year => from_year }} %>
+          <lable><b>To</b>&nbsp;</lable>
+          <%= date_select :to_date , :select, {:discard_day => true, :order => [:month, :year], :default => { :month => @to_month, :year => @to_year }} %>
+          <input type="submit" name="submit" id="submit" value="Get Report">
+          </form>
+      </td>
+  </tr>
+</table>

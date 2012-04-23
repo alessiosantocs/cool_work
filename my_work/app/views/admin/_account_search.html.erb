@@ -1,0 +1,8 @@
+<% form_tag '/admin/accounts', :method => 'get' do %>
+
+  <p style="text-align:center">
+    <%= text_field_tag :a_search, params[:a_search], :size=>'30' %>
+    <%= submit_tag "Search Accounts", :name => nil %>
+  </p>
+  
+<% end %>

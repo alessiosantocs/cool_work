@@ -1,0 +1,18 @@
+<p>
+  <b>Title:</b>
+  <%=h @ticker.title %>
+</p>
+
+<p>
+  <b>Body:</b>
+  <%=h @ticker.body %>
+</p>
+
+<p>
+  <b>Expiry:</b>
+  <%=h @ticker.expiry %>
+</p>
+
+
+<%= link_to 'Edit', edit_ticker_path(@ticker) %> |
+<%= link_to 'Back', tickers_path %>

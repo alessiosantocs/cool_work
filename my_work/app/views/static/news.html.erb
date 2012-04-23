@@ -1,0 +1,84 @@
+<%= render :partial => 'sidebar' %>
+<td valign="top" width="725" style="padding-right: 15px;">
+    <br>
+    <img src="/images/MYFRESHNEWS.gif" height="34" width="273">
+    <br>
+    <br>
+    <span class="subtitle">Catch
+        the latest on company news that may affect your service, news in
+        technological improvements in professional garment care, news on global
+        climate change, and tips on cleaning and being green.
+        <br>
+        <br>
+    </span>
+
+<% if !@news.blank? %>
+
+  <table>
+    <% @news.each do |news|%>
+      <tr></tr>
+      <tr>
+          <td>
+              <div style="float:left;padding-right:10px;width:200px;min-height:100px;padding-top:10px;"><%= image_tag(news.image.url(:medium)) unless news.image_file_name.blank? %></div>
+              <div class="subtitleGreen" style="border-top: 5px solid #C0C0C0;color:#000;padding-top:5px;text-transform:capitalize;"><%= news.title %><br></div>
+              <span class="right_nav_links_text"><%= news.updated_at.strftime("%B %d, %Y")%></span> <br><br><%= simple_format(news.body) %> <img src="/images/news-article-button.jpg" height="11" width="10">
+          </td>
+      </tr>
+    <% end %>
+  </table>
+<% end %>
+  <!--      <br>
+        <br>
+        <img src="/images/terrapass-logo.jpg" height="102" width="135">
+        <br>
+        <br>
+        <br>
+        <span class="subtitleGreen">CLEANING CLOTHES AND CLEANING WATER
+            <br>
+        </span>
+        By <span class="style2">the fresh prince</span> | March 15, 2008 
+        <br>
+        <br>
+        <br>
+        1st Paragraph goes here <img src="/images/news-article-button.jpg" alt="" height="11" width="10">
+        <br>
+        <br>
+        <img src="/images/clean-bottle.jpg" height="214" width="72">
+        <br>
+        <br>
+        <img src="/images/news.jpg" height="24" width="72">
+        <br>
+        <br>
+        My Fresh Shirt &amp; Terrapass
+        <br>
+        <br>
+        My Fresh Shirt &amp; charity: water
+        <br>
+        <br>
+        <img src="/images/olds.gif" height="24" width="72">
+        <br>
+        <br>
+        February 2008
+        <br>
+        January 2008
+        <br>
+    </span>
+    <br>
+    <br>!-->
+</td>
+</tr>
+<tr>
+    <td valign="top">
+        &nbsp;
+    </td>
+    <td valign="top">
+        &nbsp;
+    </td>
+</tr>
+</tbody>
+</table>
+</td>
+<td valign="top">
+    &nbsp;
+</td>
+</tr>

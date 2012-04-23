@@ -1,0 +1,43 @@
+<% form_for @item, :url => order_items_path(@item) do |f| %>
+<table cellspacing=5>
+	<tr>
+		<th>Item Type</th>
+		<td>
+			<%= select :customer_item, :item_type_id, ItemType.find(:all, :joins=>[:prices], :conditions => ["prices.service_id = ? AND prices.is_active = TRUE", @service.id], :order => 'name asc').collect {|s| [ s.name,s.id ]}, {},{ :onchange => "$('cost_field').style.display = this.value == 59 ? '' : 'none';" }%>
+			<%= f.hidden_field :order_id %>
+			<%= f.hidden_field :service_id %>
+		</td>
+	</tr>
+	<% if @service.weighable? %>
+	<tr>
+		<th>Weight</th>
+		<td><%= f.text_field :weight, :size => 8 %></td>
+	</tr>
+	<% else %>
+	<tr>
+		<th>Brand</th>
+		<td><%= text_field :customer_item, :brand, :size => 12 %></td>
+	</tr>
+        <tr id="cost_field" style="display:none">
+		<th>Cost</th>
+		<td><%= text_field :order_item, :price, :size => 12 %></td>
+	</tr>
+	<tr>
+		<th>Color</th>
+		<td><%= text_field :customer_item, :color, :size => 12 %></td>
+	</tr>
+	<tr>
+		<th>Size</th>
+		<td><%= text_field :customer_item, :size, :size => 4 %></td>
+	</tr>
+	<tr>
+		<th>Special</th>
+		<td><%= f.text_area :instructions_text, :size => 40 %></td>
+	</tr>
+	<% end %>
+	<tr>
+		<th>&nbsp;</th>
+		<td><%= image_submit_tag "create_btn.png", :class => 'align-button' %></td>
+	</tr>
+</table>
+<% end %>

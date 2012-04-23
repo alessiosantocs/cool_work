@@ -1,0 +1,26 @@
+# == Schema Information
+# Schema version: 98
+#
+# Table name: serviced_zips
+#
+#  id  :integer(11)   not null, primary key
+#  zip :string(9)     
+#
+
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+
+p1:
+  id: 1
+  zip: 10001
+
+h1:
+  id: 2
+  zip: 10002
+
+p2:
+  id: 5
+  zip: 10005
+
+p3:
+  id: 4
+  zip: 10004

@@ -1,0 +1,48 @@
+<a href="/"><%= image_tag ("fresh_zip_deny.jpg") %></a>
+<div style="float: right; vertical-align: text-top;">
+	<%= image_tag ("bottomcorner.jpg") %>
+</div>
+<div style="padding-left: 350px;" >
+<div id="flash" style="width: 700px;">
+        <%= content_tag 'span', h(flash[:notice]),
+        :class => 'notice' if flash[:notice] %>
+        <%= content_tag 'span', h(flash[:error]),
+        :class => 'error' if flash[:error] %>
+    </div>
+<form method="post" id="zip-form" action="/zip/complete">
+	<table style="margin: 20px auto;">
+		<tbody>
+			<tr>
+				<td>
+					<div>Name: *</div>
+					<input type="text" name="name" id="name" class="input" value="<%= params[:name] %>" />
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<div>Email: *</div>
+					<input type="text" name="email" id="email" class="input" value="<%= params[:email] %>" />
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<div>Zip: *</div>
+					<input type="text" name="zip" id="zip" class="input" value="<%= params[:zip] %>"/>
+				</td>
+			</tr>
+			<tr>
+				<td style="text-align: center;">
+					<br/><font face="HelveticaRounded"><input type="image" src="/images/send_go_btn.png" class="align-button"/></font>
+					OR
+					<%= link_to image_tag('just_go_btn.png'), '/how_it_works', :class => 'align-button' %>
+				</td>
+			</tr>		
+		</tbody>
+	</table>
+</form>
+
+<p style="text-align: center">
+	Current Customer? <%= link_to '<strong>Log In</strong>', login_url, :class => 'green' %> or <%= link_to '<strong>Try A Different Zip Code</strong>', '/zip', :class => 'green' %>
+</p>
+</div>
+<br/>

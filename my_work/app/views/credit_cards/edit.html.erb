@@ -1,0 +1,9 @@
+<div>
+    <%= error_messages_for :credit_card %>
+    
+    <% form_for :credit_card, :url => customer_credit_card_path(@customer, @credit_card), :html => { :method => :put } do |f| %>
+		<%= render :partial => 'form', :locals => { :create => false, :f => f } %>
+    <% end %>
+    
+    <%= link_to '<< Payment Information', customer_credit_cards_path(@customer) %>
+</div>

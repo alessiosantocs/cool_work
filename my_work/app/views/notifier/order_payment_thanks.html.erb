@@ -1,0 +1,43 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<style type="text/css">
+<!--
+body p{
+font-family: Verdana, Geneva, sans-serif;
+}
+-->
+</style>
+</head>
+
+<body>
+	<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<style type="text/css">
+<!--
+body p{
+font-family: Verdana, Geneva, sans-serif;
+}
+-->
+</style>
+</head>
+
+<body>
+	<p>
+
+<% email_content do %>
+<div>Dear <%= @user.name %>,</div>
+
+<h1 class='green'>THANK YOU!</h1>
+<p>Your Order ID: <strong><%= @order.identifier %></strong></p>
+<p>Thank you for your recent order with us. Your business is greatly appreciated. If there are any questions, please feel free to contact us. <%= link_to 'Please Click Here to contact us', '#', :class=>'green' %></p>
+
+<% end %>
+<%= render :partial => 'signature' %>  
+</body>
+</html>

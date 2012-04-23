@@ -1,0 +1,109 @@
+<table class="order" cellspacing="10">
+	<tr>
+		<td class="label"><label>Status:</label></td>
+		<td><%= order.status %></td>	
+	</tr>
+	
+	<% if order.discount.to_f > 0.0 %>
+	<tr>
+			<td><strong>Promotional Discount:</strong></td><td><strong>&nbsp;&nbsp;<%= number_to_currency(order.discount.to_f) %></strong></td>
+	</tr>
+	<% end %>		
+	<tr>
+		<% if order.finalized == true %>
+		<td class="label"><label>Order Total:</lable></td><td><strong><%= number_to_currency(order.total < 0.00 ? 0.00 : order.total) %></strong></td>
+			
+		<% end %>
+		
+		<% if order.finalized != true %>
+	
+		<td class="label"><label>Estimated Total:</lable></td><td><strong><%= number_to_currency(order.estimated_amount < 0.00 ? 0.00 : order.estimated_amount) %></strong></td>
+		<% end %>
+	</tr>
+	
+	<tr>
+		<td class="label"><label>Items:</label></td>
+		<td>
+			<% if order.order_items.size > 0 %>
+				<div style="width:270px"><%= link_to_function "#{order.order_items.size} items", "$('#{type}_#{order.id}_items').toggle()" %></div>
+				<div id="<%= type %>_<%= order.id %>_items" style="display:none">
+					<table cellspacing="5">
+						<tr>
+							<th class="align-left">Category</th>
+							<th class="align-left">Item</th>
+							<th class="align-left">Quantity</th>
+							<th class="align-left">Special Handling</th>
+                                                        <th  class="align-left">Price</th>
+						</tr>
+					<% order.order_items.group_by(&:customer_item_type).sort.each do |service, items| %>
+						<tr class="<%= cycle('light-blue', 'light-green', :name => "order_class") %>">
+							<td style="text-align:center"><%= service.services.first.name %></td>
+							<td style="text-align:center"><%= service.name %></td>
+							<td style="text-align:center"><%= items.size %></td> 
+							<td>
+                                                              <% for item in items %>
+                                                                      <%= (item.order.premium || item.customer_item.premium || item.premium) ? 'Premium,' : '' %>
+                                                              <% end %>
+                                                        </td>
+                                                        <td>
+                                                              <% for item in items %>
+                                                                <%= number_to_currency(item.price) %>, 
+                                                              <% end %>
+                                                        </td>
+						</tr>
+					<% end %>
+					</table>
+				</div>
+			<% else %>
+				<div>0 Items</div>
+			<% end %>
+		</td>	
+	</tr>
+	<tr>
+		<td class="label"><label>Schedule:</label></td>
+		<td>
+			<% if order.pickup  %>
+			<div><strong>PICK UP</strong></div>
+			<div><%= format_date(order.pickup_date) + ', ' + time_window(order.pickup_window) if order.pickup_date %></div>
+			<% if order.status == 'missed pickup' and !order.recurring_order_id %>
+				<div class="small_text"><%= link_to "Reschedule", reschedule_customer_order_path(order.customer, order), :class => "green" %> pickup</div>
+			<% end %>	
+			<% end %>
+			<% if order.delivery%>
+			<div><strong>DELIVERY</strong></div>
+			<div><%= format_date(order.delivery_date) + ', ' + time_window(order.delivery_window) if order.delivery_date %></div>
+		  <% if !order.recurring_order_id%><div class="small_text"><%= link_to "Reschedule", reschedule_customer_order_path(order.customer, order), :class => "green" %> delivery</div><%end%>
+			<% end %>
+		</td>	
+	</tr>
+	<% if payment == true %>
+	<tr>
+		<td class="label"><label>Payment Status:</label></td>
+		<td>
+			<div><%= order.payment_status %></div>
+			<div>
+				<% if order.payment %>
+					<strong><%= order.payment.cc_payment_method%></strong>: <%= order.payment.cc_number%>
+				<% end %>
+			</div>
+			<div class="small_text"><%= link_to "Change", payment_customer_order_path(order.customer, order), :class => "green" %> payment method</div>
+		</td>	
+	</tr>
+	<% end %>
+	<tr>
+		<td class="label"><label>Green:</label></td>
+		<td>
+			<div>Eco-Points earned: <%= order.eco_points %></div>
+			<div>Carbon Footprint: <%= order.carbon_footprint %></div>
+			<div>Water Saved: <%= order.water_saved %> gallons</div>
+		</td>	
+	</tr>
+	<tr>
+		<td>&nbsp;</td>
+		<td>
+			<%= link_to_lightbox 'Add Note/Complaint<br/>', new_note_path + '?o_id='+order.id.to_s+'&c_id='+order.customer.id.to_s, :class => 'action new' if(payment == true && (current_user.user_class=="customer" || current_user.has_role?('note')))%>
+			<%= link_to image_tag('print_receipt_btn.png'), receipt_customer_order_path(order.customer, order), :popup => true, :class => 'align-button' unless type == 'pending' %>
+			<%= link_to image_tag('cancel_order_btn.png'), customer_order_path(order.customer, order), :class => 'align-button', :confirm => 'Are you sure you want to delete this order?', :method => :delete unless type == 'previous' || order.finalized %>
+		</td>
+	</tr>
+</table>

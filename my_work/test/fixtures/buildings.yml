@@ -1,0 +1,50 @@
+# == Schema Information
+# Schema version: 98
+#
+# Table name: buildings
+#
+#  id          :integer(11)   not null, primary key
+#  addr1       :string(255)   
+#  addr2       :string(255)   
+#  city        :string(255)   
+#  state       :string(255)   
+#  zip         :string(9)     
+#  doorman     :boolean(1)    
+#  schedule_id :integer(11)   
+#  serviced    :boolean(1)    
+#
+
+building1:
+    id: 1
+    addr1: 101 Ruby Rd.
+    city: Hackerstown
+    state: NJ
+    zip: 10002
+    doorman: true
+
+building2:
+    id: 2
+    addr1: 15 Python Pl.
+    city: Hackerstown
+    state: NJ
+    zip: 10002
+    doorman: true
+
+building3:
+    id: 3
+    addr1: 305 Lisp Ln.
+    city: Hackerstown
+    state: NJ
+    zip: 10002
+    doorman: false
+
+building7:
+    id: 4
+    addr1: 8088 Basic Blvd.
+    city: Hackerstown
+    state: NJ
+    zip: 10004
+    doorman: true
+
+
+    

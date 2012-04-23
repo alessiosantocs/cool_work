@@ -1,0 +1,96 @@
+<div class="view-menu">
+	<span><strong>Promotions</strong></span>
+</div>
+<table width="1000" cellpadding="10px">
+<tr>
+  <td valign="top" colspan="8">
+    <br/>
+    <img src="/images/MYFRESHPROMOS.gif">
+    <br/>
+    <br/>
+    <img src="/images/promos.gif"> 
+	<%= link_to_lightbox 'New', new_admin_promotion_path, :class => 'action new' if logged_in? && current_user.has_role?('content') %>
+    <br/>
+    <br/>
+  </td>
+</tr>
+<% if !@current_promotions.blank? %>
+    <tr><td style="font-family: arial; font-size: 18px; font-weight:bold;" colspan="8">Current Promotions<br/><br/></td></tr>
+    <tr><td colspan="8"><strong>TUT -</strong> Times Usable Total, <strong>TUPU -</strong> Times Usable Per User, <strong>TU -</strong> Times Used</td></tr>
+    <tr>
+        <th>Code</th>
+        <th>TUT</th>
+        <th>TUPU</th>
+        <th>TU</th>
+        <th>Expiry</th>
+        <th>Function</th>
+        <th>Arguments</th>
+        <th>&nbsp;</th>
+        <th>&nbsp;</th>
+    </tr>
+    <% for promotion in @current_promotions %>
+        <% form_for promotion, :url => "/admin/promotions/#{promotion.id}",:html => {:method => 'put'} do |f| %>
+            <tr class="<%= cycle('light-blue', 'light-green', :name => "order_class") %>">
+                <td width="50"><%= f.text_field :code, :size => 10 %></td>
+                <td><%= f.text_field :times_usable, :size => 5, :onkeyup => "numeric(this);" %></td>
+                <td><%= f.text_field :times_usable_per_user, :size => 5, :onkeyup => "numeric(this);" %></td>
+                <td width="50" align="center"><%= promotion.orders.size %></td>
+                <td width="295"><%= f.date_select :expiry %></td>
+                <td><%= f.select :function , Promotion.available %></td>
+                <td><%= f.text_field :arguments, :size => 10  %></td>
+                <td align="center"><%= f.submit "Update", :class => 'button green' %><br/>
+                <%= link_to '&nbsp;', "/admin/promotions/#{promotion.id}", :confirm => 'Are you sure?', :method => :delete, :class => 'action delete' if logged_in? && current_user.has_role?('content') %></td>
+                <td width="120"><div style="background-color:#A3CC4E;-moz-border-radius: 8px 8px 8px 8px;text-align:center;padding:2px;"><%= link_to 'Add Service/Item', admin_promotion_promotion_services_path(promotion), :style=>"color:#FFF;" %></div></td>
+                <td width="110"><div style="background-color:#A3CC4E;-moz-border-radius: 8px 8px 8px 8px;text-align:center;padding:2px;"><%= link_to 'Add Zip', admin_promotion_promotion_zips_path(promotion), :style=>"color:#FFF;" %></div></td>
+            </tr>
+        <% end %>
+  <% end %>
+<% end %>
+<% if !@old_promotions.blank? %>
+    <tr><td style="font-family: arial; font-size: 18px; font-weight:bold;" colspan="8"><br/>Old Promotions<br/><br/></td></tr>
+    <tr><td colspan="8"><strong>TUT -</strong> Times Usable Total, <strong>TUPU -</strong> Times Usable Per User, <strong>TU -</strong> Times Used</td></tr>
+    <tr>
+        <th>Code</th>
+        <th>TUT</th>
+        <th>TUPU</th>
+        <th>TU</th>
+        <th>Expiry</th>
+        <th>Function</th>
+        <th>Arguments</th>
+        <th>&nbsp;</th>
+        <th>&nbsp;</th>
+    </tr>
+    <% for promotion in @old_promotions %>
+        <% form_for promotion, :url => "/admin/promotions/#{promotion.id}",:html => {:method => 'put'} do |f| %>
+          <tr class="<%= cycle('light-blue', 'light-green', :name => "order_class") %>">
+              <td><%= f.text_field :code, :size => 10 %></td>
+              <td><%= f.text_field :times_usable, :size => 5, :onkeyup => "numeric(this);" %></td>
+              <td><%= f.text_field :times_usable_per_user, :size => 5, :onkeyup => "numeric(this);" %></td>
+              <td width="50" align="center"><%= promotion.orders.size %></td>
+              <td width="295"><%= f.date_select :expiry %></td>
+              <td><%= f.select :function , Promotion.available %></td>
+              <td><%= f.text_field :arguments, :size => 10  %></td>
+              <td align="center"><%= f.submit "Update", :class => 'button green' %><br/><%= link_to '&nbsp;', "/admin/promotions/#{promotion.id}", :confirm => 'Are you sure?', :method => :delete, :class => 'action delete' if logged_in? && current_user.has_role?('content') %></td>
+              <td width="120"><div style="background-color:#A3CC4E;-moz-border-radius: 8px 8px 8px 8px;text-align:center;padding:2px;"><%= link_to 'Add Service/Item', admin_promotion_promotion_services_path(promotion), :style=>"color:#FFF;" %></div></td>
+              <td width="110"><div style="background-color:#A3CC4E;-moz-border-radius: 8px 8px 8px 8px;text-align:center;padding:2px;"><%= link_to 'Add Zip', admin_promotion_promotion_zips_path(promotion), :style=>"color:#FFF;" %></div></td>
+          </tr>
+      <% end %>
+  <% end %>
+<% end %>
+
+<tr>
+    <td valign="top">
+        &nbsp;
+    </td>
+    <td valign="top">
+        &nbsp;
+    </td>
+</tr>
+</tbody>
+</table>
+</td>
+<td valign="top">
+    &nbsp;
+</td>
+</tr>
+

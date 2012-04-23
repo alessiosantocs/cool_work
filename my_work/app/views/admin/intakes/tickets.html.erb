@@ -1,0 +1,62 @@
+<% for service in @services %>
+	<table class="order-ticket" cellspacing="10">
+		<tr>
+			<td>
+				<h2><%= service.name %></h2>
+				<table cellspacing="10">
+					<% order = @order; customer = @order.customer %>
+					<tr>
+						<td>
+							<span class="label">Customer:</span> 
+							<div><%= customer.account.name %></div>
+							<%= "<div>Home Phone: #{customer.home}</div>" if !customer.home.nil? %>
+							<%= "<div>Cell Phone: #{customer.cell}</div>" if !customer.cell.nil? %>
+						</td>
+						<td>
+							<div class="label">Address:</div>
+							<div><%= order.customer.primary_address.formatted %></div>
+						</td>
+						<td>
+							<div><span class="label">Pickup Date: </span><%= format_date(order.pickup_date) %></div>
+							<div><span class="label">Delivery Date: </span><%= format_date(order.delivery_date) %></div>
+						</td>
+						<td>
+							<div class="label">Preferences:</div>
+							<div>Express: <%= order.express? ? 'yes' : 'no' %></div>
+							<div>Premium: <%= order.premium? ? 'yes' : 'no' %></div>
+						</td>
+						<td>
+							<div class="barcode"><%= order.barcode %></div>
+						</td>
+					</tr>
+				</table>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<% for item_type in service.applicable_item_types %>
+					<% for item in @order.items_from_type(item_type,service.id) %>
+						<table cellspacing="10">
+							<% order = item.order; customer = item.order.customer %>
+							<tr>
+								<td>
+									<span class="label">Item Details:</span> 
+									<div>Item: <%= item.customer_item_type.name %></div>
+									<div>Order ID#: <%= order.identifier %></div>
+									<div>Customer ID#: <%= customer.id %></div>
+									<div>Carbon: <%= item.carbon_cost %></div>
+									<div>Water: <%= item.water_cost %></div>
+									<% if item.is_weighable? %>
+										<div>Weight: <%= item.weight %></div>
+									<% else %>
+									<% end %>
+									<div>Special Instructions: <%= item.customer_item.instructions ? 'yes' : 'no' %></div>
+								</td>
+							</tr>
+						</table>	
+					<% end %>
+				<% end %>
+			</td>
+		</tr>
+	</table>
+<% end %>

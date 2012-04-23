@@ -1,0 +1,121 @@
+  <% for order in @pending_orders %>
+    <%= render :partial => 'order', :locals => {:order => order, :type => 'pending'} %>
+    <% end %>
+    <tr>
+        <td colspan="2">
+            <hr class="grey" />
+        </td>
+    </tr>
+   <tr>
+        <td class="title">
+            RECURRING ORDERS
+        </td>
+    <td>
+      View, edit &amp; create your recurring orders
+    </td>
+    </tr>
+  <% for order in @recurring_orders %>
+    <%= render :partial => 'order', :locals => {:order => order, :type => 'recurring'} %>
+    <% end %>
+  <tr>
+    <td>
+      &nbsp;
+    </td>
+    <td>
+      
+      <div class="small_text" style="margin-top: 20px; width:300px;">If the days or time slots below are not your preferred time slots, please indicate your preferences below for your recurring order (Note: 48 Hour min difference from Pickup and Delivery)</div>
+    </td>
+  </tr>
+
+  <tr>
+        <td colspan="2">
+          <strong>PICKUP</strong>
+    </td>
+  </tr>
+  <% form_for :customer, :url => update_recurring_customer_path(@customer), :html => { :method => :post } do |f| %>
+  <tr>
+    <td>Day:</td>
+    <td><select name="recurring[pickup_day]">
+        <option value="0">Choose</option>
+        <option <%= selected_reccuring_pick(@recurring_order, 1) %> >Monday</option>
+        <option <%= selected_reccuring_pick(@recurring_order, 2) %> >Tuesday</option>
+        <option <%= selected_reccuring_pick(@recurring_order, 3) %> >Wednesday</option>
+        <option <%= selected_reccuring_pick(@recurring_order, 4) %> >Thursday</option>
+        <option <%= selected_reccuring_pick(@recurring_order, 5) %> >Friday</option>
+        <option <%= selected_reccuring_pick(@recurring_order, 6) %> >Saturday</option>
+        <option <%= selected_reccuring_pick(@recurring_order, 7) %> >Sunday</option>
+      </select>
+    </td>
+  </tr>
+  <tr>
+    <td>Time:</td>
+    <td><select name="recurring[pickup_time]">
+        <option value="0">Choose</option>
+        <% @windows.each_with_index do |window,i| %>
+          <option <%= selected_window_pick(@recurring_order, window) %>>
+            <% if @windows.last == window %>
+              Doorman
+            <% else %>
+              <%= time_window(window) %>
+            <% end %>
+          </option>
+        <% end %>
+      </select>
+    </td>
+  </tr>
+  <tr>
+        <td colspan="2">
+          <strong>DELIVERY</strong>
+    </td>
+  </tr>
+  <tr>
+    <td>Day:</td>
+    <td><select name="recurring[delivery_day]">
+        <option value="0">Choose</option>
+        <option <%= selected_reccuring_del(@recurring_order, 1) %>>Monday</option>
+        <option <%= selected_reccuring_del(@recurring_order, 2) %>>Tuesday</option>
+        <option <%= selected_reccuring_del(@recurring_order, 3) %>>Wednesday</option>
+        <option <%= selected_reccuring_del(@recurring_order, 4) %>>Thursday</option>
+        <option <%= selected_reccuring_del(@recurring_order, 5) %>>Friday</option>
+        <option <%= selected_reccuring_del(@recurring_order, 6) %>>Saturday</option>
+        <option <%= selected_reccuring_del(@recurring_order, 7) %>>Sunday</option>
+      </select>
+    </td>
+  </tr>
+  <tr>
+    <td>Time:</td>
+    <td><select name="recurring[delivery_time]">
+        <option value="0">Choose</option>
+        <% @windows.each_with_index do |window,i| %>
+          <option <%= selected_window_del(@recurring_order, window) %>>
+            <% if @windows.last == window %>
+              Doorman
+            <% else %>
+              <%= time_window(window) %>
+            <% end %>
+          </option>
+        <% end %>
+      </select>
+    </td>
+  </tr>
+  <tr>
+    <td><strong>INTERVAL:</strong></td>
+    <td>
+      <select name="recurring[interval]" size="1">
+            <option <%= selected_interval(@recurring_order, 7) %>>Weekly</option>
+            <option <%= selected_interval(@recurring_order, 14) %>>2 Weeks</option>
+            <option <%= selected_interval(@recurring_order, 21) %>>3 Weeks</option>
+            <option <%= selected_interval(@recurring_order, 28) %>>4 Weeks</option>
+          </select>
+    </td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td> 
+    <td>
+      <div class="green_button">
+        <font face="HelveticaRounded"><%= image_submit_tag 'update_btn.png', :class=>'align-button' %></font>
+      </div>
+      <div class="small_text" style="margin-top: 20px; width:300px;">However, if you choose, you can cancel this at any time. In addition, if you need to order  an additional service on top of your recurring order, you will still be able to do so.</div>
+    </td>
+  </tr>
+  <% end -%>

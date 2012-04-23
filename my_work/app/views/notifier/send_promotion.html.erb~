@@ -1,0 +1,59 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<style type="text/css">
+p{
+font-family: Verdana, Geneva, sans-serif;
+font-family: "Helvetica Rounded", Arial, sans-serif;
+font-weight:bold;
+color: #000032;
+}
+</style>
+</head>
+
+<body>
+<table width="800" cellpadding="0" cellspacing="0" style="font-family:Verdana;">
+    <tr>
+        <td colspan="2" style="padding-bottom:15px">	
+            <div id="logo">
+		<table cellspacing=0 style="margin: auto; ">
+			<tr>
+				<td><img src="<%= @ip_addr %>/images/banner_left.jpg" style="width:270px;height:145px"></td>
+				<td><div style="width:340px"><a href="http://www.myonlinecleaner.com"><img src="<%= @ip_addr %>/images/myfreshshirt.jpg" style="border:0px"></a></div></td>
+				<td><img src="<%= @ip_addr %>/images/banner_right.jpg" style="width:270px"></td>
+			</tr>
+		</table>
+            </div>
+        </td>
+    </tr>
+    <tr>
+        <td style="width:25%;" valign="top">
+            <div style="float:left;padding-top:10px;"><%= image_tag "#{@ip_addr}" + @promotion_content.image.url("thumb") %><br /></div>
+        </td>
+        <td valign="middle">
+            <div style="margin-right:16px;margin-left:16px;font-family:Verdana;color:rgb(0,0,50);font-size:12pt;">
+                <div style="font-size:28pt;font-weight:bold; text-transform: capitalize;"><%= @promotion_content.title %></div>
+               <%= simple_format(@promotion_content.body) %>
+            </div>
+        </td>
+    </tr>
+    <tr>
+        <td colspan="2">
+            <div style="float:left;font-size:30pt;text-align:center;width:775px;">
+                <table width="100%">
+                    <tr>
+                        <td height="75px"><a href="http://www.myonlinecleaner.com" style="text-decoration:none;color: #000032;font-size: 30pt;font-weight: bold;text-decoration: none;font-family:Verdana;">www.myonlinecleaner.com</a></td>
+                    </tr>
+                    <tr>
+                        <td style="font-size:12pt;color: #000032;font-family:Verdana;font-weight:bold;">To unsubscribe from update emails <a href="<%= @ip_addr %><%= @user.account.blank? ? "" : "/customers/#{@user.account.id}/preferences" %>">click here</a></td>
+                    </tr>
+                </table>
+            </div>
+            <div style="float:left;"><img src="<%= @ip_addr %>/images/eco-logic.jpg" style="border:none;"></div>
+        </td>
+    </tr>
+</table>
+</body>
+</html>

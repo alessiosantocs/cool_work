@@ -1,0 +1,20 @@
+<h1>Editing promotion_zip</h1>
+
+<% form_for(@promotion_zip) do |f| %>
+  <%= f.error_messages %>
+
+  <p>
+    <%= f.label :promotion_id %><br />
+    <%= f.text_field :promotion_id %>
+  </p>
+  <p>
+    <%= f.label :serviced_zip_id %><br />
+    <%= f.text_field :serviced_zip_id %>
+  </p>
+  <p>
+    <%= f.submit 'Update' %>
+  </p>
+<% end %>
+
+<%= link_to 'Show', @promotion_zip %> |
+<%= link_to 'Back', promotion_zips_path %>

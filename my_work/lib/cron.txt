@@ -1,0 +1,1 @@
+0 0 * * * /usr/local/bin/ruby /home/devwdec/staging/current/script/runner -e production /home/devwdec/staging/current/lib/place_recurring_orders.rb >> /home/devwdec/staging/current/log/recurring.log 2>&1

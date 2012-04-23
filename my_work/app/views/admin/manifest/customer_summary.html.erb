@@ -1,0 +1,23 @@
+<div class="view-menu">Manifest for <strong><%= @truck.name %></strong> on <strong><%= calendar_day.strftime("%a %m/%d/%Y") %></strong></div>
+<% counter = 0 %>
+<table width="100%" cellspacing="9" cellpadding="0" class="main-table">
+          <tr> <td> <strong>Customer Name</strong> </td> <td><strong>Order #</strong> </td><td><strong>Notes / Comments</strong></td></tr>
+  <% for assignment in @truck.assignments_for_date_and_locations(calendar_day, @selected_serviced_zips) %>
+    <% for request in assignment.requests %>
+      <% if request.order.confirmed? %>
+        <% order = request.order; customer = order.customer; address = order.address %>
+          <tr>
+           	<td width="20%" ><%= "#{customer.first_name} #{customer.last_name}" if !customer.user.nil? %></td>
+           	<td width="20%" ><%= "#{order.barcode}" %></td>
+            <td width="60%" ><%i=0; note_size= (order.nil? or order.notes.nil?)? 0 :order.notes.size;%>
+              <% for note in order.notes %><% i+=1%>    	
+             	  <strong><%= note.note_type %>:</strong> <%= "#{note.body}" unless note.blank?%>
+             	  <% if i < note_size %><%=","%>
+             	  <%end%>
+             	<% end %>  
+           	</td>  
+          </tr>
+        <% end %>
+	<% end %>
+<% end %>
+</table>

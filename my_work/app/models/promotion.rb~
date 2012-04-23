@@ -1,0 +1,97 @@
+# == Schema Information
+# Schema version: 98
+#
+# Table name: promotions
+#
+#  id           :integer(11)   not null, primary key
+#  code         :string(255)   
+#  function     :string(255)   
+#  arguments    :string(255)   
+#  times_usable :integer(11)   default(1)
+#  expiry       :date          
+#  created_at   :datetime      
+#  updated_at   :datetime      
+#
+
+class Promotion < ActiveRecord::Base
+  has_many :orders
+  has_many :content_promotions
+  has_many :promotion_services
+  has_many :promotion_zips
+  #available promotions is a dictionary of promotions available, plus the argument template expected
+  #arguments are presented as a list of comma-separated values.
+  @@available_promotions = {:percent_off_order => "percent_off", :amount_off_order => "amount_off", :amount_off_order_over => "amount_off_orders_over"}
+  
+  def self.available
+    @@available_promotions
+  end
+  
+  def self.percent_off_order(order, args)
+    order.discount = Promotion.discount_amount(order) * (0.01 * args.to_f)
+    order.save!
+    Customer.calculate_fresh_cash(order)
+  end
+  
+  def self.amount_off_order(order, args)
+    discount = Promotion.discount_amount(order)
+    actual_discount = order.promotion.arguments.to_f 
+    order.discount = ( discount > actual_discount ? actual_discount : discount )
+    order.save!
+    Customer.calculate_fresh_cash(order)
+  end
+  
+  def self.amount_off_order_over(order, args)
+    order.discount = args.split(",")[0].to_f if Promotion.discount_amount(order).to_f >= args.split(",")[1].to_f
+    order.discount = 0 if args.split(",")[1].blank?
+    order.save!
+    Customer.calculate_fresh_cash(order)
+  end
+  
+  def available_for(order)
+    return true if Order.find(order.id).promotion_id == self.id #already saved with this promotion
+    return true if order.promotion.code == "FREETRIAL"
+    return false unless order.created_at.to_date <= self.expiry.to_date
+    #puts "this promotion has been used " + Order.count(:conditions => ["customer_id = ? AND promotion_id = ?", order.customer_id, self.id]).to_s + " times."
+#     return false unless Order.count(:conditions => ["customer_id = ? AND promotion_id = ?", order.customer_id, self.id]) < self.times_usable
+    return false if !(Order.count(:conditions => ["customer_id = ? AND promotion_id = ?", order.customer_id, self.id]) < self.times_usable && Order.count(:conditions => ["promotion_id = ?", self.id]) < self.times_usable_per_user)
+    return true
+  end
+  
+  def apply_to(order)
+    #if self.available_for(order)
+    if order.promotion && order.customer
+      fn = self.function
+      if    fn == 'percent_off'
+        return Promotion.percent_off_order(order, self.arguments)
+      elsif fn == 'amount_off'
+        return Promotion.amount_off_order(order, self.arguments)
+      elsif fn == 'amount_off_orders_over'
+        return Promotion.amount_off_order_over(order, self.arguments)
+      end
+    end
+    #end
+    return false
+  end
+
+  def self.discount_amount(order)
+    discount = 0
+debugger
+    is_zip_active = Promotion.get_zip_activity( order )
+    if order.promotion.promotion_services.blank? && is_zip_active
+        bag_prices = order.order_products.collect {|product| product.price * product.quantity}.sum
+        bag_tax = bag_prices* 0.09
+        discount = order.estimated_amount.round(2) + order.discount.to_f + order.fresh_cash_used.to_f - bag_prices - bag_tax - order.estimated_shipping_amount.round(2)
+    else
+      order.order_items.each do |item|
+        if is_zip_active
+           discount +=  item.price unless PromotionService.find(:all, :conditions => ["promotion_id=? AND service_id=? AND ( item_type_id is null OR item_type_id = ?)", order.promotion_id, item.service_id, item.customer_item.item_type_id]).blank?
+        end
+      end
+    end
+    discount
+  end
+
+  def self.get_zip_activity( order )
+    ( order.promotion.promotion_zips.blank? || !(PromotionZip.find(:all, :conditions => ["promotion_id = ? AND serviced_zip_id IN (?)", order.promotion_id, ServicedZip.find(:all, :select => 'id', :conditions => ["zip = ?", order.customer.addresses[0].building.zip])]).blank?) )
+  end
+end

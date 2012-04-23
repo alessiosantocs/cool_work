@@ -1,0 +1,110 @@
+<%= render :partial => 'sidebar' %>
+<td valign="top" width="725" style="padding-right: 15px;">
+    <br>
+    <img src="/images/MYFRESHPROMOS.gif" height="30" width="400">
+    <br>
+    <br>
+    <span class="subtitle">We
+        are always trying to promote more convenience, better quality, and a
+        cooler planet. Check back often to view our current promotions.
+        <br>
+        <br>
+        CURRENT PROMOTIONS
+    </span>
+    <br>
+    <br>
+<!--    <table border="0" cellpadding="0" cellspacing="0" width="725">
+        <tbody>
+            <tr>
+                <td>
+                    <img src="/images/MYfreetrial.jpg" align="left" height="220" width="337">
+                </td>
+                <td width="20">
+                    &nbsp;
+                </td>
+                <td>
+                    <br>
+                    <span class="right_nav_links_text">0 Points to redeem
+                        <br>
+                        Sign up now and receive $25 off your first order
+                        <br>
+                        Promotion Code: freetrial 
+                        <br>
+                        Expires: TBD 
+                        <br>
+                        <br>
+                        *Get $25 off your first order of $50 or more (dry cleaning only). Limited to one free trial per household. My Fresh Shirt reserves the right to cancel this promotion without further notice. 
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <br>
+                    <br>
+                    <br>
+                    <img src="/images/MYfreshcash.jpg" height="236" width="337">
+                </td>
+                <td width="20">
+                    &nbsp;
+                </td>
+                <td class="right_nav_links_text" valign="middle">
+                    0 Points to redeem
+                    <br>
+                    Refer a friend, earn 1% towards your laundry.
+                    <br>
+                    Promotional code: friend
+                    <br>
+                    Expires: TBD
+                    <br>
+                    <br>
+                    Refer a friend and earn Fresh Cash the first time they place an order. 1% of their total cleaning bill will be credited to your Fresh Cash account which you may use to pay for your laundry. Not redeemable for cash. 
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    &nbsp;
+                </td>
+                <td width="20">
+                    &nbsp;
+                </td>
+                <td>
+                    &nbsp;
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <br>
+    <br>
+    <br>!-->
+<% if !@promotions.blank? %>
+
+  <table width="100%">
+    <% @promotions.each do |promotion|%>
+      <tr></tr>
+      <tr>
+          <td>
+              <div style="float:left;padding-right:10px;width:200px;min-height:100px;padding-top:10px;"><%= image_tag(promotion.image.url(:medium)) unless promotion.image_file_name.blank? %></div>
+              <div class="subtitleGreen" style="border-top: 5px solid #C0C0C0;color:#000;padding-top:5px;text-transform:capitalize;"><%= promotion.title %><br></div>
+              <span class="right_nav_links_text"><%= promotion.updated_at.strftime("%B %d, %Y")%></span> <br><br><%= simple_format(promotion.body) %>
+          </td>
+      </tr>
+    <% end %>
+  </table>
+<% end %>
+</td>
+</tr>
+<tr>
+    <td valign="top">
+        &nbsp;
+    </td>
+    <td valign="top">
+        &nbsp;
+    </td>
+</tr>
+</tbody>
+</table>
+</td>
+<td valign="top">
+    &nbsp;
+</td>
+</tr>

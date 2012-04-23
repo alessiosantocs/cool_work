@@ -1,0 +1,140 @@
+<% 
+	@schedules = {}
+	first_weekday.upto(last_weekday) do |day|	
+		@schedules[day] = Schedule.for(@selected_location, day)
+	end
+%>
+
+<%= render :partial => '/admin/account_search' %>
+<% if @selected_state.nil? %>
+	<div class="view-menu">
+		<span class="float-right"><%= link_to_lightbox 'New', new_serviced_zip_path, :title => "New Serviced Zip", :class => 'action new' %></span>
+		<span><strong>Please create a new route</strong></span>
+	</div>
+<% else %>
+	<div class="view-menu">
+		<span class="float-right">
+			<%= link_to_lightbox 'New State', new_state_path, :title => "New State", :class => 'action new' %>
+		</span>
+		<span><strong>State </strong></span>
+		<select onchange="document.location = '?state_location=' + this.options[this.selectedIndex].value;">
+		<% for state in @state %>
+			  <option value="<%= state.id %>" <%= 'selected' if state.id == @selected_state.id %>><%= state.name %></option>	
+		<% end %>
+		</select>
+		<span>
+			<%= link_to_lightbox 'Edit', edit_state_path(@selected_state), :title => "Edit State Zip", :class => 'action edit' %>
+		</span>
+	</div>
+	
+	<div class="view-menu">
+		<span class="float-right">
+			<%= link_to_lightbox 'New Route', new_serviced_zip_path, :title => "New Serviced Zip", :class => 'action new' %>
+		</span>
+		<span><strong>Route </strong></span>
+		<select onchange="document.location = '?location=' + this.options[this.selectedIndex].value;">
+		<% for service_zip in @selected_state.serviced_zips %>
+			<option value="<%= service_zip.id %>" <%= 'selected' if service_zip.id == @selected_location.id  %>><%= service_zip.zip %></option>
+		<% end %>
+		</select>
+				<% unless @selected_state.serviced_zips.blank?%>
+		<span>
+			<%= link_to_lightbox 'Edit', edit_serviced_zip_path(@selected_location), :title => "Edit Serviced Zip", :class => 'action edit' %>
+		</span>
+		<%end%>
+	</div>
+
+	<% if @selected_location.active %>
+		<div id="schedule-menu">
+			<div class="widget">
+				<div class="header">
+					<span><a class="collapse-link" href="#" onclick="toggle_slide('schedule-calendar', 'schedule-calendar-toggle'); return false"><%=image_tag('minimize.gif', :id => 'schedule-calendar-toggle', :alt => 'show/hide', :title => 'show/hide') %></a><strong> Capacity</strong></span>
+					<span id="medium">Med</span>
+					<span id="hot">Hot</span>
+				</div>
+				<div id="schedule-calendar" class="body">
+					<div id="calendar_picker">
+						<script type="text/javascript">
+						   var selected_day = new calendar('selected_day', new Date(<%= calendar_day.strftime("%Y,%m-1,%d") %>), 0, <%= schedules_heat(@schedules) %>);
+						   document.write(selected_day.write());
+						</script>
+				    </div>
+				</div>
+			</div>
+			<div class="widget">
+				<div class="header">
+					<span class="float-right"><%= link_to_lightbox 'New', new_truck_path, :title => "New Truck", :class => 'action new' %></span>
+					<span><a class="collapse-link" href="#" onclick="toggle_slide('schedule-fleet', 'schedule-fleet-toggle'); return false"><%=image_tag('minimize.gif', :id => 'schedule-fleet-toggle', :alt => 'show/hide', :title => 'show/hide') %></a><strong> Fleet</strong></span>
+				</div>
+				<div id="schedule-fleet" class="body">
+					<% for truck in @trucks %>
+					<div class="fleet-container">
+						<div class="truck" style="background-color: #<%= truck.hex_color %>;"><%= image_tag('fleet.png') %></div>
+						<div class="fleet" style="background-color: #<%= truck.hex_color %>;">
+							<span class="fleet-drop">
+								<span>&lt; <%= truck.capacity %></span>
+								<span class="edit-truck"><%= link_to_lightbox image_tag('minimize.gif'), edit_truck_path(truck), :title => "Edit Truck" %></span>
+							</span>
+							<span><%= truck.name %></span>
+						</div>
+					</div>
+					<% end %>
+				</div>
+			</div>
+		</div>
+		
+		<div id="schedule">
+			<table>
+				<thead>
+					<tr>
+						<th>&nbsp;</th>
+						<% first_weekday.upto(last_weekday) do |day| %>
+						<th>
+							<div><%= @schedules[day].to_s("%a %m/%d/%Y") %></div>
+							<div class="day-summary"><%= render :partial => 'day_summary', :locals => {:schedule => @schedules[day]} %></div>
+							<div><span><%= link_to('View Manifest', '/admin/manifest?date='+day.to_s) if current_user.has_role?("manifest")%></span></div>
+							<table class="schedule-window-copy">
+								<tr>
+									<td><%= link_to '<', '/admin/schedule/copy_backward?date='+day.to_s %></td>
+									<td><%= link_to image_tag("copy-icon.gif", :alt => 'copy'), '/admin/schedule/copy_to_locations?date='+day.to_s %></td>
+									<td><%= link_to '>', '/admin/schedule/copy_forward?date='+day.to_s %></td>
+								</tr>
+								<tr>
+									<td colspan=3><%= link_to 'v', '/admin/schedule/copy_to_next_week?date='+day.to_s %></td>
+								</tr>
+							</table>
+		            	</th>
+		        		<% end %>
+		    		</tr>
+				</thead>
+				<tbody>
+					<% @windows.each_with_index do |window,i| %>
+					
+					<tr>
+						<td class="day-time"><%= time_window(window) %>
+							<% if @windows.last == window %>
+								<br/>Doorman
+							<% end %>
+						</td>
+						<% first_weekday.upto(last_weekday) do |day| %>
+							<% if @schedules[day][i].nil? %>
+							<td class="<%= window.start.hour % 2 > 0 ? cycle('green', 'blue') : cycle('light-green', 'light-blue') %>">
+								<%= link_to 'New Stop', new_stop_path + '?date=' + day.to_s + '&loc=' + @selected_location.id.to_s + '&win=' + window.id.to_s, :title => "New Stop", :class => 'action new' %>
+							<% else %>
+							<td id="window_stop_<%= @schedules[day][i].id %>" class="<%= window.start.hour % 2 > 0 ? cycle('green', 'blue') : cycle('light-green', 'light-blue') %>">
+								<%= render :partial => 'window', :locals => { :stop => @schedules[day][i] } %>
+							<% end %>
+						</td>
+						<% end %>
+					</tr>
+					<% end %>
+				</tbody>
+			</table>
+		</div>
+	<% else %>
+		<br/><br/>
+		<center><h2>This location is set to be inactive, Edit above to re-activate!</h2></center>
+	<% end %>
+  <div class="view-menu" style="display:block;text-align:center;height:20px;">
+</div>
+<% end %>

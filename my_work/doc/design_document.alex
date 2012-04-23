@@ -1,0 +1,196 @@
+general questions:
+    WHAT IS EXPRESS SERVICE: is this just service outside designated building pick-up times?
+
+general comments:
+    THERE SHOULD BE A SPECIALLY COLORED BAG FOR DONATIONS to allay the risk of accidentally donating clothes meant for cleaning.
+    THE CUSTOMER may indicate a donation is available, and the bag will be deposited with them and picked up on the next delivery?  #this two-step process would imply a return customer
+    a REFERRER property has been added to customer.  Perhaps you should reward people who recommend their friends.
+
+#CUSTOMER AGENT
+
+Splash page:
+    zip code lookup:
+        requires:
+            list of zipcodes serviced
+            list of zipcodes awaiting future service, time until service is available
+
+
+#Object Summary
+Profile object: #this is the company profile.
+    customer_service #
+    customer_service hours
+    address
+    date_of_establishment CONSTANT
+
+Customer objects:  #we can have anonymous entry to the store, but this customer may not sign up for services.
+    first name
+    last name
+    title
+    address (addr1, addr2, city, state, zip, apt, suite, floor)
+    company
+    zip code
+    username
+    password #mask
+    active #will be made inactive if moved to another zipcode
+    home_phone
+    work_phone
+    cell_phone
+    sms BOOL #standard text messaging rates from your service provider will be incurred
+    email address
+    mother's maiden name
+    sex
+    dob
+    accepted_terms BOOL
+    referrer #customer
+    membership points
+    outstanding balance *derived
+    delinquencies *derived
+    flagging *derived #does customer have actionable orders?
+
+Payment objects:
+    customer
+    payment type {visa, mastercard, ...}
+    account#
+    expiry
+    ccv
+    billing address
+    
+Customer_preferences object:  #managers will be able to add preferences to each group and add enumerated options
+                                #this will be scoped out into preference groups and the preferences that belong in each
+    customer
+    #wash and fold
+    temp ENUM(hot,cold,warm)
+    fabric_softener BOOL
+    bleach BOOL
+    #laundered shirts
+    starch {light, medium, heavy}
+    press {light, medium, heavy}
+    packaging {hung, box}
+    #dry cleaning
+    starch
+    press
+    #tagging
+    permanent BOOL
+    #cloting size: (TINYINTS)
+    >Shirt Size
+    >Pant Size
+    >Jacket Size
+    >Dress Size
+    #notifications
+    Day before notification (Yes Ð email [default], Yes Ð sms text, No)
+    Day of notification (Yes Ð email [default], Yes Ð sms text, No)
+    How would you like the driver to notify you of your delivery (home, cell)
+    #contact
+    allow_work
+    allow_home
+    allow_cell
+    allow_sms #implies allow_cell
+    preferred_contact
+    #doorman
+    items may be left with doorman BOOL
+    #remember_me
+    remember_me BOOL
+    #green
+    recycle bags/hangars: BOOL
+    donate old clothes: BOOL #this should be default
+    
+    
+Employee objects: #myFreshShirt employee
+    first name
+    last name
+    title
+    demographics?  #is this the same as the customer demos?
+    date hired
+    date fired
+    pay grade
+    suspensions
+    complaints
+    reviews
+    permission_level {management, administrator, hr, driver, }
+    on_vacation BOOL (start/end?)
+    
+Location objects:
+    serviceable
+    doorman BOOL
+    address
+    customer_presence *derived
+    scheduled_pickup_times
+    
+Questionnaire object:
+    question:
+    type: free-form, multiple choice
+    choices #list
+
+Answers object:
+    customer_ref
+    questionnaire
+    question/answer pairs
+    
+Service object: #shares keying with product object?
+    #services: express, custom, recurring, donation, carbon
+    catalog_number
+    level {basic, premium}
+    price
+    pickup
+    delivery
+    available BOOL
+    point_value
+
+Product object: #shares keying with service object?
+    catalog_number
+    price
+    delivery
+    available BOOL
+    inventory INT
+    point_value
+
+Product_groups: #so you can selectively apply promotions
+    group
+    product/service id 
+
+Order object:
+    placed
+    fuel surcharge
+    subtotal *derived
+    tax *derived
+    total *derived
+    deliveryfee
+    promotion_code
+    
+Orderitem object:
+    order id
+    price
+    service/product_id
+    comment/special instructions
+
+Promotion object
+    code
+    discount
+    product_groups
+
+
+Inquiry objects: #so customers can sign up for notifications of future service.  No sense making them customers yet.
+    email address
+    zip code
+    temp_session #return the anonymous customer
+
+ZipCode object:
+    @serviced BOOL
+    @will_be_serviced DATE
+
+testimonial/complaint (feedback) object:
+    new BOOL
+    approved BOOL
+    body
+    submitter #customer object
+    voice {positive, negative, neutral} #the person reviewing will determine this.
+    complaint_type {damaged goods, missing items, quality of customer service, scheduling, payment, promotions, GREEN, specific employee, ...}
+    associated_order
+
+Truck object:
+    capacity
+    range
+    driver {/employees/}
+    
+Route object:
+    list_of_locations

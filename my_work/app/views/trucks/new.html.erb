@@ -1,0 +1,5 @@
+<%= error_messages_for :truck %>
+
+<% form_for :truck, :url => trucks_path(@truck) do |f| %>
+	<%= render :partial => 'form', :locals => { :create => true, :f => f } %>
+<% end %>

@@ -1,0 +1,55 @@
+<h2>Stop</h2>
+
+<p>
+	<span><strong>Slots: </strong></span>
+	<span><%= f.text_field :slots %></span>
+</p>
+
+<p>
+	<span><strong>Complete: </strong></span>
+	<span><%= f.check_box :complete %></span>
+</p>
+
+<%= f.hidden_field :location_id %>
+<%= f.hidden_field :date %>
+<%= f.hidden_field :window_id %>
+<% if !create %>
+
+<!-- 
+<h2>
+	<label> Assign Driver & Truck</label>
+</h2>
+
+	<% fields_for :assignment do |a| %>
+	<div id="assignments">
+		<p>
+			<span><strong>Driver: </strong></span>
+			<span><%= a.select :driver, @drivers.collect {|d| [ d.name,d.id ]} %></span>
+		</p>
+		<p>
+			<span><strong>Truck: </strong></span>
+			<span><%= a.select :truck, @trucks.collect {|t| [ t.name,t.id ]} %></span>
+		</p>
+		<p>
+			<span><strong>Route: </strong></span>
+			<span><%= @stop.serviced_zip.zip  %></span>
+			<%= a.hidden_field :location_id %>
+		</p>
+		<p>
+			<span><strong>Date: </strong></span>
+			<span><%= @assignment.date %></span>
+			<%= a.hidden_field :date %>
+		</p>
+	</div>
+	<% end %>
+<% end %>
+-->
+
+<p>
+	<% if create %>
+        <%= f.submit "Create" %>
+    <% else %>
+        <%= f.submit "Update" %>
+    <% end %>
+</p>
+

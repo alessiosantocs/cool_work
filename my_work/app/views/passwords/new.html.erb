@@ -1,0 +1,21 @@
+<a href="/"><%= image_tag ("fresh_logins.jpg") %></a>
+<br/>
+
+<% form_for(:password, :url => passwords_path) do |f| %>
+	<div style="padding-left: 360px;" >
+		<label for="email">Email: </label>
+		<%= text_field_tag 'email', nil, {:class => "input"} %>
+		<font face="HelveticaRounded"><%= image_submit_tag 'forgot_password_btn.png', :class => 'align-button' %></font>
+	</div>
+<% end %>
+<br/>	
+<div id="flash">
+    <%= content_tag 'span', h(flash[:notice]),
+    :class => 'notice' if flash[:notice] %>
+    <%= content_tag 'span', h(flash[:error]),
+    :class => 'error' if flash[:error] %>
+</div>
+<div style="float: right; vertical-align: text-top;">
+	<%= image_tag ("bottomcorner.jpg") %>
+</div>
+<br/><br/><br/>

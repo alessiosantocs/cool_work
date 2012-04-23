@@ -1,0 +1,119 @@
+# Methods added to this helper will be available to all templates in the application.
+module ApplicationHelper
+  
+  def page_title
+    "MyOnlinecleaner" + (" &mdash; #{strip_tags(@page_title)}" if !@page_title.blank?).to_s
+  end
+  
+  def body_tag(options={},&block)
+    options.reverse_merge!({
+      :id => body_id,
+      :class => body_classes
+    })
+    
+    content_tag(:body,options,&block)
+  end
+  
+  def reg_url
+    if session[:zip_approved].nil?
+      'zip/'
+    else
+      session[:zip_approved] == 'true' ? '/zip' : '/signup?zip=' + session[:zip]    
+    end
+  end
+  
+  def selected_menu_tag(menu, selected_menu)
+    "class='dim'" if menu != selected_menu
+  end
+  
+  def link_to_lightbox(name, options = {}, html_options = {}, *parameters_for_method_reference)
+    html_options[:class] =  'lightwindow ' + html_options[:class].to_s
+    link_to name, options, html_options, *parameters_for_method_reference
+  end
+  
+  def calendar_day
+    @calendar_day ||= session[:calendar_day]
+  end
+  
+  def first_weekday
+    @first_weekday ||= 
+     (
+     @week_start ||= 0
+     day = @week_start > calendar_day.wday ? calendar_day - 6 : calendar_day
+     day - day.wday + @week_start
+    )
+  end
+  
+  def last_weekday
+    @last_weekday ||= (first_weekday + 6)
+  end
+  
+  def prev_week
+    @prev_week ||= (first_weekday - 7)
+  end
+  
+  def next_week
+    @next_week ||= (last_weekday + 1)
+  end
+  
+  def capitalize_first_char(str)
+    str.gsub(/^[a-z]|\s+[a-z]/) { |a| a.upcase }  
+  end
+  
+  def checked_window(type, order, radio_date, radio_hour)
+    if (type == 'pickup')
+      if (order.pickup_date && order.pickup_time && (order.pickup_date == radio_date) && (order.pickup_time.hour == radio_hour))
+      "checked"
+      end
+    else
+      if (order.delivery_date && order.delivery_time && (order.delivery_date == radio_date) && (order.delivery_time.hour == radio_hour))
+      "checked"
+      end
+    end
+  end
+  
+  def format_date(date)
+    date.nil? ? '' : date.strftime('%m/%d/%Y')  
+  end
+  
+  def time_window(window)
+    formatTime(window.start+1.second) + " - " + formatTime(window.end + 1.second)  
+  end
+  
+  def formatTime(time)
+    hr = time.strftime("%I").to_i
+    min = time.strftime("%M") == '00' ? '' : ':' + time.strftime("%M") 
+    ampm = time.strftime("%p").downcase
+    hr.to_s + min + ampm
+  end
+  
+  def tooltip(content, options = {}, html_options = {}, *parameters_for_method_reference)
+    html_options[:class] = html_options[:class] || 'tooltip'
+    html_options[:href] = '#'
+    content_tag("a", image_tag("help.png", :alt=> '') + content_tag("span", content, nil), html_options)
+  end
+  
+  def email_content(&block)
+    concat('<table width="800"><tr><td style="border-bottom: 1px solid black;"><img width="800" border="0" src="http://myonlinecleaner.com/images/header_top_email.jpg"/><br /><br/></td><tr><td><br/><br/>', block.binding)
+    yield  # now insert the markup in the block
+    concat('<br/><br/></td></tr><tr><td align="center" style="border-top: 1px solid black;"><br/></td></tr></table>', block.binding)
+  end
+  
+  def link_to_unless_current_heirarchy(name, options = {}, html_options = {}, &block)
+    if current_page_heirarchy?(options)
+      html_options[:class] =  'selected ' + html_options[:class].to_s
+    end
+    link_to name, options, html_options, &block
+  end
+  
+  def current_page_heirarchy?(options)
+    url_string = CGI.escapeHTML(url_for(options))
+    request = @controller.request
+    if url_string =~ /^\w+:\/\//
+      "#{request.protocol}#{request.host_with_port}#{request.request_uri}".start_with?(url_string)
+    else
+      request.request_uri.start_with?(url_string)
+    end
+  end
+  
+end

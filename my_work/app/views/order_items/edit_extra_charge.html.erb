@@ -1,0 +1,20 @@
+<% form_for @item, :url => "/order_items/#{@item.order_item.order_id}/update_extra_charge?c_id=#{@item.id}" do |f| %>
+<table cellspacing=5>
+	<tr>
+		<th>Amount</th>
+		<td><%= f.text_field :extra_charge, :size => 4, :onkeyup => "numeric(this);" %></td>
+	</tr>
+	<tr>
+		<th>Plant Amount</th>
+		<td><%= f.text_field :plant_extra_charge, :size => 4, :onkeyup => "numeric(this);" %></td>
+	</tr>
+	<tr>
+		<th>Description</th>
+		<td><%= f.text_field :extra_charge_description, :size => 12 %></td>
+	</tr>
+	<tr>
+		<th>&nbsp;</th>
+		<td><%= image_submit_tag "create_btn.png", :class => 'align-button' %></td>
+	</tr>
+</table>
+<% end %>

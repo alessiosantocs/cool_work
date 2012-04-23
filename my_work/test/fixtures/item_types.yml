@@ -1,0 +1,39 @@
+# == Schema Information
+# Schema version: 98
+#
+# Table name: item_types
+#
+#  id          :integer(11)   not null, primary key
+#  name        :string(255)   
+#  icon        :string(255)   
+#  carbon_cost :float         
+#  water_cost  :float         
+#
+
+wash_and_fold:
+    id: 1
+    name: assorted
+
+pants:
+    id: 2
+    name: pants
+
+woven:
+    id: 3
+    name: woven shirt
+    
+knit:
+    id: 4
+    name: knit shirt
+
+shoe:
+    id: 5
+    name: shoe
+
+jacket:
+    id: 6
+    name: jacket
+
+coat:
+    id: 7
+    name: coat

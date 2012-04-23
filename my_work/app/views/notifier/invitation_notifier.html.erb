@@ -1,0 +1,29 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<style type="text/css">
+body p{
+font-family: Verdana, Geneva, sans-serif;
+}
+</style>
+</head>
+
+<body>
+  <% email_content do %>
+      <p>Hi <%= @user.name %>,</p>
+
+      <p>Welcome to My Fresh Shirt - New York City's first online, eco-friendly, dry cleaning and laundry pick up and delivery service!  </p>
+
+      <p><%= referrer.name %> would like to share with you a $25 discount on your first order with My Fresh Shirt - You also get 25% off all services for your first month of service! </p>
+
+      <a>Visit <a href="http://myonlinecleaner.com/">myonlinecleaner.com</a>, <a href=<%= @url %>>create an account </a> and start today!</p>
+
+      <p>If you have any questions about My Fresh Shirt, or its services please do not hesitate to email customerservice@myfreshshirt.com or call (212)625-3131.</p>
+
+  <% end %>
+<%= render :partial => 'signature' %>  
+</body>
+
+</html>

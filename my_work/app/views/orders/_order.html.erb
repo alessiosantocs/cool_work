@@ -1,0 +1,16 @@
+<% current = (params[:order] == order.id.to_s) %>
+<tr>
+	<td colspan="2">
+		<%= link_to_function "View", "$('#{type}_order_#{order.id}').toggle()", :class => 'green' %>
+		<%= " #{order.tracking_number}, #{order.pickup_date.strftime('%A %B %d %Y') if order.pickup_date}" %>
+		<% if current %>
+			<a id="current" name="current">&nbsp;</a>
+		<% end %> 
+	</td>
+</tr>
+
+<tr id="<%= type %>_order_<%= order.id %>" <%= "style='display:none'" if !current %>>
+	<td colspan="2">
+		<%= render :partial => '/orders/order_items', :locals => {:order => order, :payment => true} %>
+	</td>
+</tr>

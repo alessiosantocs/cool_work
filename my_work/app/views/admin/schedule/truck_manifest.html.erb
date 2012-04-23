@@ -1,0 +1,142 @@
+<div class="view-menu">Manifest for <strong><%= @truck.name %></strong> on <strong><%= calendar_day.strftime("%a %m/%d/%Y") %></strong></div>
+<% counter = 0 %>
+<table>
+<% for assignment in @truck.assignments_for_date_and_locations(calendar_day, @selected_serviced_zips) %>
+	<% for request in assignment.requests %>
+		<% if counter%2 == 0 %>
+			<tr>
+		<% end %>
+<td width="50%" class="main-table">
+<table width="100%" cellspacing="9" cellpadding="0">
+  <% order = request.order; customer = order.customer; address = order.address %>
+  <tr>
+	<td width="35%" class="main-head"><%= "P" if request.for_pickup? %><%= "D" if request.for_delivery? %></strong> -- <%= time_window(request.stop.window) %></td>
+	<td width="65%" class="sub-head" align="center"><%= order.barcode %></td>
+  </tr>
+  <tr>
+	<td colspan="2" class="sub-head"><%= "#{customer.first_name} #{customer.last_name}" if !customer.first_name.nil? %></td>
+	</tr>
+  <tr>
+	<td valign="top" align="center"><table width="100%" border="0" cellspacing="0" cellpadding="0">
+	  <tr>
+		<td>&nbsp;</td>
+	  </tr>
+	  <tr>
+		<td class="unit-head">Unit#: <%=order.customer.primary_address.unit_number%>,</td>
+	  </tr>
+	  <tr>
+		<td class="unit-head"><%=order.customer.primary_address.addr1%>,</td>
+	  </tr>
+	  <tr>
+		<td class="unit-head"><%=order.customer.primary_address.zip%></td>
+	  </tr>
+	</table></td>
+	<td valign="top" align="center"><table width="100%" border="0" cellspacing="0" cellpadding="0">
+	  <tr>
+		<td colspan="2" align="center" valign="middle" class="delivery">Delivery Status:</td>
+		</tr>
+	  <tr>
+		<td width="50%" class="set-font">[  &nbsp;]  Customer Not Home </td>
+		<td width="50%" class="set-font">[  &nbsp;]  Bag Missing</td>
+	  </tr>
+	  <tr>
+		<td width="50%" class="set-font">[  &nbsp;]  Customer Refused</td>
+		<td width="50%" class="set-font">[  &nbsp;]  Bag Damaged</td>
+	  </tr>
+	  <tr>
+		<td width="50%" class="set-font">[  &nbsp;]  Doorman Refused</td>
+		<td width="50%" class="set-font">[  &nbsp;]  No Access To Building</td>
+	  </tr>
+	</table></td>
+  </tr>
+  <tr>
+	<td colspan="2" align="left" valign="middle"><strong>Home Phone:</strong><%="#{customer.home}"%><br />
+	  <strong>Cell Phone:</strong><%="#{customer.cell}"%></td>
+	</tr>
+  <tr>
+	<td colspan="2" align="left" valign="top" class="delivery">Order Details:</td>
+	</tr>
+  <tr>
+	<td colspan="2" align="center" valign="top">
+		<%count = 1 %>
+		<%style = '48%'%>
+		  <%for service in order.services_for_order%>
+				<%if order.services_for_order.size == 1 %>
+					<%style = '100%'%>
+				<%end%>
+				<div style="float:left;width:<%= style%>;padding-right:8px;">
+				  <table class="area" width="100%">
+					<tr>
+					  <td colspan="2" class="counter" align="center"><%=count%><td>
+					  <td colspan="2">
+						<table width="100%">
+						<tr>
+						  <td colspan="4" align="left"><strong><%=service.name%>--<%=order.service_in_order(service).size%></strong><td>
+						</tr>
+						<%count=count + 1%>
+						<% for item_type in service.applicable_item_types %>
+						  <% items = order.items_from_type(item_type,service.id) %>
+						  <% if items.size != 0 %>
+							<tr>
+							  <td colspan="4" align="left">
+								<table>
+								  <tr class="show">
+									<td colspan="1"><%= service.name == "Wash and Fold" ? "#{items[0].weight.to_i}lb" : items.size%>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+									<td colspan="3"><%=item_type.name%></td>
+								  </tr>
+								</table>
+							   </td>
+							</tr>
+						  <%end%>
+						<%end%>
+						</table>
+					  <td>
+					<tr>
+				  </table>
+	</div>
+			  <%end%>     
+	</td>
+	</tr>
+  	<tr>
+        <td colspan="2" class="delivery"><em>Notes:</em>
+            <div style="font-size: 13px;font-style: normal;font-weight: normal;">
+                <% for note in order.notes %>
+                    <div style="padding:3px 0"><strong><%= note.note_type %>:</strong> <%= note.body %></div>
+                <% end %>
+            </div>
+				</td>
+	</tr>
+	<tr>
+		<td><td>
+	</tr>
+	<tr>
+		<td><td>
+	</tr>
+	<tr>
+		<td><td>
+	</tr>
+	<tr>
+		<td><td>
+	</tr>
+	<tr>
+		<td><td>
+	</tr>
+	<tr>
+		<td><td>
+	</tr>
+  <tr>
+	<td colspan="2" class="customer">Customer Signature-----------------------------------      Time ---- : ---- AM/PM</td>
+  </tr>
+  <tr>
+	<td colspan="2" align="left" valign="top">By signing, I am acknowledging that I have recieved the total bags listed above</td>
+  </tr>
+	  </table>
+		  </td>
+		  <td></td>
+		  <% counter = counter + 1 %>
+		  <% if counter%2 == 0 %>
+		  	</tr>
+		  <% end %>
+	<% end %>
+<% end %>
+</table>

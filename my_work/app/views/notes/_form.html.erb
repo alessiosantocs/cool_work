@@ -1,0 +1,22 @@
+<h2>Note/Complaint</h2>
+
+<p>
+	<label style="vertical-align: top;"><strong>Type: &nbsp;</strong></label>
+	<%= f.select :note_type, ['Complaint', 'Damaged Item', 'Lost', 'Note'] %>
+</p>
+<p>
+	<label style="vertical-align: top;"><strong>Text: &nbsp;</strong></label>
+	<%= f.text_area :body, :rows => 10, :cols => 35 %>
+</p>
+
+<%= f.hidden_field :order_id %>
+<%= f.hidden_field :customer_id %>
+
+<p><br/><br/>
+	<% if create %>
+        <%= f.submit "Create" %>
+    <% else %>
+        <%= f.submit "Update" %>
+    <% end %>
+</p>
+

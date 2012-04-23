@@ -1,0 +1,52 @@
+<a href="/"><%= image_tag ("fres_log_reg.jpg") %></a>
+<div style="padding-left: 250px;" >
+<table>
+	<tr>
+		<td>
+			<form method="get" id="zip-form" action="/zip/check">
+				<table style="margin: 20px auto;">
+					<tbody>
+						<tr>
+							<td style="text-align: center"><h2 style="margin-bottom: 2px;">MY <span class="green">ZIP</span> CODE</h2></td>
+						</tr>
+						<tr>
+							<td style="text-align: center"><input type="text" name="zip" id="zip" class="input"/></td>
+						</tr>
+						<tr>
+							<td style="text-align: center"><br/><font face="HelveticaRounded"><input type="image" src="/images/go_btn.png" class="align-button"/></font></td>
+						</tr>		
+					</tbody>
+				</table>
+			</form>
+		</td>
+		<td style="padding-left: 150px;">
+			<% form_tag session_path, :id => 'login-form' do -%>
+			<table>
+				<tr>
+					<td class="label"><label for="login">Login:</label></td>
+				</tr>			
+				<tr>
+					<td><%= text_field_tag 'login', @login, {:class => "input"} %></td>
+				</tr>
+				<tr>
+					<td class="label"><label for="password">Password:</label></td>
+				</tr>			
+				<tr>
+					<td><%= password_field_tag 'password' , @password, {:class => "input"} %></td>
+				</tr>
+			</table>
+			
+			<div  style="text-align: center">
+				<font face="HelveticaRounded"><input type="image" src="/images/go_btn.png" class="align-button"/></font>
+			</div>
+			<br/>
+		<% end -%>
+		</td>
+	</tr>	
+</table>
+<br/><br/><br/><br/><br/><br/>
+</div>
+<div style="position: absolute; left: 800px; top: 470px; z-index: -1;">
+	<%= image_tag ("bottomcorner.jpg") %>
+</div>
+

@@ -1,0 +1,16 @@
+<form action="/admin/reporting/get_report">
+    <span><b>Select Report Type</b>
+          <select name="report_type" onchange="submit()">
+            <option value="monthwise_promotion_report" <%= params[:action]=="monthwise_promotion_report" ? 'selected' : '' %> >Monthly Promotion</option>
+            <option value="monthwise_customer_report" <%= params[:action]=="monthwise_customer_report" ? 'selected' : '' %> >Monthly Customer</option>
+            <option value="monthwise_category_report" <%= params[:action]=="monthwise_category_report" ? 'selected' : '' %> >Monthly Category</option>
+            <option value="monthwise_item_type_report" <%= params[:action]=="monthwise_item_type_report" ? 'selected' : '' %> >Monthly Item Type</option>
+            <option value="daywise_order_report" <%= params[:action]=="daywise_order_report" ? 'selected' : '' %> >Daywise Orders</option>
+            <option value="selected_monthwise_promotion_report" <%= params[:action]=="selected_monthwise_promotion_report" ? 'selected' : '' %> >Month Rangewise Promotion</option>
+            <option value="selected_monthwise_customer_report" <%= params[:action]=="selected_monthwise_customer_report" ? 'selected' : '' %> >Month Rangewise Customer</option>
+            <option value="selected_monthwise_category_report" <%= params[:action]=="selected_monthwise_category_report" ? 'selected' : '' %> >Month Rangewise Category</option>
+            <option value="selected_monthwise_item_type_report" <%= params[:action]=="selected_monthwise_item_type_report" ? 'selected' : '' %> >Month Rangewise Item Type</option>
+            <option value="month_rangewise_order_report" <%= params[:action]=="month_rangewise_order_report" ? 'selected' : '' %> >Month Rangewise Orders</option>
+          </select>
+    </span>
+  </form>

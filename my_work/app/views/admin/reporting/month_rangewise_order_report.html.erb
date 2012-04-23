@@ -1,0 +1,36 @@
+<%= render :partial => 'range_date_section' %>
+<div style = "overflow-x: scroll;overflow-y: hidden;">
+<table cellspacing=10 width="100%">
+  <% if @selected_month_result.blank? %>
+      <tr><td>"No Record Found"</td></tr>
+  <% else %>
+      <tr class="<%= cycle('light-blue', 'drag-green', :name => "price_class") %>">
+          <th>Time Of Order Pickup</th>
+          <% @selected_month_result.each do |key, value| %>
+              <% if key != @selected_month_result[0][0] %>
+                  <th><%= Date::MONTHNAMES[key.month] + " " + key.year.to_s %></th>
+              <% end %>
+          <% end %>
+      </tr>
+
+      <% @windows.each do |window|%>
+          <tr style="text-align: left;" class="<%= cycle('light-blue', 'drag-green', :name => "price_class") %>" valign="middle">
+              <th><%= window.start.strftime('%I %p') + "-" + (window.end + 1.second).strftime('%I %p') %></th>
+              <% @selected_month_result.each do |key, value| %>
+                  <% if !value[window.id.to_s].blank? && key != @selected_month_result[0][0] %>
+                      <td><%= value[window.id.to_s].to_i %></td>
+                  <% end %>
+              <% end %>
+          </tr>
+      <% end %>
+      <tr style="text-align: left;" class="<%= cycle('light-blue', 'drag-green', :name => "price_class") %>">
+          <th>Total</th>
+          <% @selected_month_result.each do |key, value| %>
+              <% if key != @selected_month_result[0][0] %>
+                  <td><%= value["total"].to_i %></td>
+              <% end %>
+          <% end %>
+      </tr>
+    <% end %>
+</table>
+</div>

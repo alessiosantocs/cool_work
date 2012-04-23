@@ -1,0 +1,23 @@
+<h1>Bind Service</h1>
+
+<%= error_messages_for :promotion_service %>
+
+<% form_for @promotion_service, :url => admin_promotion_promotion_services_path(params[:promotion_id]), :html => { :method => 'post'} do |f| %>
+<table>
+  <tr>
+      <td><b>Service</b><br /></td>
+      <td><%= f.select :service_id, Service.find(:all).collect{|s| [s.name, s.id]}, {}, { :onchange => "#{remote_function(:url  => {:action => "update_sub_categories"}, :with => "'service_id='+value+'&update=sub_categories'")}", :style => "width:240px;"} %></td>
+  </tr>
+
+  <tr>
+      <td><b>Item type</b><br /></td>
+      <td><div id="sub_categories"><%= render :partial => 'item_types', :object => @item_types, :locals => { :f => "" } %></div></td>
+  </tr>
+
+  <tr>
+      <td></td>
+      <td><%= f.submit "Create" %></td>
+  </tr>
+</table>
+<% end %>
+

@@ -1,0 +1,18 @@
+<div>
+	<div>Restrict Order Results By:</div>
+	<form method="get" action="">
+		<table cellspacing=15 style="background-color: #F0F0F0; border: 1px solid #C0C0C0;">
+			<tr>
+				<td>
+					<%= select_tag 'zip', "<option value="">Zip Code</option>"+options_from_collection_for_select(@serviced_zips, :id, :zip, [params[:zip].to_i]) %>
+				</td>
+				<td>
+					<%= select_tag 'window', "<option value="">Time Window</option>"+options_from_collection_for_select(@windows, :id, :to_s, [params[:window].to_i]) %>
+				</td>
+				<td>Date (dd/mm/yyyy): <input type="text" size="30" name="date" id="date" value="<%= params[:date] %>"/></td>
+				<td><input type="submit" value="Search"/></td>
+			</tr>
+		</table>
+	</form>
+	<br/>
+</div>

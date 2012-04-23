@@ -1,0 +1,30 @@
+<h1>New news post</h1>
+
+<%= error_messages_for :news %>
+
+<% form_for :news, :url => '/news', :html => { :multipart => true }do |f| %>
+<table>
+  <tr>
+    <td><b>Title</b><br /></td>
+    <td><%= f.text_field :title %></td>
+  </tr>
+  
+  <tr>
+    <td><b>Body</b><br /></td>
+    <td><%= f.text_area :body, :size=> "34x10" %></td>
+  </tr>
+  
+  <tr>
+    <td><b><div style="line-height:1;">Upload Image</div></b><br /></td>
+    <td><%= f.file_field :image %></td>
+  </tr>
+
+  <tr>
+    <td>&nbsp;</td>
+    <td><%= f.submit "Create" %></td>
+  </tr>
+</table>
+<% end %>
+
+
+

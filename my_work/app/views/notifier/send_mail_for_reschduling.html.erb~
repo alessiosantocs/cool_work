@@ -1,0 +1,31 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<style type="text/css">
+<!--
+body p{
+font-family: Verdana, Geneva, sans-serif;
+}
+-->
+</style>
+</head>
+
+<body>
+	<% email_content do %>
+	<p>Hi Admin,</p>
+        <p>  <%= @customer.first_name %> has been rescheduled his order </p> 
+        <p>  Order tracking_number up date <%=@order.tracking_number%><br/>
+             <b>Pick up</b><br/> <%=@order.pickup_date%>,<%=(@order.pickup.window.start + 1.second).strftime('%I %p')%>-<%=(@order.pickup.window.end + 1.second).strftime('%I %p')%><br/>
+             <b>Delivery up</b><br/> <%=@order.delivery_date%>,<%=(@order.delivery.window.start + 1.second).strftime('%I %p')%>- <%=(@order.delivery.window.end + 1.second).strftime('%I %p')%>
+        </p>
+	
+
+	<p>My Fresh Shirt</p>
+
+	<p>Use of the My Fresh Shirt service and Web site constitutes acceptance of our Terms of Use and Privacy Policy.</p>
+<% end %>
+</body>
+
+</html>

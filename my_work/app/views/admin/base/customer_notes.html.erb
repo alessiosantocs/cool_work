@@ -1,0 +1,57 @@
+<%= render :partial => '/admin/account_search' %>
+
+<div class="view-menu">
+	<span><strong>Administrator > Dashboard</strong></span>
+</div>
+
+<%= render :partial => '/admin/base/search' %>
+
+<ul class="tabselector" id="tabcontrol1">
+    <li class="tab-<%= params[:action] == 'index' ? 'selected' : 'unselected'%> ">
+        <%= link_to_unless_current_heirarchy ("Current", "/admin") %>
+    </li>
+    <li class="tab-<%= params[:action] == 'pending' ? 'selected' : 'unselected'%> ">
+        <%= link_to_unless_current_heirarchy ("Pending", "/admin/base/pending") %>
+    </li>
+	<li class="tab-<%= params[:action] == 'complete' ? 'selected' : 'unselected'%> ">
+        <%= link_to_unless_current_heirarchy ("Complete", "/admin/base/complete") %>
+    </li>
+    <li class="tab-<%= params[:action] == 'cancelled' ? 'selected' : 'unselected'%> ">
+        <%= link_to_unless_current_heirarchy ("Cancelled", "/admin/base/cancelled") %>
+    </li>
+    <li class="tab-<%= params[:action] == 'missed_pickup' ? 'selected' : 'unselected'%> ">
+        <%= link_to_unless_current_heirarchy ("Missed PickUp", "/admin/base/missed_pickup") %>
+    </li>
+    <li class="tab-<%= params[:action] == 'missed_delivery' ? 'selected' : 'unselected'%> ">
+        <%= link_to_unless_current_heirarchy ("Missed Delivery", "/admin/base/missed_delivery") %>
+    </li>
+    <li class="tab-<%= params[:action] == 'customer_notes' ? 'selected' : 'unselected'%> ">
+        <%= link_to_unless_current_heirarchy ("Customer Notes", "/admin/base/customer_notes") %>
+    </li>    
+</ul>
+<div class="panes" id="panecontrol1">
+    <div class="pane-selected">
+<table width="100%" cellspacing="9" cellpadding="0" class="main-table">
+          <tr> <td> <strong><a href="/admin/base/<%= params[:action] %>?sort=customer_id&orderby=<%=@orderby%>">Customer Name</strong> </td> 
+          <td><strong><a href="/admin/base/<%= params[:action] %>?sort=id&orderby=<%=@orderby%>">Order #</strong> </td>
+          <td><strong>Notes / Comments</strong></td></tr>
+  <% for order in @orders %>      
+        <% customer = order.customer; %>
+          <tr>
+           	<td width="20%" ><%= "#{customer.first_name} #{customer.last_name}"  %></td>
+           	<td width="20%" ><%= "#{order.barcode}" %></td>
+            <td width="60%" ><%i=0; note_size= (order.nil? or order.notes.nil?)? 0 :order.notes.size;%>
+              <% for note in order.notes %><% i+=1%>    	
+             	  <strong><%= note.note_type %>:</strong> <%= "#{note.body}" unless note.blank?%>
+             	  <% if i < note_size %><%=","%>
+             	  <%end%>
+             	<% end %>  
+           	</td>  
+          </tr>
+<% end %>
+</table>
+	</div>
+</div>
+<div class="view-menu" style="display:block;text-align:center;">
+  <%= will_paginate @orders %>
+</div>

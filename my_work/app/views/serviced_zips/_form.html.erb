@@ -1,0 +1,26 @@
+<p>
+	<span><strong>Zip: </strong></span>
+	<span><%= f.text_field :zip ,:style=>"margin-left:19px;"%></span>
+</p>
+<p>
+  <span><strong>State: </strong></span>
+  <select name="serviced_zip[state_id]" style="margin-left:7px;">
+    <% states = State.all%>
+      <% for state in states %>
+	        <option value="<%= state.id %>" <%= 'selected'%> name= "serviced_zip[state_id]" ><%= state.name %></option>	
+      <% end %>
+  </select>
+</p>
+<p>
+	<span><strong>Active: </strong></span>
+	<span><%= f.check_box :active %></span>
+</p>
+
+<p>
+	<% if create %>
+        <%= f.submit "Create" %>
+    <% else %>
+        <%= f.submit "Update" %>
+    <% end %>
+</p>
+

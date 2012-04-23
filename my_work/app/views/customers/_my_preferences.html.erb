@@ -1,0 +1,137 @@
+<table cellspacing="5">
+			<tr>
+	        	<td colspan="2">
+	            	<hr class="grey" />
+	        	</td>
+	    	</tr>
+			<tr>
+				<td class="title" colspan="2">MY CLOTHES</td>
+			</tr>
+			<tr>
+				<td><label for="customer_preferences_ls_starch">Do you want starch on your laundered shirts?</label></td>
+				<td><%= f.radio_button :ls_starch, true %> Yes <%= f.radio_button :ls_starch, false %> No</td>
+				<td></td>
+			</tr>
+			<tr>
+				<td><label for="customer_preferences_dc_starch">Do you want starch on your dry cleaned items?</label></td>
+				<td><%= f.radio_button :dc_starch, true %> Yes <%= f.radio_button :dc_starch, false %> No</td>
+			</tr>
+			<tr>
+	        	<td colspan="2">
+	            	<hr class="grey" />
+	        	</td>
+	    	</tr>
+			<tr>
+				<td class="title" colspan="2">MY TAGGING </td>
+			</tr>
+			<tr>
+				<td><label for="customer_preferences_permanent_tags">Find out more on our <%= link_to 'tagging processess', '/ordering_process#1', :target => '_blank', :class => 'green' %></label></td>
+				<td>
+					<div>
+						<%= f.radio_button :permanent_tags, true, :disabled => 'disabled' %>
+						<label for="customer_preferences_permanent_tags_true"> Eco-logic(Coming Soon)</label>
+					</div>
+					<div>
+						<%= f.radio_button :permanent_tags, false, :checked => true %>
+						<label for="customer_preferences_permanent_tags_false"> Temporary</label>
+					</div>
+				</td>
+			</tr>
+			<tr>
+	        	<td colspan="2">
+	            	<hr class="grey" />
+	        	</td>
+	    	</tr>
+                         <tr>
+				<td class="title" colspan="2">MY RECURRING SERVICES</td>
+			</tr>
+			<tr>
+				<td>
+					<b>Recurring Type</b>
+				</td>
+                                <td>
+					<b>Pick up Time</b>
+				</td>
+                              
+                                <td>
+					<b>Delivery Time</b>
+				</td>
+			</tr>
+                        <%unless @current_recurrings.nil?%>
+                          <% @current_recurrings.each do |current_recurring|%>
+                          <% unless current_recurring.last_order.nil?%>
+                            <tr>
+                                    <td>
+                                            <%="Weekly" if current_recurring.interval == 7%>
+                                            <%="Every Other Week" if current_recurring.interval == 14%>
+                                            <%="Monthly" if current_recurring.interval == 28%>
+                                    </td>
+                                    <td>
+                                          <%= current_recurring.last_order.requests.first.stop.date.strftime("%A") %>,<br/>
+                                          <%= current_recurring.last_order.requests.first.stop.window.start.strftime('%I:%M %p') %> -- <%= (current_recurring.last_order.requests.first.stop.window.end + 1.second).strftime('%I:%M %p') %>
+                                    </td>&nbsp;&nbsp;
+                                    <td>  
+                                          <%= current_recurring.last_order.requests.last.stop.date.strftime("%A")  %>,<br/>
+                                          <%= current_recurring.last_order.requests.last.stop.window.start.strftime('%I:%M %p') %> -- <%= (current_recurring.last_order.requests.last.stop.window.end + 1.second).strftime('%I:%M %p') %>
+                                    </td>
+                                    <td>
+                                          <%= link_to 'Modify', edit_recurring_customer_path(current_recurring) %>
+                                    </td>
+                                    <td>
+                                          <%= link_to 'Cancel', delete_recurring_customer_path(current_recurring),:confirm => 'Are you sure?', :method => :delete %>
+                                    </td>  
+                            </tr>
+                            <%end%>
+                          <%end%>
+                        <%end%>
+                        <tr>
+	        	  <td colspan="2">
+	            	  <hr class="grey" />
+	        	</td>
+	    	</tr>
+			
+			<tr>
+				<td class="title" colspan="2">MY NOTIFICATIONS</td>
+			</tr>
+			<tr>
+				<td><label for="customer_preferences_day_before">Day Before Notification:</label></td>
+				<td>
+					<%= f.check_box :day_before_email %><label for="customer_preferences_day_before_email"> Email</label>
+					<%= f.check_box :day_before_sms %><label for="customer_preferences_day_before_sms"> Sms</label>
+				</td>
+			</tr>
+			<tr>
+				<td><label for="customer_preferences_day_before">Day Of Notification:</label></td>
+				<td>
+					<%= f.check_box :day_of_email %><label for="customer_preferences_day_of_email"> Email</label>
+					<%= f.check_box :day_of_sms %><label for="customer_preferences_day_of_sms"> Sms</label>
+				</td>
+			</tr>
+			<tr>
+				<td><label for="customer_preferences_day_before">Promotion Notification:</label></td>
+				<td>
+					<%= f.check_box :promotion_email %><label for="customer_preferences_promotion_email"> Email</label>
+				</td>
+			</tr>
+                        <tr>
+                          <td colspan="2">
+                            <hr class="grey" />
+                          </td>
+	    	        </tr>
+                      
+                        <tr>
+				<td class="title" colspan="2">
+			<tr>
+				<td><div style="width: 300px;">I would like to automatically donate to the <%= link_to 'Carbon Buyback Program', '/my_fresh_air', :target => '_blank', :class => 'green' %></div></td>
+				<td>
+					<%= f.radio_button :my_fresh_air, true, :checked => true %><label for="customer_preferences_my_fresh_air_true"> Yes</label>
+					<%= f.radio_button :my_fresh_air, false %><label for="customer_preferences_my_fresh_air_false"> No</label>
+				</td>
+				<td><%= tooltip 'CARBON BUY BACK PROGRAM<br/><br/>We want to be partners with you for change.  Because we built our company with sustainability in mind, we have revolutionized the way laundering services impact the environment.  You can help by participating in our carbon buy back program.  With every order, you can automatically choose to offset your carbon footprint. We have worked with Terrapass to develop a program that effectively offsets the greenhouse gases involved with your order. Your donation will go to proven programs that will produce an equal amount of renewable or clean energy within this calendar year. If you need more time to evaluate how you can help lessen our impact on the environment, every bill will include a reminder of how much carbon dioxide is produced with every order.<br/><br/>This averages $0.21 on the average participation based our minimum order or $30' %></td>
+			</tr>
+
+			
+		</table>
+		<div class="submit-buttons">
+			<font face="HelveticaRounded"><%= image_submit_tag 'save_pref_btn.png' %></font>
+		</div>

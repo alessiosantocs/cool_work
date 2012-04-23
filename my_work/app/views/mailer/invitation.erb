@@ -1,0 +1,47 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<style type="text/css">
+<!--
+body p{
+font-family: Verdana, Geneva, sans-serif;
+}
+-->
+</style>
+</head>
+
+<body>
+  <% email_content do %>
+  <p>Dear <%= @customer.first_name %> <%= @customer.last_name %>,</p>
+
+
+<p>Welcome to My Fresh Shirt! New York City's first online eco-friendly personal valet!
+
+You have been invited to join The Laundry Revolution by <%= @referrer.first_name %> <%= @referrer.last_name %>.  Simply go on line at <%= @url %> and simply follow the instructions to begin using My Fresh Shirt services today!      
+
+You too can begin receiving FREE My Fresh Shirt services through our brand new referral program! Once you sign up through the link provided simply go to My Referrals from your dashboard, invite some friends and start earning FRESH CASH today! Visit us online for more information.  Rules and restrictions apply.
+
+My Fresh Shirt offers convenient service windows for dry cleaning, launder shirts, wash & fold and shoe service... Monday-Sunday, just like Fresh Direct!  Get ready to feel good about not having to drag your clothes to the corner and then have to drag them right back.
+
+We hope you enjoy the My Fresh Shirt experience!
+
+My Fresh Shirt- Customer Service
+
+www.myonlinecleaner.com
+
+ 
+
+Use of the My Fresh Shirt service and Web site constitutes acceptance of our Terms of Use and Privacy Policy.
+</p>
+  <p>Use of the My Fresh Shirt service and Web site constitutes acceptance of our Terms of Use and Privacy Policy.</p>
+<% end %>
+</body>
+
+</html> 
+ 
+
+
+
+

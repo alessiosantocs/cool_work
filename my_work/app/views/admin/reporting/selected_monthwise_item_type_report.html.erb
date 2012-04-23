@@ -1,0 +1,86 @@
+<%= render :partial => 'range_date_section' %>
+<div style = "overflow-x: scroll;overflow-y: hidden;">
+<table cellspacing=10 width="100%">
+  <% if @selected_month_result.blank? %>
+      <tr><td>"No Record Found"</td></tr>
+  <% else %>
+      <tr class="<%= cycle('light-blue', 'drag-green', :name => "price_class") %>">
+          <th rowspan="2" valign="middle"><a href="/admin/reporting/<%= params[:action] %>?orderby=<%=@orderby%>">Item Type By Month</th>
+          <% @selected_month_result.each do |key, value| %>
+              <% if @selected_month_result[0][0] != key %>
+                  <th colspan="3" ><%= Date::MONTHNAMES[key.month] + " " + key.year.to_s %></th>
+              <% end %>
+          <% end %>
+      </tr>
+      <tr class="<%= cycle('light-blue', 'drag-green', :name => "price_class") %>">
+          <% @selected_month_result.each do |key, value| %>
+              <% if @selected_month_result[0][0] != key %>
+              <th>#Units</th>
+              <th>Total Plant $</th>
+              <th>Total Retail $</th>
+              <% end %>
+          <% end %>
+      </tr>
+      <% item_types = ItemType.find(:all,:order=>"name #{params[:orderby]}") %>
+      <% item_types.each do |item_type|%>
+          <tr style="text-align: left;" class="<%= cycle('light-blue', 'drag-green', :name => "price_class") %>" valign="middle">
+              <th><%= item_type.name %></th>
+              <% @selected_month_result.each do |key, value| %>
+                  <% if @selected_month_result[0][0] != key %>
+                      <% if !value[item_type.name.to_s].blank? %>
+                          <td><%= value[item_type.name.to_s][:unit].to_i %>
+                           <%if item_type.name == 'Assorted' %>
+                            <span class="red">(<%=value[item_type.name.to_s][:lbs_weight]%> lbs)</span>
+                          <%end%>
+                          </td>
+                          <td><%= number_to_currency(value[item_type.name.to_s][:total_plant], options = {:unit => ""}) %></td>
+                          <td><%= number_to_currency(value[item_type.name.to_s][:total_retail], options = {:unit => ""}) %></td>
+                      <% else %>
+                          <td>0</td>
+                          <td>0.00</td>
+                          <td>0.00</td>
+                      <% end %>
+                  <% end %>
+              <% end %>
+          </tr>
+      <% end %>
+      <tr style="text-align: left;" class="<%= cycle('light-blue', 'drag-green', :name => "price_class") %>">
+          <th>Total</th>
+          <% @selected_month_result.each do |key, value| %>
+              <% if @selected_month_result[0][0] != key %>
+                  <% if !value["total"].blank? %>
+                      <td><%= value["total"][:unit].to_i %></td>
+                      <td><%= number_to_currency(value["total"][:total_plant], options = {:unit => ""}) %></td>
+                      <td><%= number_to_currency(value["total"][:total_retail], options = {:unit => ""}) %></td>
+                  <% else %>
+                      <td>0</td>
+                      <td>0.00</td>
+                      <td>0.00</td>
+                  <% end %>
+              <% end %>
+          <% end %>
+      </tr>
+      <tr style="text-align: left;" class="<%= cycle('light-blue', 'drag-green', :name => "price_class") %>" valign="middle">
+          <th>Montly% Increase/Decrease</th>
+          <% previous = @selected_month_result[0][1] %>
+          <% @selected_month_result.each do |key, value| %>
+              <% previous_unit = previous["total"][:unit].to_f %>
+              <% unit_value_increased = value["total"][:unit].to_f - previous_unit %>
+              <% previous_unit_percent = unit_value_increased != 0.00 ? ((unit_value_increased.abs)*100/previous_unit) : 0.00%>
+              <% previous_plant = previous["total"][:total_plant].to_f %>
+              <% plant_value_increased = value["total"][:total_plant].to_f - previous_plant %>
+              <% previous_plant_percent = plant_value_increased != 0.00 ? ((plant_value_increased.abs)*100/previous_plant) : 0.00 %>
+              <% previous_retail = previous["total"][:total_retail].to_f %>
+              <% retail_value_increased = value["total"][:total_retail].to_f - previous_retail %>
+              <% previous_retail_percent = retail_value_increased != 0.00 ? ((retail_value_increased.abs)*100/previous_retail) : 0.00 %>
+              <% if @selected_month_result[0][0] != key %>
+                      <td class="<%= unit_value_increased < 0.00 ? 'red' : '' %>"><%= number_to_currency(previous_unit_percent, options = {:unit => ""}) %></td>
+                      <td class="<%= plant_value_increased < 0.00 ? 'red' : '' %>"><%= number_to_currency(previous_plant_percent, options = {:unit => ""}) %></td>
+                      <td class="<%= retail_value_increased < 0.00 ? 'red' : '' %>"><%= number_to_currency(previous_retail_percent, options = {:unit => ""}) %></td>
+              <% end %>
+              <% previous = value  %>
+          <% end %>
+      </tr>
+    <% end %>
+</table>
+</div>

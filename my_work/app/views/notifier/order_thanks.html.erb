@@ -1,0 +1,36 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<style type="text/css">
+<!--
+body p{
+font-family: Verdana, Geneva, sans-serif;
+}
+-->
+</style>
+</head>
+
+<body>
+	<% email_content do %>
+	<p>Dear <%= @customer.first_name %>,</p>
+
+	<p>Your request for pick-up has been received. Thank you for ordering and welcome to the revolution. Get ready to feel good about not having to drag your clothes to the corner and then have to drag them right back. We will pick-up your clothing between <%= @order.pickup.window.start.strftime('%I %p') if @order.pickup %> and <%= (@order.pickup.window.end + 1.second).strftime('%I %p') if @order.pickup %> on <%= @order.pickup_date.strftime("%m/%d/%Y") if @order.pickup_date %>.</p>
+
+	<p>As soon as we scan your clothing at our cleaning facility, we'll send you an e-mail with an itemization and the final order total. We’ll also include an itemized, printed receipt with your delivery. Remember, you will not be charged until your clothing has been delivered.</p>
+
+	<p>You'll know your order has arrived when a My Fresh Shirt delivery person appears at your door holding your Fresh and clean clothes.</p> 
+
+	<p>You are under no obligation to tip our delivery personnel. Further, My Fresh Shirt delivery personnel are not permitted to solicit tips under any circumstances.</p>
+
+	<p>If you have last-minute updates or additions to your order, go to your account to make changes before <%= @order.pickup_time.strftime('%I %p') if @order.pickup %> on <%= (@order.pickup_date - 1.day).strftime("%m/%d/%Y") if @order.pickup %>.</p>
+
+	<p>We hope you enjoy the My Fresh Shirt experience.</p> 
+<p>Use of the My Fresh Shirt service and Web site constitutes acceptance of our Terms of Use and Privacy Policy.</p>
+<% end %>
+<%= render :partial => 'signature' %>  
+
+</body>
+
+</html>

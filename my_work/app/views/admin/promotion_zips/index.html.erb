@@ -1,0 +1,34 @@
+<div class="view-menu">
+	<span><strong>Promotion Zips</strong></span>
+<span style="float:right;"><%= link_to_lightbox 'New', new_admin_promotion_promotion_zip_path(params[:promotion_id]), :class => 'action new' if logged_in? && current_user.has_role?('content') %></span>
+</div>
+<table width="1000" cellpadding="10px">
+<tr>
+    <th>Zip Code</th>
+    <th>&nbsp;</th>
+  </tr>
+<% unless @promotion_zips.blank?%>
+    <% @promotion_zips.each do |promotion_zip| %>
+      <% form_for promotion_zip, :url => admin_promotion_promotion_zip_path(params[:promotion_id], promotion_zip),:html => {:method => 'put'} do |f| %>
+      <tr class="<%= cycle('light-blue', 'light-green', :name => "order_class") %>">
+          <td align="center"><%= f.select :serviced_zip_id, ServicedZip.find(:all, :conditions => {:active => true}, :order => ["zip"]).collect{|s| [s.zip, s.id]}, {}, { :style => "width:140px;"} %></td>
+          <td align="center"><%= f.submit "Update", :class => 'button green' %>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<%= link_to '&nbsp;', admin_promotion_promotion_zip_path(params[:promotion_id], promotion_zip.id), :confirm => 'Are you sure?', :method => :delete, :class => 'action delete' if logged_in? && current_user.has_role?('content') %></td>
+      </tr>
+      <% end %>
+    <% end %>
+<% end %>
+<tr>
+    <td valign="top">
+        &nbsp;
+    </td>
+    <td valign="top">
+        &nbsp;
+    </td>
+</tr>
+</tbody>
+</table>
+</td>
+<td valign="top">
+    &nbsp;
+</td>
+</tr>
