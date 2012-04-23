@@ -1,0 +1,39 @@
+<% form_tag(admin_url(:action => "party"), { :method => 'post', :id => "update_form", :autocomplete => "off" }) do -%>
+  <p>Title:<br /> 
+  	  	<%= text_field 'party', 'title', { :maxlength => 50, :size => 30 } -%>
+  </p>
+  <p>Music:<br /> 
+  	  	<%= text_field 'party', 'music', { :maxlength => 125, :size => 24 } -%>
+  </p>
+  <p>Dj:<br /> 
+  	  	<%= text_field 'party', 'dj', { :maxlength => 45, :size => 24 } -%>
+  </p>
+  <p>User:<br /> 
+  	  	<%= text_field 'user', 'username', { :maxlength => 75, :size => 24 } -%> <span id="user_username_changed"></span>
+  	  	<%= hidden_field 'party', 'user_id' -%>
+  	  	<div id="user_username_auto_complete" class="auto_complete"></div>
+  </p>
+  <p>Hosted by:<br /> 
+  	  	<%= text_field 'party', 'hosted_by', { :maxlength => 50, :size => 60 } -%>
+  </p>
+  <p>Description:<br /> 
+  	  	<%= text_area 'party', 'description', { :rows => 8, :cols => 60 } -%>
+  </p>
+  
+  <p>RSVP Email:<br />
+  	<%= text_field 'party', 'rsvp_email', { :maxlength => 65, :size => 30 } -%> <span class="small">If want to receive all rsvps by rsvp_email</span>
+  </p>
+  
+  <p>Photographer:<br /> 
+  	  	<%= text_field 'party', 'photographer', { :maxlength => 65, :size => 24 } -%>
+  </p>
+  <p>Days paid: <%= text_field 'party', 'days_paid', { :maxlength => 4, :size => 4 } -%> Days free: <%= text_field 'party', 'days_free', { :maxlength => 3, :size => 4 } -%> Pics left: <%= text_field 'party', 'pics_left', { :maxlength => 3, :size => 3 } -%></p>
+  <p><%= check_box 'party', 'premium', {} -%> Premium <%= check_box 'party', 'comments_allowed', {} -%> Comments allowed <%= check_box 'party', 'active', {} -%> Active</p>
+  <%= hidden_field 'party', 'id' -%>
+	<div class="button-bar"><%= submit_tag "Update" -%></div>
+<% end -%>
+
+<h1>RSVP Code for Email</h1>
+<form>
+  <textarea cols="60" id="rsvp_code" name="rsvp_code" rows="8" class="code"></textarea>
+</form>

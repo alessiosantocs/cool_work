@@ -1,0 +1,95 @@
+site: atp
+show_ads: true
+notifier_email: fcgnews@gmail.com
+admin_email: admin@fcgmedia.com
+welcome_email: welcome@fcgmedia.com
+lost_password_email: lostpassword@fcgmedia.com
+info_email: info@fcgmedia.com
+refund_email: refund@fcgmedia.com
+signature: Sam and Chris from FCG Media
+www:
+  thumbnails: 8
+  events: 25
+  articles: 3
+  top_pics: 10
+blog:
+  url: http://mag.alltheparties.com
+  xml: http://mag.alltheparties.com/feed/
+  ttl: 30
+limit: 5
+days_free: 7
+pics_free: 0
+pics_left: 1
+stats_expire_in_days: 3
+country: us
+currency: US Dollars($)
+price:
+  pics: 4999
+  days: 499
+  flyers: 1999
+image_server:
+  host: i2.fcgmedia.com
+  file_max_size: 20000000
+  img_max_size: 1000000
+  scratch_dir: ./public/system/scratch
+  upload_dir: ./public/system/upload
+  base_url: /system
+  path:  ./public/system
+  extension: .jpg
+  compressed_files:
+    \.tar: tar xf
+    \.tar\.bz2: tar xjf
+    \.zip: unzip -oj
+    \.tar\.gz: tar xzf
+image:  
+  watermark: ./public/images/watermark.gif
+  icon:
+    width: 16
+    height: 16
+  tiny:
+    width: 50
+    height: 50
+  small:
+    width: 100
+    height: 100
+  large:
+    width: 480
+    height: 640
+  flyer:
+    width: 120
+    height: 120
+  banner_336x280:
+    width: 336
+    height: 280
+  cover_image:
+    width: 480
+    height: 207
+  max:
+    width: 1600
+    height: 1600
+ad:
+  sizes:
+    - 120x120
+    - 336x280
+restricted_roles:
+  - Super Admin
+  - Admin
+  - Moderator
+rateable:
+  - Image
+  - Party
+  - Venue
+flaggable:
+  - Comment
+  - Image
+  - Msg
+faveable:
+  - ImageSet
+  - Party
+  - Profile
+  - Venue
+relationship_type:
+  - dates
+  - a serious relationship
+  - friends
+  - activity partners

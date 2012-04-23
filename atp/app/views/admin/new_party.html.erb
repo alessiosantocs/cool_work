@@ -1,0 +1,112 @@
+<% @party = Party.blank %>
+<%= form_tag(nil, { :method => 'post', :id => "create_form", :autocomplete => "off", :onsubmit => "submitNew(); return false;" }) -%>
+	    <p>End date:<br /> 
+  	  	<%= text_field 'party', 'end_date', { :maxlength => 12, :size => 24 } -%>
+  </p>
+    <p>Premium:<br /> 
+  	  	<%= check_box 'party', 'premium', {} -%>
+  </p>
+    <p>Title:<br /> 
+  	  	<%= text_field 'party', 'title', { :maxlength => 50, :size => 60 } -%>
+  </p>
+    <p>Length in hours:<br /> 
+  	  	<%= text_field 'party', 'length_in_hours', { :maxlength => 12, :size => 24 } -%>
+  </p>
+    <p>Dotw:<br /> 
+  	  	<%= text_field 'party', 'dotw', { :maxlength => 1, :size => 6 } -%>
+  </p>
+    <p>Sponsored:<br /> 
+  	  	<%= check_box 'party', 'sponsored', {} -%>
+  </p>
+    <p>Venue:<br /> 
+  	  	<%= text_field 'party', 'venue_id', { :maxlength => 10, :size => 15 } -%>
+  </p>
+    <p>Age female:<br /> 
+  	  	<%= text_field 'party', 'age_female', { :maxlength => 1, :size => 6 } -%>
+  </p>
+    <p>Music:<br /> 
+  	  	<%= text_field 'party', 'music', { :maxlength => 125, :size => 135 } -%>
+  </p>
+    <p>Last time cron:<br /> 
+  	  	<%= text_field 'party', 'last_time_cron', { :maxlength => 12, :size => 24 } -%>
+  </p>
+    <p>Age male:<br /> 
+  	  	<%= text_field 'party', 'age_male', { :maxlength => 1, :size => 6 } -%>
+  </p>
+    <p>Dj:<br /> 
+  	  	<%= text_field 'party', 'dj', { :maxlength => 45, :size => 55 } -%>
+  </p>
+    <p>Description:<br /> 
+  	  	<%= text_area 'party', 'description', { :rows => 20, :cols => 60 } -%>
+  </p>
+    <p>Recur:<br /> 
+  	  	<%= text_field 'party', 'recur', { :maxlength => 12, :size => 22 } -%>
+  </p>
+    <p>Sponsored ad:<br /> 
+  	  	<%= text_field 'party', 'sponsored_ad_id', { :maxlength => 25, :size => 35 } -%>
+  </p>
+    <p>Guestlist charge:<br /> 
+  	  	<%= text_field 'party', 'guestlist_charge', { :maxlength => 12, :size => 24 } -%>
+  </p>
+    <p>Tf:<br /> 
+  	  	<%= text_field 'party', 'tf', { :maxlength => 1, :size => 6 } -%>
+  </p>
+    <p>Pics left:<br /> 
+  	  	<%= text_field 'party', 'pics_left', { :maxlength => 3, :size => 8 } -%>
+  </p>
+    <p>Females free until:<br /> 
+  	  	<%= text_field 'party', 'females_free_until', { :maxlength => 8, :size => 18 } -%>
+  </p>
+    <p>Comments allowed:<br /> 
+  	  	<%= check_box 'party', 'comments_allowed', {} -%>
+  </p>
+    <p>City:<br /> 
+  	  	<%= text_field 'party', 'city_id', { :maxlength => 10, :size => 15 } -%>
+  </p>
+    <p>User:<br /> 
+  	  	<%= text_field 'party', 'user_id', { :maxlength => 10, :size => 15 } -%>
+  </p>
+    <p>Hosted by:<br /> 
+  	  	<%= text_field 'party', 'hosted_by', { :maxlength => 50, :size => 60 } -%>
+  </p>
+    <p>Timeframecount:<br /> 
+  	  	<%= text_field 'party', 'timeframecount', { :maxlength => 1, :size => 6 } -%>
+  </p>
+    <p>Males free until:<br /> 
+  	  	<%= text_field 'party', 'males_free_until', { :maxlength => 8, :size => 18 } -%>
+  </p>
+    <p>Males reduced until:<br /> 
+  	  	<%= text_field 'party', 'males_reduced_until', { :maxlength => 8, :size => 18 } -%>
+  </p>
+    <p>Last event:<br /> 
+  	  	<%= text_field 'party', 'last_event_id', { :maxlength => 10, :size => 15 } -%>
+  </p>
+    <p>Door charge:<br /> 
+  	  	<%= text_field 'party', 'door_charge', { :maxlength => 12, :size => 24 } -%>
+  </p>
+    <p>Days paid:<br /> 
+  	  	<%= text_field 'party', 'days_paid', { :maxlength => 4, :size => 9 } -%>
+  </p>
+    <p>Females reduced until:<br /> 
+  	  	<%= text_field 'party', 'females_reduced_until', { :maxlength => 8, :size => 18 } -%>
+  </p>
+    <p>Photographer:<br /> 
+  	  	<%= text_field 'party', 'photographer', { :maxlength => 65, :size => 75 } -%>
+  </p>
+    <p>Days free:<br /> 
+  	  	<%= text_field 'party', 'days_free', { :maxlength => 3, :size => 8 } -%>
+  </p>
+    <p>Current event:<br /> 
+  	  	<%= text_field 'party', 'current_event_id', { :maxlength => 10, :size => 15 } -%>
+  </p>
+    <p>Dress code:<br /> 
+  	  	<%= text_field 'party', 'dress_code', { :maxlength => 1, :size => 6 } -%>
+  </p>
+    <p>Wotm:<br /> 
+  	  	<%= text_field 'party', 'wotm', { :maxlength => 1, :size => 6 } -%>
+  </p>
+    <p>Active:<br /> 
+  	  	<%= check_box 'party', 'active', {} -%>
+  </p>
+  	<div class="button-bar"><%= submit_tag "Create" -%></div>
+<%= end_form_tag -%>

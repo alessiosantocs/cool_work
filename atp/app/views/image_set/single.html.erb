@@ -1,0 +1,119 @@
+<% 
+  @comment = Comment.new({ :commentable_type => 'ImageSet', :commentable_id => @image.id })
+  @comments = Comment.find_comments_for_commentable('ImageSet', @image.id)
+  prev_pic = @image.higher_item()
+  next_pic = @image.lower_item()
+%>
+<script type="text/javascript" language="javascript">new Location({image_set_id: <%= @image.id %>, event_id: <%= @obj_rec.id %> });</script>
+<div id="topbar">
+  <div id="action">
+  <h1><%= @picture_title.maxlength(45) -%></h1>
+
+  <h2>Picture Info</h2>
+  <ul id="actionlinks">
+    <% if @image.obj.party.rsvp? %>
+    <li class="drop"><a href="/rsvp/<%= @image.obj.party_id %>" id="rsvp" title="RSVP Now" class="new_window">RSVP Now</a></li>
+    <% end %>
+    <% unless @image.obj.party.past_events.empty? %>
+    <li><%= link_to( "Upload Party Pics", event_image_set_upload_url(:id => @image.obj.party.id) ) -%></li>
+    <% end %>
+    <li><%= fave_link(@image, 'Add to Faves') -%></li>
+  </ul>
+
+  <div id="explore">
+    <h3>Explore</h3>
+    <div id="explorepics">
+      <p class="prev2"><a href="#"></a></p>
+      <p class="next2"><a href="#"></a></p>
+      <ul>
+        <li id="pic_nav_prev"><%= event_image(prev_pic, { :size => 'tiny'}) %></li>
+        <li id="pic_nav_next"><%= event_image(next_pic, { :size => 'tiny'}) %></li>
+      </ul>
+      </div>
+      <p><%= link_to("View thumbnails &gt;", image_set_url(:obj_type => @obj_type, :obj_id => @obj_id, :at => @image.position)) %></p>
+    </div>
+
+    <div id="sharerate">
+      <h3>Share</h3>
+      <p class="more"><%= sharethis_widget %></p>
+      <h3>Rate This Pic</h3>
+      <div class='rate_<%= @image.image.class.to_s -%>_<%= @image.image.id -%>'>
+      	<%= render :partial => "layouts/shared/rating", :locals => { :asset => @image.image } -%>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="flyerads">
+    <h4>Flyer Ads</h4>
+    <%= inhouse_ads('120x120') -%>
+  </div>
+</div><!-- topbar -->
+
+<div id="primaryContent">
+  <p id="postedby">Posted by: <%= people_link(@image.obj.party.user) -%> | Photo by: <%= people_link(@image.image.user) -%> <span id="comment_count"></span></p>
+  <p style="clear: both;"><div id="caption">
+  <% if !@image.image.caption.nil? and @image.image.caption.length > 0 -%>
+      <%= @image.image.caption %>
+    <% else  %>Untitled<% end %></div></p>
+  <p><%= show_img(@image.image, 'large') -%></p>
+  <script type="text/javascript" language="javascript">
+  // <![CDATA[
+    (function(){
+      editors = ["<%= @image.obj.party.user.username %>", "<%= @image.image.user.username %>"].uniq();
+      function editable () {
+        return editors.find(function(e){ return (e == Auth.current_user.name); });
+      }
+      function audit(type, id, rid, sid, act) {
+        img = new Image();
+        img.src = '/l?type=' + type + '&id=' + id + '&rid=' + (rid || 0) + '&sid=' + (sid || 0) + '&act=' + (act || '') + '&uid=' + (Auth.current_user.id || 0);
+      }
+      if (editable()){
+        new Ajax.InPlaceEditor( "caption", '/pictures/event/<%= "#{@image.obj_id}/#{@image.id}" -%>/update_caption');
+      }
+      if (window.location.hash.length == 0){
+        new Effect.ScrollTo('primaryContent');
+      }
+      <%= "audit('ImageSet', #{@image.id}, #{@region.id}, #{SITE_ID}, 'view');" %>
+    })();
+  // ]]>
+  </script>
+  <% if @image.show_comments? %>
+  <h2>Recent Comments</h2>
+  <div id="comments">
+    <% if @comments.size > 0 %>
+      <%= show_comments(@comments) %>
+    <% else %>
+      <p>Be first to comment.</p>
+    <% end %>
+  </div><!-- comments -->
+
+  <h2>Post Comment</h2>
+  <div id="post-comment">
+    <%= render :partial => "layouts/shared/comment_form" -%>
+  </div>
+  <% end %>
+</div><!-- primaryContent -->
+
+<div id="secondaryContent">
+  <div id="top10pics">
+  <% cache(:action_suffix => "cache", :action => 'show', :id => nil ) do %>
+    <% top10 = Stat.most_views_by_type(@obj_rec, 1.day.ago) %>
+    <h1>Top 10</h1>
+    <ul id="top10" class='old'>
+      <% 0.upto(9) do |i| %>
+      <li><%= top10[i].nil? ? img_na('tiny') : event_image(top10[i], {:size => 'tiny'}) %></li>
+      <% end %>
+    </ul>
+  <% end %>
+  </div>
+  <div id="googads">  
+    <%= render_ad("120x600_ros") %>
+  </div>
+
+  <div class="advertisement">
+    <h4>Advertisement</h4>
+    <%= render_ad("336x280_ros") %>
+  </div>
+</div><!-- secondaryContent -->
+<script type="text/javascript" src="http://www.pixazza.com/widget/9502f9464/"></script>

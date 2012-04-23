@@ -1,0 +1,66 @@
+/* - - - - - - - - - - - - - - - - - - - - -
+
+Title : AllTheParties Stylesheet
+Author : Lealea Design
+URL : http://www.lealea.net/
+
+Description : Photo Thumbs Page Specific Style Sheet
+
+Created : Dec 6, 2006
+Modified : Dec 14, 2006
+
+- - - - - - - - - - - - - - - - - - - - - */
+#image_set #primaryContent {
+  float:left;
+  width:830px;
+}
+#image_set #secondaryContent {
+  width:120px;
+  float:right;
+  margin-top:0;
+}
+#top25{
+  background-color: #BFC5D1;
+  border: 1px solid #FFFFFF;
+  padding: 0 3px;
+}
+#top25 h1{
+  color: #000000;
+  font-weight: bold;
+}
+#top25 ul{
+  padding-left: 7px;
+}
+#latest_pictures{
+  float: left;
+}
+#latest_pictures table{
+  width: 800px;
+}
+#latest_pictures table tr:hover{
+  background-color: #333333;
+}
+
+#latest_parties table tr td.date{
+  width:126px;
+}
+
+#latest_parties table tr td.banner{
+  width:20px;
+}
+
+#latest_parties table tr td.info{
+  width:674px;
+}
+
+#latest_parties table tr:hover{
+  background-color: #333333;
+}
+
+.purple, #latest_parties table tr.freq_no{
+  background-color: #550152;
+}
+
+#latest_parties table tr.freq_no:hover{
+  background-color: #333333;
+}

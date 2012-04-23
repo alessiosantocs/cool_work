@@ -1,0 +1,2 @@
+alert("No picture left. Purchase more picture sets here.");
+//new Message('No picture left. Purchase more picture sets here.');

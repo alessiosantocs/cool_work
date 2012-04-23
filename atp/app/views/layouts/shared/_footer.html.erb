@@ -1,0 +1,8 @@
+<ul>
+  <li><%= link_to 'Company Overview &amp; Advertising Information', url_for(:controller => 'page', :action => 'overview' ) -%></li>
+  <li><%= link_to 'Sydicate Content', url_for(:controller => 'page', :action => 'syndicate' ) -%></li>
+	<li><%= link_to 'Terms of Use', url_for(:controller => 'page', :action => 'tos' ) -%></li>
+	<li><%= link_to 'Privacy Policy', url_for(:controller => 'page', :action => 'privacy' ) -%></li>
+</ul>
+<p>A part of <a href="http://www.fcgmedia.com/">FCG Media, Inc.</a></p>
+<p>We can be reached at 347-558-4020 or <%= mail_to "info@alltheparties.com", "Info@AllTheParties.com", :encode => "javascript" %></p>

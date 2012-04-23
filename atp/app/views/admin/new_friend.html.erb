@@ -1,0 +1,13 @@
+<% @friend = Friend.blank %>
+<%= form_tag(nil, { :method => 'post', :id => "create_form", :autocomplete => "off", :onsubmit => "submitNew(); return false;" }) -%>
+	    <p>A:<br /> 
+  	  	<%= text_field 'friend', 'a', { :maxlength => 1, :size => 6 } -%>
+  </p>
+    <p>Fc:<br /> 
+  	  	<%= text_field 'friend', 'fc', { :maxlength => 11, :size => 16 } -%>
+  </p>
+    <p>Fp:<br /> 
+  	  	<%= text_field 'friend', 'fp', { :maxlength => 11, :size => 16 } -%>
+  </p>
+  	<div class="button-bar"><%= submit_tag "Create" -%></div>
+<%= end_form_tag -%>

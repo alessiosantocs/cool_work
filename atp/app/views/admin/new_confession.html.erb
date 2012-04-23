@@ -1,0 +1,22 @@
+<% @confession = Confession.blank %>
+<%= form_tag(nil, { :method => 'post', :id => "create_form", :autocomplete => "off", :onsubmit => "submitNew(); return false;" }) -%>
+	    <p>Name:<br /> 
+  	  	<%= text_field 'confession', 'name', { :maxlength => 30, :size => 40 } -%>
+  </p>
+    <p>Title:<br /> 
+  	  	<%= text_field 'confession', 'title', { :maxlength => 45, :size => 55 } -%>
+  </p>
+    <p>Story:<br /> 
+  	  	<%= text_area 'confession', 'story', { :rows => 20, :cols => 60 } -%>
+  </p>
+    <p>Published:<br /> 
+  	  	<%= check_box 'confession', 'published', {} -%>
+  </p>
+    <p>User:<br /> 
+  	  	<%= text_field 'confession', 'user_id', { :maxlength => 10, :size => 15 } -%>
+  </p>
+    <p>Location:<br /> 
+  	  	<%= text_field 'confession', 'location', { :maxlength => 45, :size => 55 } -%>
+  </p>
+  	<div class="button-bar"><%= submit_tag "Create" -%></div>
+<%= end_form_tag -%>

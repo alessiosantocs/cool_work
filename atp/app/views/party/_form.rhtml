@@ -1,0 +1,439 @@
+<%= hidden_field 'party', 'id' -%>
+<%= hidden_field 'party', 'venue_id' -%>
+<%= hidden_field 'party', 'premium' -%>
+<%= hidden_field 'party', 'next_date' -%>
+<div id="party_info">
+  <p>
+  	<label for="party_title">Title:</label> 
+  	<%= text_field 'party', 'title', { :maxlength => 50, :size => 30 } -%> <span class="small">Don't include the venue name.</span>
+  </p>
+  
+  <p>
+  	<label for="party_hosted_by">Hosted By:</label>
+  	<%= text_field 'party', 'hosted_by', { :maxlength => 50, :size => 30 } -%>
+  </p>
+  
+  <p>
+  	<label for="venue_name">Venue:</label>
+  	<%= text_field 'venue', 'name', { :maxlength => 50, :size => 30, :class=>"first_venue" } -%> <a id="add_new_venue" href="#"  title="Add A Venue"><%= image_tag "add.gif", {'alt'=>"Add A Venue"} -%></a>  <span class="small">Add venue by typing and the name will appear. If nothing appears, click the green plus to add it manually.</span>
+	  <div id="venue_name_auto_complete" class="auto_complete"></div>
+  </p>
+  
+  <p>
+  	<label for="party_music">Music:</label>
+  	<%= text_field 'party', 'music', { :maxlength => 128, :size => 30 } -%> <span class="small">Separate with commas</span> <div id="party_music_autocomplete" class="auto_complete"></div>
+  </p>
+  
+  <p>
+  	<label for="party_dj">DJ:</label>
+  	<%= text_field 'party', 'dj', { :maxlength => 45, :size => 30 } -%>
+  </p>
+  
+  <p>
+  	<label for="party_next_date">Date:</label>
+  	<%= date_select('party', 'next_date', :order => [:month, :day, :year]) %>
+  </p>
+  
+  <div id="when" style="display:none;">
+	  <p>
+	  	<label for="party_start_time">Time:</label>
+	  	<%= text_field 'party', 'start_time', { :maxlength => 8, :size => 8 } %> to <%= text_field 'party', 'end_time', { :maxlength => 8, :size => 8 } %>
+	  	<div id="party_start_time_autocomplete" class="auto_complete"></div>
+	  	<div id="party_end_time_autocomplete" class="auto_complete"></div>
+	  </p>
+	  <p>
+	  	<label for="party_recur">Repeat:</label>
+	  	<%= select "party", "recur", Party.recur.collect {|k,v| [ v, k ] }, { :include_blank => true } -%> 
+	  	<span id="repeat_monthly" class="repeat_when">
+	  		<span class="stronger">Only on :</span>  <%= select "party", "wotm", Party.wotm.collect {|k,v| [ v, k ] } -%>  <%= select "party", "dotw", Party.dotw -%>
+	  	</span>
+	  </p>
+  </div>
+  <script>$$(".repeat_when").each(function(el){el.hide()});</script>
+  
+  <p>
+  	<label for="party_door_charge">Door Charge:</label>
+  	<%= text_field 'party', 'door_charge', { :maxlength => 6, :size => 6 } -%>
+  </p>
+  
+  <p>
+  	<label for="party_guestlist_charge">Guestlist Charge:</label>
+  	<%= text_field 'party', 'guestlist_charge', { :maxlength => 6, :size => 6 } -%> <span class="small"><a href='#' id="toggle_door_charge_conditions">show advanced options</a></span>
+  </p>
+  
+  <p id="door_charge_conditions" style="display:none;">
+  	<label>Reduced until:</label>
+  	<%= text_field 'party', 'females_reduced_until', { :maxlength => 8, :size => 11 } -%> F <%= text_field 'party', 'males_reduced_until', { :maxlength => 8, :size => 11 } -%> M<br />
+  	<label>Free until:</label>
+  	<%= text_field 'party', 'females_free_until', { :maxlength => 8, :size => 11 } -%> F <%= text_field 'party', 'males_free_until', { :maxlength => 8, :size => 11 } -%> M<br />
+  </p>
+  
+  <p>
+  	<label>Age Limits:</label>
+  	<%= select "party", "age_female", Party.age.collect {|k,v| [ v, k ] }, { :include_blank => true } -%> F 
+  	<%= select "party", "age_male", Party.age.collect {|k,v| [ v, k ] }, { :include_blank => true } -%> M
+  </p>
+  
+  <p>
+  	<label for="party_dress_code">Dress Code:</label>
+  	<%= select "party", "dress_code", Party.dress_code.collect {|k,v| [ v, k ] }, { :include_blank => true } -%>
+  </p>
+  
+  <p>
+  	<label for="party_description">Description:</label>
+  	<%= text_area 'party', 'description' -%>
+  </p>
+
+  <p>
+  	<label for="party_rsvp_email">RSVP Email:</label>
+  	<%= text_field 'party', 'rsvp_email', { :maxlength => 65, :size => 30 } -%> <span class="small">If want to receive all rsvps by rsvp_email</span>
+  </p>
+  
+  <p>
+  	<label for="party_photographer">Photographer Email:</label>
+  	<%= text_field 'party', 'photographer', { :maxlength => 65, :size => 30 } -%> <span class="small">If someone else is going to upload pictures</span>
+  </p>
+  
+  <p>
+  	<label for="party_comments_allowed">Comments Allowed:</label>
+  	<%= check_box 'party', 'comments_allowed', { :class => 'checkbox' } -%>
+  </p>
+  
+  <p>
+  	<label>&nbsp;</label>
+  	<%= submit_tag "Post This Party" -%>
+  </p>
+</div>
+
+<script type="text/javascript" src="/javascripts/form_validation.js"></script>
+<script type="text/javascript" src="/javascripts/countries.js"></script>
+<script type="text/javascript" src="/javascripts/timezones.js"></script>
+<script type="text/javascript" src="/javascripts/party_data.js"></script>
+
+<script type="text/javascript" language="javascript">
+// <![CDATA[
+	function validate(){
+		//  title
+		if ($F('party_title').length<1){
+			new Message("Title is missing.");
+			$('party_title').focus();
+			return false;
+		}
+		// venue
+		if ($F('party_venue_id').length<1){
+			new Message("Select a venue from the drop down");
+			$('venue_name').focus();
+			return false;
+		}
+		//hostedby
+		if ($F('party_hosted_by').length < 2){
+			new Message("Enter the hosts' names");
+			$('party_hosted_by').focus();
+			return false;
+		}
+		// music
+		if ($F('party_music').length<1){
+			new Message("Add music.");
+			$('party_music').focus();
+			return false;
+		}
+		// door charge
+		if ($F('party_door_charge').length<1){
+			new Message("Enter the amount you charge at the door.");
+			$('party_door_charge').focus();
+			return false;
+		}
+		// Male age limit
+		if ($F('party_age_male').length<1){
+			new Message("Select the male age limit.");
+			$('party_age_male').focus();
+			return false;
+		}
+		// female age limit
+		if ($F('party_age_female').length<1){
+			new Message("Select the female age limit.");
+			$('party_age_female').focus();
+			return false;
+		}
+		// dress code
+		if ($F('party_dress_code').length<1){
+			new Message("Select the dress code.");
+			$('party_dress_code').focus();
+			return false;
+		}
+		// door charge
+		if ($F('party_door_charge').length<1){
+			new Message("Enter door charge amount");
+			$('party_door_charge').focus();
+			return false;
+		}
+		// reduced charge
+		if ($F('party_guestlist_charge').length < 0 && ($F('party_females_reduced_until').length>0 || $F('party_males_reduced_until').length>0) ){
+			new Message("Enter guestlist/reduced charge amount");
+			$('party_guestlist_charge').focus();
+			return false;
+		}
+		// validate start time
+		$('party_start_time').value = $F('party_start_time').replace(/ /,'');
+		if (!SD.validate.time($F('party_start_time'))){
+			new Message("Enter the start time (in 15 minute increments)");
+			$('party_start_time').focus();
+			return false;
+		}
+		// validate end time
+		$('party_end_time').value = $F('party_end_time').replace(/ /,'');
+		if (!SD.validate.time($F('party_end_time'))){
+			new Message("Enter the end time (in 15 minute increments)");
+			$('party_end_time').focus();
+			return false;
+		}
+		// Repeat / recur
+		if ($F('party_recur').length<1){
+			new Message("Select a repeat option.");
+			$('party_recur').focus();
+			return false;
+		}
+		// description
+		if ($F('party_description').length<3){
+			new Message("Enter a description.");
+			$('party_description').focus();
+			return false;
+		}
+    $('party_door_charge').value = $F('party_door_charge') * 100;
+  	$('party_guestlist_charge').value = $F('party_guestlist_charge') * 100;
+  	$("party_next_date").value = $F("party_next_date_1i") + "-" + $F("party_next_date_2i") + "-" +$F("party_next_date_3i");
+		return true;
+	}
+	
+	function update_recur(){
+		$$(".repeat_when").each(function(el){el.hide()});
+		if ($('party_recur').selectedIndex == 0){ return; }
+		recur = $('party_recur').value;
+		if (recur == 'monthly'){
+			$('repeat_'+recur).show();
+		}
+	}
+	function start_date_changed(){
+	  date_array = $w('party_next_date_2i party_next_date_1i party_next_date_3i').collect(function(n){ return new Number($F(n)) });
+		start_date = new Date();
+		start_date.setFullYear($F("party_next_date_1i"), $F("party_next_date_2i"), $F("party_next_date_3i"));
+		if (!$('when').visible()){ 
+		  $('when').show(); 
+		  new Effect.Appear('when', { duration: 2});
+		}
+    // this.lastValue = $F('party_next_date');
+	}
+	var party = new Object();
+	party = {
+		premium: <%= @party.premium -%>,
+		next_date: '<%= @party.next_date -%>',
+		start_time: '<%= @party.start_time -%>',
+		end_time: '<%= @party.end_time -%>',
+		age_male: '<%= @party.age_male -%>',
+		age_female: '<%= @party.age_female -%>',
+		dress_code: '<%= @party.dress_code -%>',
+		venue_name: '<%= h @party.venue.name unless @party.venue_id.nil? -%>'
+	};
+	
+  $('party_door_charge').value = new Money(parseInt($F('party_door_charge'))).toMoney();
+	$('party_guestlist_charge').value = new Money(parseInt($F('party_guestlist_charge'))).toMoney();
+	$('party_age_male').value = party.age_male;
+	$('party_age_female').value = party.age_female;
+	$('party_dress_code').value = party.dress_code;
+  // $('party_next_date').value = party.next_date;
+	$('venue_name').value = party.venue_name;
+	
+	new Autocompleter.Local('party_music', 'party_music_autocomplete', SD.music, { tokens: [',']});
+	new Autocompleter.Local('party_start_time', 'party_start_time_autocomplete', SD.time, { minChars: 1});
+	new Autocompleter.Local('party_end_time', 'party_end_time_autocomplete', SD.time, { minChars: 1});
+	new Ajax.Autocompleter('venue_name', "venue_name_auto_complete", '/venue/autocomplete?relation=party_venue_id', {
+		minChars: 3, 
+		afterUpdateElement: function(element, selectedElement){
+			if (selectedElement.title == 'no match found'){
+				$("venue_name").value = "Click button to to add venue ----->";
+				create_new_window({title: "Create a new venue", href: "/venue/create"});
+			} else {
+				entity_parts = selectedElement.title.split(":");
+				if ($(entity_parts[0])){
+					$(entity_parts[0]).value = entity_parts[1];
+				}
+			}
+		}
+	});
+  
+  C(Q(".show_more"), "click", function(ev){
+    var el = ev.target;
+    create_new_window({title: el.title, href: el.href});
+    ev.preventDefault();
+  });
+  
+  C(ID("party_recur"), "change", function(ev){
+    update_recur();
+  });
+  
+  C(ID("party_form"), "submit", function(ev){
+    return validate();
+  });
+  
+  C(ID("toggle_door_charge_conditions"), "click", function(ev){
+    ev.preventDefault();
+    var el = ev.target;
+    if ($(el.id).innerHTML.trim() != 'show advanced options'){ 
+      new Effect.SlideUp('door_charge_conditions'); 
+      this.update('show advanced options'); 
+    } else { 
+      new Effect.SlideDown('door_charge_conditions'); 
+      new Effect.Highlight('door_charge_conditions', { duration: 2}); this.update('hide options'); 
+    }
+    return false;
+  });
+  
+	observe_data =  new PeriodicalExecuter(start_date_changed, .25);
+	var length_of_time;
+// ]]>
+</script>
+
+<script type="text/javascript" language="javascript">
+// <![CDATA[
+	(function(){
+	  
+    FCG.page = function () {
+      var venue = {
+        data: {},
+        name: function(){
+          return Q(".second_venue")[0];
+        },
+        update_party: function(){
+        	ID('venue_name').value = venue.data.name;
+        	ID('party_venue_id').value = venue.data.id;
+        },
+        post_form_via_ajax: function(){
+        	new Ajax.CustomRequest('/venue/create', {
+        		postBody: Form.serialize('new_venue_form'),
+        		onSuccess: function(r){ 
+        			eval("venue.data=" + r.responseText);
+        			console.log(venue.data);
+        			venue.update_party();
+        			venue.dialog.hide();
+        		},
+        		onLoading: function(){}
+        	});
+        },
+        validate: function(ev){
+          ev.preventDefault();
+          //  name
+          var name = venue.name();
+        	if (F(name).length<1){
+        		App.notice.set("Venue must have a name.", "bad");
+        		name.focus();
+        		return false;
+        	}
+        	//country
+        	if (F('venue_country').length != 2){
+        		App.notice.set("Select a Country");
+        		ID('venue_country').focus();
+        		return false;
+        	}
+        	// address
+        	if (F('venue_address').length<1){
+        		App.notice.set("Venue must have an address.");
+        		ID('venue_address').focus();
+        		return false;
+        	}
+        	//city and state for non-us countries
+        	if (F('venue_country')!='us'){
+        		if (F('venue_city_name').length<1){
+        			App.notice.set("Enter the city");
+        			ID('venue_city_name').focus();
+        			return false;
+        		}
+        		if (F('venue_state').length<1){
+        			App.notice.set("Enter the state or province");
+        			ID('venue_state').focus();
+        			return false;
+        		}
+        	}
+        	//postal code
+        	if (F('venue_country')=='us' && F('venue_postal_code').length!=5){
+        		App.notice.set( "Enter your postal code");
+        		ID('venue_postal_code').focus();
+        		return false;
+        	}
+        	//post form to server and return id
+        	venue.post_form_via_ajax();
+        },
+        validate_via_ajax: function(el){
+          new Ajax.CustomRequest('/venue/validate?name='+el.id+"&value="+el.value, {
+        		onSuccess: function(r){ eval(r.responseText) },
+        		onLoading: function(){}
+        	});
+        },
+        zip_action: function(){
+        	if (F('venue_country') == "us"){
+        		ID("div_postal_code_form").show();
+        		ID("city_state").hide();
+        		ID('venue_city_name').value='';
+        		ID('venue_state').value='';
+        	} else if (F('venue_country').length == 2){
+        		ID("city_state").show();
+        		ID("div_postal_code_form").hide();
+        	} else {
+        		ID('venue_postal_code').value ="";
+        		ID("city_state").show();
+        		ID("div_postal_code_form").hide();
+        	}
+        },
+        get_zip_data: function(){
+          var opt = {
+            postBody: 'postal_code='+F('venue_postal_code')+'&country='+F('venue_country'),
+            onLoading:'',
+        		onSuccess:function(r){
+        			eval(r.responseText); 
+        			setTimeout(function(){
+        				if(zFlag==true){
+        					ID('venue_city_name').value = city;
+        					ID('venue_state').value = state;
+        				} else {
+        				  App.notice.set("The postal code ("+F('venue_postal_code')+") doesn't exist in our system.");
+        				}
+        			}, 250);
+        		}
+        	}
+        	new Ajax.CustomRequest('/postal_code/find', opt);
+        }
+      }
+      var start = function(){
+        C(ID("add_new_venue"), "click", function(ev){
+          ev.preventDefault();
+          venue.dialog = create_new_window({title: "Create a new venue", href: "/venue/create"});
+          venue.dialog.onDownloadEnd = function(ev){
+            venue.name().focus();
+            createSelect("venue_time_zone", "venue[time_zone]", "", SD.timezones, 'timezoneSelect');
+            C(ID("venue_country"), "change", venue.get_zip_data);
+            C(ID("new_venue_form"), "submit", venue.validate);
+            C(ID("venue_postal_code"), "change", function(ev){
+              var el = ev.target;
+              console.log(venue);
+          		if (F(el).length==5){ venue.get_zip_data(); }
+          		venue.zip_action();
+            });
+          };
+        });
+      };
+
+      return{
+        init:function(){
+        	D.addOnLoad(function(){
+        		start();
+        		if (!App.notice){
+        	    App.notice = new Notice({id: "atp_notice", style: "z-index: 2000;"});
+        	  }
+        	});
+        }
+      };
+    }();
+    FCG.page.init();
+  
+	})();
+// ]]>
+</script>

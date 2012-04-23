@@ -1,0 +1,10 @@
+<% form_tag(url, { :target=> 'responder', :method=>"post", :id => form_id, :multipart=> true }) do %>
+<fieldset>
+	<legend>Upload Image</legend>
+	<div id="upload_form">
+			<%= file_field 'file', 'images', { :style => "width:200px;" } -%>
+			<p><%= submit_tag "Upload" -%></p>
+	</div>
+	<iframe id='responder' name="responder"></iframe>
+</fieldset>
+<% end %>

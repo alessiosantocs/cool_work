@@ -1,0 +1,19 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+first:
+  id: 1
+  short_name: nyc
+  full_name: New York City
+  region_id: 1
+  active: true
+second:
+  id: 2
+  short_name: lsv
+  full_name: Las Vegas
+  region_id: 3
+  active: true
+third:
+  id: 3
+  short_name: nrk
+  full_name: Newark
+  region_id: 1
+  active: false

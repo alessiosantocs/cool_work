@@ -1,0 +1,20 @@
+html{
+  background:#232b2e;
+}
+body{
+  font: 81.25%/1.5 'Trebuchet MS','Lucida Grande',Verdana, sans-serif;
+  background: #000 url(/images/bg.gif) repeat-x bottom;
+}
+body#slim div#container{
+  width: auto;
+  margin:0 auto;
+  color:#ccc;
+}
+#flash_good, .good_ajax_response, #flash_bad, .bad_ajax_response {
+  width: auto;
+  background-color: #000;
+}
+#message{
+  background-color: transparent;
+  margin: 10px 50px;
+}

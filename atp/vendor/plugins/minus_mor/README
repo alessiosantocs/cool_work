@@ -1,0 +1,17 @@
+= MinusMOR Plugin
+
+Author: Dan Webb (dan@danwebb.net)
+Licence: MIT
+
+For those who don't quite buy the writing JavaScript in Ruby part of RJS and just want to write some real JavaScript. Here's RJS minus the R.  This tiny plugin simply adds .ejs templates accept normal JavaScript and ERB:
+
+   alert('No more silly Ruby in my JavaScript!');
+   $('thing').setStyle(<%=js @style_options %>);
+
+And so on.  Get the idea?  As you can see above the plugin provided the built in js helper that simply calls to_json to turn your Ruby data into nice escaped strings.  This version also has the partial() helper which takes a name of a partial (and any other options such as :collection, :locals) and renders out the HTML already escaped for you:
+
+  $('boob').update(<%= partial('new_boob') %>);
+
+This is a more liberal version of the original MinusR plugin which uses a new .ejs extension instead of completely overriding .rjs templates.  This means that respond_to :js will now first search for a .ejs template and then revert to using a .rjs template if it's not found.  More kind and sharing you see?  I have to say, the people in the comments were right.  This is a much nicer implementation.
+
+That will be all.

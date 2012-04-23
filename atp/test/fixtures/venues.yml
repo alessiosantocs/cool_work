@@ -1,0 +1,31 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+first:
+  id: 4
+  name: Etoile
+  user_id: 1
+  postal_code: 10022
+  address: 109 E 56th Street
+  cross_street: ''
+  city: New York
+  state: NY
+  country: us
+  phone: nil
+  time_zone: -5.0
+  active: true
+  created_on: <%= 5.days.ago.to_s :db %>
+  updated_on: <%= Time.now - 100 %>
+second:
+  id: 363
+  name: Lotus
+  user_id: 1
+  postal_code: 10014
+  address: 409 W 14 Street
+  cross_street: ''
+  city: New York
+  state: NY
+  country: us
+  phone: nil
+  time_zone: -5.0
+  active: true
+  created_on: <%= 5.years.ago.to_s :db %>
+  updated_on: <%= Time.now - 15500 %>

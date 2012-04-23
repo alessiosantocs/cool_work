@@ -1,0 +1,45 @@
+<h1>Flyer</h1>
+<h2><%= link_to('list', url_for(:controller => 'flyer', :action => 'list')) -%></h2>
+<p><span class="stronger">Instructions:</span> Upload the image and then enter the info.</p>
+<%= render :partial => "layouts/shared/upload_image", :locals => { :form_id => "image_form", :url => url_for(:controller=>"flyer", :action=>"image") } -%>
+
+<% form_tag(url_for(:controller=>"flyer", :action=>"create"), { :method=>"post", :id => "flyer_form", :autocomplete => "off", :multipart=> true}) do %>
+	<%= render :partial => "form" %>
+<% end %>
+<script type="text/javascript" language="javascript">
+// <![CDATA[
+	Event.addBehavior({
+    "#flyer_form:submit": function(event) {
+      return validate();
+    },
+    "#flyer_site_id:change": function(event) {
+      populate_city();
+    }
+  });
+	Form.disable('flyer_form');
+	$('active').hide();
+	function validate(){
+		if ($F('flyer_site_id') < 1){
+			new Message("Select a site");
+			return;
+		}
+		if ($F('flyer_city_id') < 1){
+			new Message("Select a City");
+			return;
+		}
+		if ($F('flyer_image_id') < 1){
+			new Message("Upload an image!");
+			return;
+		}
+	}
+	function populate_city(){
+		rec = SD.sites.find(function(r){ return r[0] == $F('flyer_site_id') });
+		if ($('flyer_city_id')){
+			Element.remove('flyer_city_id');
+		}
+		city_array = rec[2].collect(function(e){ return e[0] })
+		createSelect('flyer_city_id', 'flyer[city_id]', '', city_array, 'flyer_city_id_div')
+	}
+	SD.sites = <%= Site.active.collect{ |s| [ s.id, s.full_name, s.regions.collect{|r| r.cities.collect{|c| [c.id, c.full_name]} }] }.to_json -%>;
+// ]]>
+</script>

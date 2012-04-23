@@ -1,0 +1,20 @@
+<h1>Tags</h1>
+<p id="tags">
+<% if obj.tags.length > 0 %>
+	<%= tags_displayed(obj.tag_list.split(/ /)) -%>
+<% else %>
+	<div>None</div>
+<% end %>
+</p>
+<p><a href="#" id="new_tags_link">Tag This</a></p>
+<%= render :partial => "layouts/shared/tag_form", :locals => { :obj => obj } -%>
+<script type="text/javascript" language="javascript">
+// <![CDATA[
+
+Event.addBehavior({
+  "a#new_tags_link:click": function(event) {
+    Tag.show(); setTimeout( function(){ $('tags_tag_list').focus(); }, 250); return false;
+  }
+});
+// ]]>
+</script>

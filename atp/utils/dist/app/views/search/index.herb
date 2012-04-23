@@ -1,0 +1,14 @@
+<div style="text-align: center;">
+	<div id="logo"><%#= image_tag("#{@site.short_name}.gif") -%></div>
+  <!-- Google CSE Search Box Begins -->
+  <form id="searchbox_003979525011358546875:zf4nzoimyyq" action="/search/results">
+    <input type="hidden" name="cx" value="003979525011358546875:zf4nzoimyyq" />
+    <input name="q" type="text" size="40" />
+    <input type="submit" name="sa" value="Search" />
+    <input type="hidden" name="cof" value="FORID:9" />
+  </form>
+  <script type="text/javascript" src="http://www.google.com/coop/cse/brand?form=searchbox_003979525011358546875%3Azf4nzoimyyq"></script>
+  <!-- Google CSE Search Box Ends -->
+	<h3>Places</h3>
+   <%= @list %>
+</div>

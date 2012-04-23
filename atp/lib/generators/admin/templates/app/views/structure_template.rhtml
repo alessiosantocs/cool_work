@@ -1,0 +1,16 @@
+document.write('<script type="text/javascript" src="/javascripts/countries.js"></script>')
+document.write('<script type="text/javascript" src="/javascripts/timezones.js"></script>')
+var current_record, current_section;
+var search_results = [];
+var show_rec_id = 'showDetails';
+var ADMIN = new Object();
+ADMIN = {
+	sec: <%= tables.to_json %>,
+	act: {<%= tables.collect{|t| "#{t}: #{config[t]['actions'].to_json}" }.join(",\r\n") -%>},
+	list:{<%= tables.collect{|t| "#{t}: function(p){ return '#{config[t]['list_link']}'}" }.join(",\r\n") -%>},
+	def: {<%= tables.collect{|t| "#{t}:" + t.to_s.camelize.constantize.columns.collect {|c| { 'name' => c.name, 'type' => c.type, 'limit' => c.limit } }.to_json }.join(",\r\n") -%>},
+	rel: {<%= tables.collect{|t| "#{t}: { has_many: " + t.to_s.camelize.constantize.reflect_on_all_associations(:has_many).collect {|c| c.class_name.to_s.downcase }.to_json + ", belongs_to: " + t.to_s.camelize.constantize.reflect_on_all_associations(:belongs_to).collect {|c| c.class_name.to_s.downcase }.to_json + ", has_and_belongs_to_many: "+ t.to_s.camelize.constantize.reflect_on_all_associations(:has_and_belongs_to_many).collect {|c| c.class_name.to_s.downcase }.to_json + " }" }.join(",")  -%>},
+	<% t,f = config.partition{ |k,v| v['searchable']==true }; %>
+	show: {<%= t.collect{ |k, v| "#{k}: '#{v['search']['show'][0]}'" }.join(", \n") %>},
+	readonly_columns: <%= uneditable_columns.to_json -%>
+};

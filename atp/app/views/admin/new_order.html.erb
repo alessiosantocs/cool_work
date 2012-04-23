@@ -1,0 +1,52 @@
+<% @order = Order.blank %>
+<%= form_tag(nil, { :method => 'post', :id => "create_form", :autocomplete => "off", :onsubmit => "submitNew(); return false;" }) -%>
+	    <p>City:<br /> 
+  	  	<%= text_field 'order', 'city', { :maxlength => 25, :size => 35 } -%>
+  </p>
+    <p>Billingid:<br /> 
+  	  	<%= text_field 'order', 'billingid', { :maxlength => 6, :size => 16 } -%>
+  </p>
+    <p>Postal code:<br /> 
+  	  	<%= text_field 'order', 'postal_code', { :maxlength => 10, :size => 20 } -%>
+  </p>
+    <p>Response:<br /> 
+  	  	<%= text_field 'order', 'response', { :maxlength => 12, :size => 22 } -%>
+  </p>
+    <p>Cc last4:<br /> 
+  	  	<%= text_field 'order', 'cc_last4', { :maxlength => 4, :size => 14 } -%>
+  </p>
+    <p>Country:<br /> 
+  	  	<%= text_field 'order', 'country', { :maxlength => 2, :size => 12 } -%>
+  </p>
+    <p>Total:<br /> 
+  	  	<%= text_field 'order', 'total', { :maxlength => 7, :size => 12 } -%>
+  </p>
+    <p>Phone:<br /> 
+  	  	<%= text_field 'order', 'phone', { :maxlength => 15, :size => 25 } -%>
+  </p>
+    <p>Cc type:<br /> 
+  	  	<%= text_field 'order', 'cc_type', { :maxlength => 4, :size => 14 } -%>
+  </p>
+    <p>Transid:<br /> 
+  	  	<%= text_field 'order', 'transid', { :maxlength => 14, :size => 24 } -%>
+  </p>
+    <p>Taxes:<br /> 
+  	  	<%= text_field 'order', 'taxes', { :maxlength => 5, :size => 10 } -%>
+  </p>
+    <p>User:<br /> 
+  	  	<%= text_field 'order', 'user_id', { :maxlength => 10, :size => 15 } -%>
+  </p>
+    <p>Full name:<br /> 
+  	  	<%= text_field 'order', 'full_name', { :maxlength => 45, :size => 55 } -%>
+  </p>
+    <p>Address:<br /> 
+  	  	<%= text_field 'order', 'address', { :maxlength => 45, :size => 55 } -%>
+  </p>
+    <p>State:<br /> 
+  	  	<%= text_field 'order', 'state', { :maxlength => 25, :size => 35 } -%>
+  </p>
+    <p>Currency:<br /> 
+  	  	<%= text_field 'order', 'currency', { :maxlength => 3, :size => 13 } -%>
+  </p>
+  	<div class="button-bar"><%= submit_tag "Create" -%></div>
+<%= end_form_tag -%>

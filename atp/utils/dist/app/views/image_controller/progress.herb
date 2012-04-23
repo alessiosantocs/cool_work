@@ -1,0 +1,3 @@
+<% if @upstatus %>
+UploadProgress.update(<%= @upstatus[:size] %>, <%= @upstatus[:received] %>);
+<% end %>

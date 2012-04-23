@@ -1,0 +1,12 @@
+<h1 id="logo"><a href="/"><%= SITE.full_name %>: The Best Source of Parties Online</a></h1>
+<div id="nav">
+  <ul id="navigation">
+    <li class="parties"<% if @menu_section == "party" %>id="selected"<% end %>><a href="/parties">Parties</a></li>
+    <li class="images"<% if @menu_section == "image" %>id="selected"<% end %>><a href="/pictures">Images</a></li>
+    <li class="people"<% if @menu_section == "people" %>id="selected"<% end %>><a href="/people">People</a></li>
+  </ul>
+  <div id="banner">
+    <%= render_ad("728x90_ros") %>
+  </div>
+  <%= breadcrumb_div %>
+</div><!-- navigation -->

@@ -1,0 +1,11 @@
+<div id="primaryContent">
+  <%= menu_for_admin %>
+  <% time = 7.day.ago %>
+  <% form_tag(admin_url(:action => "mailing_list"), {:id=> "archive_form"}) do %>
+  <h3>
+    Download new members since 
+    <%= select_date(time, :start_year => Time.now.year - 5, :end_year => Time.now.year, :order => [:month, :day, :year]) %> 
+    <%= submit_tag "submit" %>
+  </h3>
+  <% end %>
+</div>

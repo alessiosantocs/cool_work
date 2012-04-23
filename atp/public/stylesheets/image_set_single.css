@@ -1,0 +1,151 @@
+/* - - - - - - - - - - - - - - - - - - - - -
+
+Title : AllTheParties Stylesheet
+Author : Lealea Design
+URL : http://www.lealea.net/
+
+Description : Photo Page Specific Style Sheet
+
+Created : Dec 6, 2006
+Modified : Dec 11, 2006
+
+- - - - - - - - - - - - - - - - - - - - - */
+#image_set #primaryContent {
+width:480px;
+float:left;
+margin-top:-0.5em;
+}
+
+#image_set #secondaryContent {
+width:470px;
+float:right;
+}
+
+#image_set #topbar {
+margin-bottom:2em;
+}
+#explore {
+width:138px;
+}
+#explore h3 {
+margin-bottom:1em;
+}
+#explore ul li {
+list-style-type:none;
+float:left;
+margin-left:1px;
+}
+#postedby {
+color:#999999;
+font-size:0.9em;
+margin:0pt 0pt 1em;
+}
+#postedby a {
+color:#999999;
+}
+#partypic, .image_large {
+border:1px solid #7E94A4;
+margin:0pt auto;
+}
+#image_set .comment-content {
+width:350px;
+}
+#image_set #action {
+_height:190px;
+}
+#image_set #action h3 {
+font-family:Arial,sans-serif;
+font-weight:normal;
+font-size:1.25em;
+color:#fff;
+}
+#image_set .advertisement {
+margin-right:17px;
+_margin-right:0;
+}
+
+/* Star Rater */
+.star-rating{
+list-style:none;
+margin: 0px;
+padding:0px;
+width: 120px;
+height: 30px;
+position: relative;
+background: url(/images/star_rating.gif) top left repeat-x;
+}
+.star-rating li{
+padding:0px;
+margin:0px;
+/*\*/
+float: left;
+/* */
+}
+.star-rating li a{
+display:block;
+width:30px;
+height: 30px;
+text-decoration: none;
+text-indent: -9000px;
+z-index: 20;
+position: absolute;
+padding: 0px;
+}
+.star-rating li a:hover{
+background: url(/images/star_rating.gif) left center;
+z-index: 3;
+left: 0px;
+border:0;
+}
+.star-rating a.one-star{
+left: 0px;
+}
+.star-rating a.one-star:hover{
+width:24px;
+}
+.star-rating a.two-stars{
+left:24px;
+}
+.star-rating a.two-stars:hover{
+width: 48px;
+}
+.star-rating a.three-stars{
+left: 48px;
+}
+.star-rating a.three-stars:hover{
+width: 72px;
+}
+.star-rating a.four-stars{
+left: 72px;
+}
+.star-rating a.four-stars:hover{
+width: 96px;
+}
+.star-rating a.five-stars{
+left: 96px;
+}
+.star-rating a.five-stars:hover{
+width: 120px;
+}
+.star-rating li.current-rating{
+background: url(/images/star_rating.gif) left bottom;
+position: absolute;
+height: 30px;
+display: block;
+text-indent: -9000px;
+z-index: 1;
+}
+
+ul#top10 {
+float:left;
+width:320px;
+margin-left:1em;
+}
+ul#top10.old{
+  width:auto;
+}
+ul#top10 li {
+list-style-type:none;
+float:left;
+margin: 0 .25em .25em 0;
+}

@@ -1,0 +1,43 @@
+
+<%= form_tag(url_for(:controller=>"guestlist", :action=>"add"), { :method=>"post", :id => "guestlist_form" }) %>
+<p>&nbsp;<%= text_field "guestlist", "full_name_and_number_of_guests", {"size" => 20, "maxlength" => 45 } %>
+<input type="hidden" name="event_id" id="event_id" value="<%= event_id %>" />
+<%= submit_tag "Join" -%> i.e. Joe Public + 3 <span id='new_guestlist_spinner' class='spinner' style="display:none;"></span></p>
+<%= end_form_tag %>
+<p><span class='stronger'>Disclaimer:</span> This guestlist does not guarantee admission. The doorperson has the right to refuse admission.</p>
+<script type="text/javascript" language="javascript">
+// <![CDATA[
+	function add_to_guestlist(){
+	  form = $("guestlist_form");
+		this.guestlist = $F('guestlist_full_name_and_number_of_guests').split('+');
+		this.name = this.guestlist[0].trim();
+		this.guests = this.guestlist[1] || 0;
+		if (this.name.length < 3){
+		  //TransparentMenu.show(this.options.id, { hideMode:'timeout', hideDelay: 5, showMode:'now'})
+			new Message('The field must be at least contain your name + the number of people in your party.'); 
+			return false;
+		}
+		$('new_guestlist_spinner').show();
+		new Ajax.CustomRequest(form.action, {
+			postBody: Form.serialize(form),
+			onLoading: function(){},
+			onSuccess: function(r){
+				$('new_guestlist_spinner').hide();
+				new Message(r.responseText, 'good');
+			},
+			on400: function(r){
+				$('new_guestlist_spinner').hide();
+				if (r.responseText.length > 0){
+					new Message(r.responseText);
+				}
+			}
+		});
+	}
+	Event.addBehavior({
+    "form#guestlist_form:submit": function(event) {
+      add_to_guestlist(); 
+      return false;
+    }
+  });
+// ]]>
+</script>

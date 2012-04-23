@@ -1,0 +1,15 @@
+<legend>Email Address</legend>
+<p>
+	<label>Current Email:</label>
+	<span class="stronger"><%= @user.email-%></span>
+</p>
+
+<p>
+	<label for="user_email">New Email:</label>
+	<%= text_field "user", "email", {:size => 25, :maxlength => 60, :value => '' } %>
+</p>
+
+<p>
+	<label for="user_email_confirmation">&nbsp;</label>
+	<%= text_field "user", "email_confirmation", {:size => 25, :maxlength => 60, :value => '' } %> <span class="small">Repeat</span>
+</p>

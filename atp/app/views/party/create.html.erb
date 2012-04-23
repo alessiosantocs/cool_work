@@ -1,0 +1,6 @@
+<div id="primaryContent">
+  <% form_tag(url_for(:controller=>"party", :action=>"create"), { :method=>"post", :id => "party_form" }) do %>
+  	<%= error_messages_for 'party' %>
+  	<%= render :partial => "form" %>
+  <% end %>
+</div>

@@ -1,0 +1,33 @@
+/* - - - - - - - - - - - - - - - - - - - - -
+
+Title : AllTheParties Stylesheet
+Author : Lealea Design
+URL : http://www.lealea.net/
+
+Description : Photo Thumbs Page Specific Style Sheet
+
+Created : Dec 6, 2006
+Modified : Dec 14, 2006
+
+- - - - - - - - - - - - - - - - - - - - - */
+
+#venue #primaryContent {
+  float:left;
+  width:830px;
+}
+#venue #primaryContent #partypics {
+width:480px;
+}
+#venue #secondaryContent {
+  width:120px;
+  float:right;
+  margin-top:0;
+}
+
+#venue table {
+width:820px;
+margin: 0 0 1em 0;
+}
+#venue #partypics ul {
+padding-left:4em;
+}

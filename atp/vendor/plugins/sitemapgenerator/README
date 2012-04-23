@@ -1,0 +1,33 @@
+SitemapGenerator
+================
+
+copyright 2006 Rodney Ramdas / Buildless B.V.
+released under the same license as Ruby on Rails itself.
+
+Given a RESTful controller this will generate a Google sitemap for you.
+
+script/generate sitemap [controller] [frequency]
+
+example:
+
+script/generate sitemap photos daily
+
+will generate a photos/sitemap.rxml template which renders a sitemap 
+amongst other things. Be sure to check out the generated controllers
+since they hold the routes you need to add to config/routes.rb
+
+Strictly speaking a RESTful controller is not necessary as long as 
+the controller name is pluralized etc. You're better of going with the REST.
+
+For more information about Google Sitemap have a look at:
+
+http://www.google.com/support/webmasters/bin/topic.py?topic=8467
+
+
+TODO: 
+
+- output compression for large maps
+- create multiple sitemaps in 1 go (script/generate sitemap photos movies mp3s)
+
+
+

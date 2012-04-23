@@ -1,0 +1,31 @@
+<% @missed_connection = MissedConnection.blank %>
+<%= form_tag(nil, { :method => 'post', :id => "create_form", :autocomplete => "off", :onsubmit => "submitNew(); return false;" }) -%>
+	    <p>Title:<br /> 
+  	  	<%= text_field 'missed_connection', 'title', { :maxlength => 45, :size => 55 } -%>
+  </p>
+    <p>Published:<br /> 
+  	  	<%= check_box 'missed_connection', 'published', {} -%>
+  </p>
+    <p>Story:<br /> 
+  	  	<%= text_area 'missed_connection', 'story', { :rows => 20, :cols => 60 } -%>
+  </p>
+    <p>Venue:<br /> 
+  	  	<%= text_field 'missed_connection', 'venue_id', { :maxlength => 9, :size => 14 } -%>
+  </p>
+    <p>User:<br /> 
+  	  	<%= text_field 'missed_connection', 'user_id', { :maxlength => 8, :size => 13 } -%>
+  </p>
+    <p>Connection date:<br /> 
+  	  	<%= text_field 'missed_connection', 'connection_date', { :maxlength => 8, :size => 12 } -%>
+  </p>
+    <p>Party:<br /> 
+  	  	<%= text_field 'missed_connection', 'party_id', { :maxlength => 9, :size => 14 } -%>
+  </p>
+    <p>Connection type:<br /> 
+  	  	<%= text_field 'missed_connection', 'connection_type', { :maxlength => 2, :size => 12 } -%>
+  </p>
+    <p>Location:<br /> 
+  	  	<%= text_field 'missed_connection', 'location', { :maxlength => 45, :size => 55 } -%>
+  </p>
+  	<div class="button-bar"><%= submit_tag "Create" -%></div>
+<%= end_form_tag -%>

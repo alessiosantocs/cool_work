@@ -1,0 +1,220 @@
+<div id="primaryContent">
+  <%= menu_for_admin(true) %>
+  <h1>Comments</h1>
+  <div id="options">
+    show only: <a href="#" id="flagged" class="show_comment">Inappropriate Comments</a>
+  </div>
+    
+  <h1 id="comment_type"></h1>
+  <table>
+    <tr valign="top">
+      <td>
+      <% form_tag(flag_list_update_url(), { :id => 'flag_form'} ) do -%>
+        <div class="button-bar right"><%= submit_tag "Submit" -%></div>
+        <table id="results" width="600">
+          <tr>
+            <th width="100">Delete Comment</th>
+            <th width="150">&nbsp;</th>
+            <th width="250">&nbsp;</th>
+            <th width="100">Clear Flag</th>
+          </tr>
+          <tbody id="comment_tr">
+          </tbody>
+        </table>
+        <div class="button-bar right"><%= submit_tag "Submit" -%></div>
+      <% end -%>
+      </td>
+      <td>
+        <div id="image_set" style="display:none;"></div>
+      </td>
+    </tr>
+  </table>
+</div>
+<script type="text/javascript" language="javascript">
+// <![CDATA[  
+  function show_image (commentId) {
+  	opt = {
+  		onSuccess:function(r){
+  			eval("imageSet="+r.responseText);
+  			if (typeof imageSet == 'object'){
+  			  prepareImageSetForTemplate();
+  			  renderImageSet();
+  			  new Effect.ScrollTo("comment_"+commentId);
+  			  new Effect.Highlight("comment_"+commentId, {queue:'end'});
+  			}
+  		},
+  		on400: function(r) { 
+  			if (r.responseText.length > 0){ eval("commentId="+r.responseText); $("pic_"+commentId).up().up().remove(); }
+  		}
+  	};
+  	new Ajax.CustomRequest('/comment/show_image_set_for_comment/'+commentId, opt);
+  }
+
+  function renderImageSet() {
+    clear_image_set();
+    var myTemplate = new Template("<div><img src='#{src}' /></div><div>#{caption}</div>");
+    processedImageSet.each(function(r){
+      txt=myTemplate.evaluate(r);
+      new Insertion.Bottom("image_set", txt);
+    });
+    var myTemplate2 = new Template("<p id='comment_#{id}' class='#{flag_class}'><span>[DELETE]</span>Comment #{id} :: Times Flagged #{flag_count} :: User #{user_id}<br />#{comment}<br />#{created}</p>");
+    processedComments.each(function(r){
+      txt=myTemplate2.evaluate(r);
+      new Insertion.Bottom("image_set", txt);
+    });
+    $("image_set").show();
+    $('image_set').scrollTo();
+  }
+  
+  function prepareImageSetForTemplate() {
+    var img_src = imageSrc(imageSet.image, 'large');
+    processedImageSet = [];
+    processedComments = [];
+    processedImageSet.push({ src: img_src, caption: imageSet.image.attributes.caption });
+    imageSet.comments.each(function(c){
+      var flag_count = c.flags.length;
+      if (flag_count >= 4){
+        var flag_class = 'flag-high';
+      } else if (flag_count >= 1){
+        var flag_class = 'flag-low';
+      }  else {
+        var flag_class = '';
+      }
+      processedComments.push({
+        id: c.attributes.id, 
+        comment: c.attributes.comment,
+        created: c.attributes.created_on,
+        user_id: c.attributes.user_id,
+        flag_class: flag_class,
+        flag_count: flag_count
+      });
+      processedComments = processedComments.sortBy(function(s){ return s.id; })
+    });
+  }
+  
+  function imageSrc(i) {
+    var size;
+    if(arguments.length == 2){
+      size = arguments[1];
+    } else {
+      size = 'small';
+    }
+    return i.attributes.url + i.attributes.name + "_" + size + ".jpg";
+  }
+  
+  function renderFlags() {
+    clear_results();
+    var myTemplate = new Template("<tr id='flag_#{id}'><td><input name='delete[#{id}]' type='checkbox' value='1' /><input name='delete[#{id}]' type='hidden' value='0' /></td><td><img src='#{src}' /></td><td><a href='#{link}' class='pic' id='pic_#{comment_id}'>#{comment}</a></td><td><input name='clear[#{id}]' type='checkbox' value='1' /><input name='clear[#{id}]' type='hidden' value='0' /></td></tr>");
+    processedFlags.each(function(r){
+      txt=myTemplate.evaluate(r);
+      new Insertion.Bottom("comment_tr", txt);
+    });
+  }
+  
+  function prepareFlagsForTemplate() {
+    processedFlags = [];
+    var img_src;
+    flags.each(function(flag){
+      var r = flag;
+      var comment = r.objekt;
+      img_src = imageSrc(comment.commentable.image_set);
+      processedFlags.push({
+        id: r.id, 
+        comment_id: comment.id, 
+        user_id: comment.user_id, 
+        comment: comment.comment,
+        src: img_src
+      });
+    });
+  }
+  
+  function fetchResultsFromServer() {
+  	opt = {
+  		onSuccess:function(r){
+  			eval("flags="+r.responseText);
+  			if (flags.length > 0){
+  			  prepareFlagsForTemplate();
+  			  renderFlags();
+  			}
+  		},
+  		on400: function(r) { 
+  			if (r.responseText.length > 0){ new Message(r.responseText); } 
+  		}
+  	};
+  	new Ajax.CustomRequest('/flag/list', opt);
+  };
+  
+  function sendFlagsToServer () {
+  	opt = {
+  	  postBody: Form.serialize('flag_form'),
+  		onSuccess:function(r){
+  			eval("flagIds="+r.responseText);
+  			if (flagIds.length > 0){
+  			  flagIds.each(function(i){ $("flag_"+i).remove(); });
+  			}
+  			new Message("Comment Flags Updated.", "good");
+  		},
+  		on400: function(r) { 
+  			if (r.responseText.length > 0){ new Message(r.responseText); } 
+  		}
+  	};
+  	new Ajax.CustomRequest($('flag_form').action, opt);
+  }
+  
+  function deleteComment(commentId) {
+  	opt = {
+  		onSuccess:function(r){
+  			eval("commentId="+r.responseText);
+  			$("comment_"+commentId).remove();
+  			if ($("pic_"+commentId)){
+  			  $("pic_"+commentId).up().up().remove();
+  			}
+  			new Message("Comment Deleted.", "good");
+  		},
+  		on400: function(r) { 
+  			if (r.responseText.length > 0){ new Message(r.responseText); } 
+  		}
+  	};
+  	new Ajax.CustomRequest("/comment/destroy/"+commentId, opt);
+  }
+  
+  function clear_image_set () {
+    $W("image_set", '');
+  }
+  
+  function clear_results () {
+    $W("comment_tr", '');
+  }
+  
+  Event.addBehavior({
+    "table tr td div#image_set p span:click" : function() {
+      commentId = this.up().id.replace("comment_",'');
+      deleteComment(commentId);
+      return false;
+    },
+    "form#flag_form:submit" : function() {
+      clear_image_set();
+      sendFlagsToServer();
+      return false;
+    },
+    "table tr td a.pic:click" : function() {
+      pic_id = this.id.replace("pic_",'');
+      show_image(pic_id);
+      return false;
+    },
+    "a.show_comment:click" : function() {
+      $W('comment_type', this.innerHTML);
+      clear_results();
+      clear_image_set();
+      fetchResultsFromServer();
+  	  return false;
+    }
+  });
+  var flags,imageSet;
+  var processedFlags=[];
+  var processedImageSet=[];
+  var processedComments=[];
+// ]]>
+</script>
+
+<div style="margin-bottom:1600px"></div>

@@ -1,0 +1,50 @@
+/* ----- Party Details ----- */
+#party #primaryContent {
+  width:480px;
+  margin:0 15px;
+  float:left;
+}
+
+#party #secondaryContent{
+  float:right;
+  width:425px;
+  margin-left:25px;
+}
+
+#html-carousel {
+  float: left;
+  width: 430px;
+  height: 135px;
+}
+
+#details {
+width:480px;
+float:left;
+}
+#details ul{
+border:10px solid #384349;
+}
+
+#details ul li {
+list-style-type:none;
+display:block;
+background:#BABFC6;
+color:#333;
+border-bottom:1px solid #8D949A;
+padding:.25em;
+}
+#details h3 {
+float:left;
+font-size:1.1em;
+padding:.1em 0 0 .5em;
+color:#0C3C5B;
+width:125px;
+}
+#details ul li a{
+	color: #0C3C5B;
+	text-decoration: underline;
+	outline: none;
+}
+#details p {
+margin-top:.1em;
+}

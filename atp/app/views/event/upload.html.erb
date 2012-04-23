@@ -1,0 +1,12 @@
+<script type="text/javascript" language="javascript">
+// <![CDATA[
+  function finish() {
+    parent.get_image_set('event');
+		setTimeout( function(){ parent.win.destroy();}, 1000);
+  }
+// ]]>
+</script>
+<form action="/event/<%= params[:id] %>/upload" enctype="multipart/form-data" target='responder' method="post">
+  <p>Select a file<span id="results"></span> <input name="file" type="file" /> <input name="commit" type="submit" value="Upload" /></p>
+</form>
+<iframe id="responder" name="responder" src="about:blank"></iframe>

@@ -1,0 +1,8 @@
+<div id="primaryContent">
+  <p class="right"><%= link_to("Already a member? Login now", { :action=>"login" }, { :class=>"stronger" } ) %></p>
+  <p class="optional" style="border: 1px solid #000; padding: 0 3px;">This information is used for providing highly relevant recommendations. Your personal information will not be sold and you will not receive any unsolicited mail.</p>
+  <% form_tag(url_for(:action=>"create"), { :method=>"post", :id => "signup_form", :autocomplete => "off", :onsubmit => "return validate();" }) do %>
+    <%= error_messages_for	'user' %>
+    <%= render :partial => "form" %>
+  <% end %>
+</div>

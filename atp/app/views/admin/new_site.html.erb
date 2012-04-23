@@ -1,0 +1,19 @@
+<% @site = Site.blank %>
+<%= form_tag(nil, { :method => 'post', :id => "create_form", :autocomplete => "off", :onsubmit => "submitNew(); return false;" }) -%>
+	    <p>Url:<br /> 
+  	  	<%= text_field 'site', 'url', { :maxlength => 128, :size => 138 } -%>
+  </p>
+    <p>Short name:<br /> 
+  	  	<%= text_field 'site', 'short_name', { :maxlength => 3, :size => 13 } -%>
+  </p>
+    <p>Comments allowed:<br /> 
+  	  	<%= check_box 'site', 'comments_allowed', {} -%>
+  </p>
+    <p>Full name:<br /> 
+  	  	<%= text_field 'site', 'full_name', { :maxlength => 25, :size => 35 } -%>
+  </p>
+    <p>Active:<br /> 
+  	  	<%= check_box 'site', 'active', {} -%>
+  </p>
+  	<div class="button-bar"><%= submit_tag "Create" -%></div>
+<%= end_form_tag -%>

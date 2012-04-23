@@ -1,0 +1,23 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+	<link rel="icon" href="/favicon.ico" type="image/x-icon">
+	<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
+  <meta http-equiv="Content-Type" content="application/xhtml+xml; charset=UTF-8" />
+	<%%= javascript_include_tag "application",  "carousel", "window", "admin" %>
+	<%%= javascript_include_tag "datebocks_engine", "calendar", "lang/calendar-en", "calendar-setup", :plugin => "datebocks_engine" %>
+	<%%= stylesheet_link_tag "undohtml", "application", "admin"  %>
+	<%%= stylesheet_link_tag "datebocks_engine", "calendar-blue", :plugin => "datebocks_engine" %>
+	<script src="<%%= url_for({ :controller=> "admin", :action => "structure" }) %>" type="text/javascript"></script>
+	<title>ADMIN</title>
+</head>
+<body id="admin">
+	<%%= render_flash unless flash.empty? %>
+  <%= render_flash -%>
+	<div id="container">
+		<%%= yield %>
+	</div>
+  <%= render :partial => 'layouts/shared/tooltip_dialog_notice'%>
+</body>
+</html>

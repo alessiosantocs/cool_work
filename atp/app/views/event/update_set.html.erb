@@ -1,0 +1,23 @@
+<p><%= link_to( "Upload, Edit, and Arrange Pictures", event_image_set_upload_url(:id => @event.party_id, :event_id => @event.id) ) -%></p>
+<% pictures = (@event.image_sets.length == 0 ? [] : @event.image_sets) %>
+<% form_tag(nil, { :method=>"post", :id => "update_form" }) do %>
+<p id="action_status" style="display:none"></p>
+<table id="image_set">
+  <tr valign="bottom">
+    <th>Delete</th>
+    <th>Image</th>
+    <th>Caption</th>
+    <th>Comments Allowed</th>
+  </tr>
+  <tbody>
+    <% pictures.each do |img| %>
+    <tr id='image_set_<%= img.id %>'>
+      <td><%= check_box 'delete', img.id -%></td>
+      <td><%= event_image(img) %></td>
+      <td><%= text_field 'caption', img.image.id, {:value=> img.image.caption, :size => 48, :maxlength => 75 } -%></td>
+      <td><%= check_box 'comments_allowed', img.id -%></td>
+    </tr>
+    <% end %>
+  </tbody>
+</table>
+<% end %>

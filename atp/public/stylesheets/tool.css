@@ -1,0 +1,152 @@
+ul.types li{
+	display:inline;
+	padding: 0 2px;
+}
+div#spot {
+	clear: both;
+	width: 640px;
+}
+
+.rec{
+	clear: both;
+	border-top: 1px solid #ccc;
+	min-height: 3.3em; /*for the hover*/
+}
+
+div.recs div.rec:hover {
+	background: #E8ECF4;
+}
+
+.what, .link, .who {
+	float: left;
+	display: block;
+	text-decoration: none;
+}
+
+.rec a, .header span {
+	padding: 15px 4px 4px 2px;
+}
+
+.header span {
+	font-weight: bold;
+}
+
+.what {
+	width: 135px;
+	text-align: center;
+	font-size: 85%;
+}
+
+.rec .link {
+	padding-top: 4px;
+	width: 315px;
+}
+
+.section {
+	float: right;
+	width: 70px;
+	font-size: 85%;
+}
+
+.who {
+	float: right;
+	width: 120px;
+	font-size: 85%;
+}
+
+.who img {
+	vertical-align: middle;
+	border: 1px solid #ccc;
+}
+
+div#spot a:hover {
+	text-decoration: underline;
+}
+
+div#sort div {
+	z-index: 200;
+	padding-top: 4px;
+}
+
+* html div#sort input {
+	position: relative;
+	top: -1px;
+}
+
+div#sort img, div#sort input {
+	vertical-align: middle;
+}
+
+.link {
+	font-size: 85%;
+}
+
+.link strong {
+	font-size: 125%;
+}
+
+.link:hover {
+	text-decoration: none  !important;
+}
+
+.link:hover strong {
+	text-decoration: underline !important;
+}
+
+.link span {
+	color: #999;
+	display: block;
+}
+
+a.play, a.pause {
+	text-indent: -2000em;
+	background: url(/images/icons/si/16x16/play.gif) 0 0 no-repeat;
+	/*display: block;*/
+	float: left;
+	width: 18px;
+	height: 18px;
+	overflow: hidden;
+	text-decoration: none;
+	margin: 3px 2px 0 0;
+}
+
+#speed-toggle {
+	float: left;
+	display: block;
+	border-right: 1px solid #ccc;
+	padding: 0 7px 0 0;
+	margin-right: 10px;
+}
+
+div#speed {
+	font-size: 70%;
+}
+
+a.play { background: url(/images/icons/si/16x16/play.gif) 0 0 no-repeat; }
+a.pause { background: url(/images/icons/si/16x16/pause.gif) 0 0 no-repeat; }
+
+.class-final-1 {
+	opacity: 0.8;
+	filter: alpha(opacity=80);
+	border-color: #cfcfcf;
+}
+.class-final-2 {
+	opacity: 0.6;
+	filter: alpha(opacity=60);
+	border-color: #ddd;
+}
+.class-final-3 {
+	opacity: 0.4;
+	filter: alpha(opacity=40);
+	border-color: #eee;
+}
+.class-final-4 {
+	opacity: 0.2;
+	filter: alpha(opacity=20);
+	border-color: #efefef;
+}
+.class-final-5 {
+	opacity: 0.1;
+	filter:alpha(opacity=10);
+	border: none;
+}

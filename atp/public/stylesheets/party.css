@@ -1,0 +1,24 @@
+#restrictions{
+	width: 200px;
+	float: right;
+	background-color: #CCC;
+	padding: 3px;
+	border: 1px #000 solid;
+	padding-left: 10px;
+	clear: right;
+}
+.options{
+	background-color: #CCC;
+	width: 260px;
+	padding: 3px;
+	margin-left: 10px;
+}
+#length_in_hours{
+	background-color: #000000;
+}
+#length_in_hours_handle{
+	background-color: #CCCCCC;
+}
+table.full{
+	width: 100%;	
+}

@@ -1,0 +1,45 @@
+<h1>Cover Image</h1>
+<h2><%= link_to('list', url_for(:controller => 'cover_image', :action => 'list')) -%></h2>
+<p><span class="stronger">Instructions:</span> Upload the image and then enter the info.</p>
+<%= render :partial => "layouts/shared/upload_image", :locals => { :form_id => "image_form", :url => url_for(:controller=>"cover_image", :action=>"upload") } -%>
+
+<% form_tag(url_for(:controller=>"cover_image", :action=>"create"), { :method=>"post", :id => "cover_image_form", :autocomplete => "off"})  do %>
+	<%= render :partial => "form" %>
+<% end %>
+<script type="text/javascript" language="javascript">
+// <![CDATA[
+  Event.addBehavior({
+    "#cover_image_form:submit": function(event) {
+      return validate();
+    },
+    "#cover_image_site_id:change": function(event) {
+      populate_city();
+    }
+  });
+	Form.disable('cover_image_form');
+	$('active').hide();
+	function validate(){
+		if ($F('cover_image_site_id') < 1){
+			new Message("Select a site");
+			return;
+		}
+		if ($F('cover_image_city_id') < 1){
+			new Message("Select a City");
+			return;
+		}
+		if ($F('cover_image_image_id') < 1){
+			new Message("Upload an image!");
+			return;
+		}
+	}
+	function populate_city(){
+		rec = SD.sites.find(function(r){ return r[0] == $F('cover_image_site_id') });
+		if ($('cover_image_city_id')){
+			Element.remove('cover_image_city_id');
+		}
+		city_array = rec[2].collect(function(e){ return e[0] })
+		createSelect('cover_image_city_id', 'cover_image[city_id]', '', city_array, 'cover_image_city_id_div')
+	}
+	SD.sites = <%= Site.active.collect{ |s| [ s.id, s.full_name, s.regions.collect{|r| r.cities.collect{|c| [c.id, c.full_name]} }] }.to_json -%>;
+// ]]>
+</script>

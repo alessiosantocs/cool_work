@@ -1,0 +1,17 @@
+var dz=document;
+dz.writeln("<SCRIPT>");
+dz.writeln("<!--");
+dz.writeln("// MaxOnline JavaScript tag for: First Clandestine- alltheparties.com");
+dz.writeln("var randomNum=Math.round(Math.random() * 100000000000);");
+dz.writeln("if ((!document.images && navigator.userAgent.indexOf('Mozilla/2.') >= 0) || navigator.userAgent.indexOf(\"WebTV\")>= 0) { ");
+dz.writeln("document.write('<A HREF=\"http://c4.maxserving.com/adclick/site=7062/area=ad728x90/aamfmt=normal/aamsz=banner/PageID=' + randomNum + '\" target=\"_blank\">');");
+dz.writeln("document.write('<IMG SRC=\"http://c4.maxserving.com/iserver/site=7062/area=ad728x90/aamfmt=normal/aamsz=banner/PageID=' + randomNum + '\" border=\"0\"></A>');");
+dz.writeln("}else{");
+dz.writeln("document.write('<SCR'+'IPT src=http://c4.maxserving.com/gen.js?site=7062&area=ad728x90&group=topbar&PageID=' + randomNum + '><\\/SCR'+'IPT>');");
+dz.writeln("}");
+dz.writeln("//-->");
+dz.writeln("<\/script>");
+dz.writeln("<noscript>");
+dz.writeln("<a href=\"http://c4.maxserving.com/adclick/site=7062/area=ad728x90/aamfmt=normal/aamsz=banner/PageID=1234567\" target=\"_blank\">");
+dz.writeln("<img src=\"http://c4.maxserving.com/iserver/site=7062/area=ad728x90/aamfmt=normal/aamsz=banner/PageID=1234567\" border=\"0\"></A>");
+dz.writeln("</noscript>");

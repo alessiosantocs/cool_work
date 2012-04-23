@@ -1,0 +1,16 @@
+<div id="party_<%= party.id -%>" name="party_<%= party.id -%>">
+	<div class="flyer" style='float: left;'>
+		<%= show_img(party.current_flyer.image, 'flyer') unless party.current_flyer.nil? -%>
+	</div>
+	<p>
+		<%= party_link party -%><br />
+		Next Party: <%= date_string(party.event.local_time) -%> @ <%= party.time -%><br />
+		<%= party.description -%>
+	</p>
+	<% if party.pictures.size > 0 %>
+	<div id="picture_list">
+		<p><span class="stronger">Recent Pictures:</span> <%= party.pictures(0,3).collect{|e| event_image_set_link(e) }.join(', ') -%></p>
+	</div>
+	<% end %>
+</div>
+<br clear='all' />

@@ -1,0 +1,2 @@
+module MissingPageHelper
+end

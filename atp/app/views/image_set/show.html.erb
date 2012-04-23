@@ -1,0 +1,36 @@
+<script type="text/javascript" language="javascript">new Location({event_id: <%= @obj_rec.id %> });</script>
+<% cache do %>
+<%= render :partial => "party/top", :locals => { :event => @obj_rec } %>
+<div id="primaryContent">
+  <h2>Synopsis</h2>
+  <div id="synopsis">
+    <% @obj_rec.synopsis ||= '' %>
+    <% if @obj_rec.synopsis.length > 1 %>
+    <p><%= h @obj_rec.synopsis %></p>
+    <% else %>
+    <h3>None at this time...</h3>
+    <% end %>
+  </div>
+  
+  <% top10 = Stat.most_views_by_type(@obj_rec, 1.day.ago) %>
+  <h1>Top 10</h1>
+  <ul id="top10" class='old'>
+    <% 0.upto(9) do |i| %>
+    <li><%= top10[i].nil? ? img_na('tiny') : event_image(top10[i], {:size => 'tiny'}) %></li>
+    <% end %>
+  </ul>
+
+  <div id="thumbnails">
+    <% i=0; images = @obj_rec.image_sets.collect{ |img| content_tag('li', "#{event_image(img)} <span class='num'>#{i+=1}</span>", { :id => "image_set_#{img.id}" }) } %>
+    <h1>Thumbnails <span id='thumbnail_count'>(<%= images.length %>)</span></h1>
+    <ul id="image_set"><%= images %></ul>
+    <br clear='all' />
+  </div>
+</div><!-- primaryContent -->
+
+<div id="secondaryContent">
+  <div id="googads">
+    <%= render_ad("120x600_ros") %>
+  </div>
+</div><!-- secondaryContent -->
+<% end %>

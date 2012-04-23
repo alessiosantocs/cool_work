@@ -1,0 +1,51 @@
+<% cache( :event => event.id ) do %>
+  <% photographer = event.party.get_photographer; owner = event.party.user %>
+  <script type="text/javascript" language="javascript">
+  // <![CDATA[
+    editors = ["<%= event.party.user.username %>"<% unless photographer.nil? %>, "<%= photographer.username %>" <% end %>].uniq();
+    function editable () {
+      return editors.find(function(e){ return e == Auth.current_user.name });
+    }
+    function show_promoter_only() {
+      if (editable())
+        document.getElementsByClassName("promoter_only", "ul#actionlinks").each(function(el){ el.show() } )
+    }
+  // ]]>
+  </script>
+  <div id="topbar">
+    <div id="action">
+      <h1><a href="<%= party_path(event.party) %>"><%= h event.party.title %></a></h1>
+      <h2>Party Action</h2>
+      <ul id="actionlinks">
+        <% if event.party.rsvp? %>
+        <li class="drop"><a href="/rsvp/<%= event.party_id %>" id="rsvp" title="RSVP Now" class="new_window">RSVP Now</a></li>
+        <% end %>
+        <% unless event.party.past_events.empty? %>
+        <li class="promoter_only" style="display:none;"><%= link_to( "Upload Party Pics", event_image_set_upload_url(:id => event.party.id) ) -%></li>
+        <% end %>
+        <li class="promoter_only" style="display:none;"><%= link_to "Update Flyers", flyer_manage_url(:id=> event.party_id) -%></li>
+        <li><%= fave_link(event.party, 'Add to Faves') -%></li>
+      </ul>
+      <script type="text/javascript" charset="utf-8">show_promoter_only();</script>
+      <div id="yahoomap">
+        <%= show_flyer(event) %>
+      </div>
+    
+      <div id="timeplace">
+        <h3><%= date_string(event.local_time) -%></h3>
+        <h4><%= event.local_time('12hr') -%></h4>
+        <p>
+          <strong>Address</strong><br/>
+          <%= venue_link(event.venue) %><br/>
+          <%= h event.venue.address %><br/>
+          <%= h event.venue.city_name %>, <%= h event.venue.state %> <%= h event.venue.postal_code %>
+        </p>
+      </div>
+    </div>
+
+    <div class="flyerads">
+      <h4>Flyer Ads</h4>
+      <%= inhouse_ads("120x120", "party", 3) -%>
+    </div>
+  </div><!-- topbar -->
+<% end %>

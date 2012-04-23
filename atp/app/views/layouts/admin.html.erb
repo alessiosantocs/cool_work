@@ -1,0 +1,45 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+	<link rel="icon" href="/images/favicon.ico" type="image/x-icon" />
+	<link rel="shortcut icon" href="/images/favicon.ico" type="image/x-icon" />
+  <meta http-equiv="Content-Type" content="application/xhtml+xml; charset=UTF-8" />
+  <%= server_time %>
+  <%= javascript_constants %>
+  <%= dojo_by_cdn %>
+  <%= google_ajax_library %>
+  <%= stylesheet_link_tag "application" %>
+  <%= stylesheet_auto_link_tags %>
+  <%= javascript_include_tag "lowpro", "application" %>
+  
+	<%= stylesheet_link_tag "themes/default" %>
+	<%= stylesheet_link_tag "datebocks_engine", "calendar-blue", :plugin => "datebocks_engine" %>
+	<!--[if IE]>
+  <link rel="stylesheet" type="text/css" href="/stylesheets/ie.css" />
+  <![endif]-->
+	<%= javascript_include_tag "window" %>
+	<%= javascript_include_tag "datebocks_engine", "calendar", "lang/calendar-en", "calendar-setup", :plugin => "datebocks_engine" %>
+	<%= javascript_auto_link_tags %>
+	<title>Admin :: <%= SITE.full_name %></title>
+	<%= yield :head %>
+</head>
+<body id="admin">
+  <div id="doc3">
+    <div id="hd">
+    	<%= render :partial => "layouts/shared/dash" %>
+      <%= render_flash -%>
+    </div><!-- hd -->
+    <div id="bd">
+      <div id="yui-main">
+         
+         <%= @content_for_layout -%>
+      </div>
+    </div><!-- bd -->
+    <div id="ft">
+      <%= render :partial => 'layouts/shared/footer'%>
+    </div><!-- ft -->
+  </div>
+  <%= render :partial => 'layouts/shared/tooltip_dialog_notice'%>
+</body>
+</html>

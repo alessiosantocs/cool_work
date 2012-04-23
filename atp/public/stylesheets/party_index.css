@@ -1,0 +1,44 @@
+#party #primaryContent {
+  float:left;
+  width:830px;
+}
+#party #secondaryContent {
+  width:120px;
+  float:right;
+  margin-top:0;
+}
+/*#flyer_ads{
+  width: 130px;
+  float: right;
+}*/
+#latest_parties{
+  float: left;
+}
+
+#latest_parties table{
+  width: 100%;
+}
+
+#latest_parties table tr td.date{
+  width:15%;
+}
+
+#latest_parties table tr td.banner{
+  width:3%;
+}
+
+#latest_parties table tr td.info{
+  width:82%;
+}
+
+#latest_parties table tr:hover{
+  background-color: #333333;
+}
+
+.purple, #latest_parties table tr.freq_no{
+  background-color: #550152;
+}
+
+#latest_parties table tr.freq_no:hover{
+  background-color: #333333;
+}

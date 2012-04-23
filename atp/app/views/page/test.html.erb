@@ -1,0 +1,20 @@
+<h1>SESSION</h1>
+<pre>
+<%= session.to_yaml %>
+</pre>
+
+<% if logged_in? %>
+<h1>USER SESSION</h1>
+<pre>
+<%= session[:user].to_yaml %>
+</pre>
+<% end %>
+
+<h1>COOKIES</h1>
+<pre>
+  <%= cookies.to_yaml %>
+</pre>
+
+<% if logged_in? %>
+  <h1>Logged In</h1>
+<% end %>

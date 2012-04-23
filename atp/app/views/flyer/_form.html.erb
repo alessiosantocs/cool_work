@@ -1,0 +1,11 @@
+<fieldset>
+	<p>Site:<br /> 
+  	<%= select 'cover_image', 'site_id', Site.active.collect {|s| [ s.full_name, s.id ] }, { :include_blank => true } -%> 
+  	<span id="active"><%= check_box 'cover_image', 'active' -%> Active</span>
+  </p>
+  <p>City:<br />
+  	<div id="cover_image_city_id_div"><%= select 'cover_image', 'city_id', {} -%></div>
+  </p>
+  <p><%= submit_tag "Post" -%></p>
+  <%= hidden_field 'cover_image', 'image_id' -%>
+</fieldset>

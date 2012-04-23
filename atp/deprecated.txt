@@ -1,0 +1,90 @@
+(in /Users/onyekwelu/workspace/atp/trunk)
+--> component
+  !! Use of components are frowned upon !!
+  ........................................
+helpers/carousel_helper.rb:27:    content_tag "div", clip, :id => id, :class => "carousel-component"
+helpers/carousel_helper.rb:35:    content_tag("div", clip, :id => id, :class => "carousel-component") + javascript_tag(js)
+views/layouts/shared/_carousel.rhtml:6:	<div class="carousel-component" id="html-carousel">
+views/layouts/shared/_image_nav.rhtml:6:	<div class="carousel-component" id="html-carousel">
+
+--> find_first
+  Clean! Cheers for you!
+
+--> @session
+  Clean! Cheers for you!
+
+--> redirect_to_url
+  !! Use redirect_to instead !!
+  .............................
+controllers/redirect_controller.rb:30:        redirect_to_url image_single_url(:id=> obj.id, :obj_type => obj.obj_type, :obj_id => obj.obj_id, :anchor => anchor)
+controllers/redirect_controller.rb:32:        redirect_to_url party_url(:subdomain => obj.venue.city.region.short_name, :id=> obj.id, :anchor => anchor)
+controllers/redirect_controller.rb:34:        redirect_to_url venue_url(:id=> obj.id, :anchor => anchor)
+
+--> paginate
+  Clean! Cheers for you!
+
+--> @env
+  Clean! Cheers for you!
+
+--> @request
+  Clean! Cheers for you!
+
+--> end_form_tag
+  !! Use form_for instead !!
+  ..........................
+views/account/forgot_password.html.erb:8:<%= end_form_tag %>
+views/account/reset_password.html.erb:9:<%= end_form_tag %>
+views/admin/new_audit.html.erb:19:<%= end_form_tag -%>
+views/admin/new_billing_profile.html.erb:37:<%= end_form_tag -%>
+views/admin/new_booking.html.erb:55:<%= end_form_tag -%>
+views/admin/new_city.html.erb:16:<%= end_form_tag -%>
+views/admin/new_comment.html.erb:25:<%= end_form_tag -%>
+views/admin/new_confession.html.erb:22:<%= end_form_tag -%>
+views/admin/new_cover_image.html.erb:16:<%= end_form_tag -%>
+views/admin/new_event.html.erb:40:<%= end_form_tag -%>
+views/admin/new_fave.html.erb:13:<%= end_form_tag -%>
+views/admin/new_flag.html.erb:22:<%= end_form_tag -%>
+views/admin/new_flyer.html.erb:19:<%= end_form_tag -%>
+views/admin/new_friend.html.erb:13:<%= end_form_tag -%>
+views/admin/new_guestlist.html.erb:16:<%= end_form_tag -%>
+views/admin/new_image.html.erb:40:<%= end_form_tag -%>
+views/admin/new_image_set.html.erb:19:<%= end_form_tag -%>
+views/admin/new_item.html.erb:19:<%= end_form_tag -%>
+views/admin/new_missed_connection.html.erb:31:<%= end_form_tag -%>
+views/admin/new_msg.html.erb:28:<%= end_form_tag -%>
+views/admin/new_order.html.erb:52:<%= end_form_tag -%>
+views/admin/new_party.html.erb:112:<%= end_form_tag -%>
+views/admin/new_phrase.html.erb:7:<%= end_form_tag -%>
+views/admin/new_phrases_user.html.erb:10:<%= end_form_tag -%>
+views/admin/new_rating.html.erb:19:<%= end_form_tag -%>
+views/admin/new_region.html.erb:13:<%= end_form_tag -%>
+views/admin/new_role.html.erb:10:<%= end_form_tag -%>
+views/admin/new_service.html.erb:52:<%= end_form_tag -%>
+views/admin/new_site.html.erb:19:<%= end_form_tag -%>
+views/admin/new_tag.html.erb:13:<%= end_form_tag -%>
+views/admin/new_tagging.html.erb:16:<%= end_form_tag -%>
+views/admin/new_user.html.erb:61:<%= end_form_tag -%>
+views/admin/new_venue.html.erb:37:<%= end_form_tag -%>
+views/admin/new_vote.html.erb:19:<%= end_form_tag -%>
+views/booking/_add.rhtml:36:<%= end_form_tag %>
+views/guestlist/_add.rhtml:6:<%= end_form_tag %>
+views/tool/spotd.html.erb:21:<%= end_form_tag %>
+
+--> @flash
+  Clean! Cheers for you!
+
+--> start_form_tag
+  Clean! Cheers for you!
+
+--> render_partial
+  Clean! Cheers for you!
+
+--> find_all[^_]
+  Clean! Cheers for you!
+
+--> :post => true
+  Clean! Cheers for you!
+
+--> @params
+  Clean! Cheers for you!
+

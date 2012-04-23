@@ -1,0 +1,45 @@
+#party #primaryContent {
+  width:auto;
+  margin:0 15px;
+  float:left;
+}
+ul#image_set li {
+  float:left;
+  margin:1px 3px;
+  cursor:move;
+  padding: 0px;
+}
+
+form#event_form{
+  margin: 1em 0;
+  padding: 3px;
+  border:0px solid #f1f1f1;
+  background:#1D2224;
+}
+
+a.action{
+  background:#1D2224;
+  border:1px solid #666;
+  font-family:Arial;
+  text-transform:uppercase;
+  color:#ccc;
+  font-size:.9em;
+  padding:.1em;
+  float:left;
+  margin-right:1em;
+  width:auto;
+}
+
+a.action:hover{
+  background:#81BFF3;
+  color: #000;
+}
+div#current_images, ul#image_set{
+  background:#1D2224;
+}
+a.switch{
+  font-size: 150%;
+}
+h3{
+clear:left;
+}

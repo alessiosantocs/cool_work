@@ -1,0 +1,37 @@
+<% @venue = Venue.blank %>
+<%= form_tag(nil, { :method => 'post', :id => "create_form", :autocomplete => "off", :onsubmit => "submitNew(); return false;" }) -%>
+	    <p>Name:<br /> 
+  	  	<%= text_field 'venue', 'name', { :maxlength => 45, :size => 55 } -%>
+  </p>
+    <p>City:<br /> 
+  	  	<%= text_field 'venue', 'city_name', { :maxlength => 45, :size => 55 } -%>
+  </p>
+    <p>Postal code:<br /> 
+  	  	<%= text_field 'venue', 'postal_code', { :maxlength => 12, :size => 22 } -%>
+  </p>
+    <p>Country:<br /> 
+  	  	<%= text_field 'venue', 'country', { :maxlength => 2, :size => 12 } -%>
+  </p>
+    <p>Cross street:<br /> 
+  	  	<%= text_field 'venue', 'cross_street', { :maxlength => 45, :size => 55 } -%>
+  </p>
+    <p>Phone:<br /> 
+  	  	<%= text_field 'venue', 'phone', { :maxlength => 15, :size => 25 } -%>
+  </p>
+    <p>User:<br /> 
+  	  	<%= text_field 'venue', 'user_id', { :maxlength => 10, :size => 15 } -%>
+  </p>
+    <p>Time zone:<br /> 
+  	  	<%= text_field 'venue', 'time_zone', { :maxlength => 45, :size => 55 } -%>
+  </p>
+    <p>Address:<br /> 
+  	  	<%= text_field 'venue', 'address', { :maxlength => 75, :size => 85 } -%>
+  </p>
+    <p>State:<br /> 
+  	  	<%= text_field 'venue', 'state', { :maxlength => 45, :size => 55 } -%>
+  </p>
+    <p>Active:<br /> 
+  	  	<%= check_box 'venue', 'active', {} -%>
+  </p>
+  	<div class="button-bar"><%= submit_tag "Create" -%></div>
+<%= end_form_tag -%>

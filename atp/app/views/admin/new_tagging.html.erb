@@ -1,0 +1,16 @@
+<% @tagging = Tagging.blank %>
+<%= form_tag(nil, { :method => 'post', :id => "create_form", :autocomplete => "off", :onsubmit => "submitNew(); return false;" }) -%>
+	    <p>Tag:<br /> 
+  	  	<%= text_field 'tagging', 'tag_id', { :maxlength => 11, :size => 16 } -%>
+  </p>
+    <p>Taggable type:<br /> 
+  	  	<%= text_field 'tagging', 'taggable_type', { :maxlength => 24, :size => 34 } -%>
+  </p>
+    <p>Taggable:<br /> 
+  	  	<%= text_field 'tagging', 'taggable_id', { :maxlength => 11, :size => 16 } -%>
+  </p>
+    <p>User:<br /> 
+  	  	<%= text_field 'tagging', 'user_id', { :maxlength => 11, :size => 16 } -%>
+  </p>
+  	<div class="button-bar"><%= submit_tag "Create" -%></div>
+<%= end_form_tag -%>

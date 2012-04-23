@@ -1,0 +1,10 @@
+<% @role = Role.blank %>
+<%= form_tag(nil, { :method => 'post', :id => "create_form", :autocomplete => "off", :onsubmit => "submitNew(); return false;" }) -%>
+	    <p>Name:<br /> 
+  	  	<%= text_field 'role', 'name', { :maxlength => 25, :size => 35 } -%>
+  </p>
+    <p>Active:<br /> 
+  	  	<%= check_box 'role', 'active', {} -%>
+  </p>
+  	<div class="button-bar"><%= submit_tag "Create" -%></div>
+<%= end_form_tag -%>

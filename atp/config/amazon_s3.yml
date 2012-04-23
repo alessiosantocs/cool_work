@@ -1,0 +1,16 @@
+common_attr: &common_attr
+  access_key_id: '0ZNQ3KC6J3W7P7T4V382'
+  secret_access_key: '4PZqvIfegpq4BW/U+t4tZCjnYCj5Wqsay/2gCEKT'
+  use_persistent: false
+
+production:
+  bucket_name: atp
+  <<: *common_attr
+
+development:
+  bucket_name: atp
+  <<: *common_attr
+
+test:
+  bucket_name: atp_test
+  <<: *common_attr

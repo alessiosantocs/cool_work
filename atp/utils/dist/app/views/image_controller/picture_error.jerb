@@ -1,0 +1,1 @@
+alert("<%= @errors.to_s %>");

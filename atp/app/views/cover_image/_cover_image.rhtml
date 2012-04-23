@@ -1,0 +1,1 @@
+<li><%= check_box 'cover_image', "active_#{cover_image.id}" -%> <%= show_img(cover_image.image, 'cover_image') -%> <%= link_to "Delete", url_for(:action => "destroy", :id => cover_image.id, :controller => "cover_image") %></li>

@@ -1,0 +1,66 @@
+/* - - - - - - - - - - - - - - - - - - - - -
+
+IE Hacks
+
+- - - - - - - - - - - - - - - - - - - - - */
+.prev, .next {
+  margin-top:0;
+}
+
+ul li a:visited span  {
+  margin-top:-100px;
+  margin-bottom:4px;
+}
+
+#image_set #secondaryContent {
+  margin-top: 0px;
+}
+
+#party #primaryContent {
+  margin-left: 0px;
+}
+
+#party #secondaryContent {
+  margin-top: 0px;
+}
+
+#venue #html-carousel, #party #html-carousel {
+  margin-bottom: 10px;
+  float: left;
+  width: 430px;
+  height: 135px;
+}
+
+#venue #html-carousel .carousel-list li, #party #html-carousel .carousel-list li {
+  width: 106px;
+  border: 0px solid green;
+  margin: 0;
+  color: #3F3F3F;
+}
+
+#personal #secondaryContent {
+  margin-top:-675px;
+}
+
+#venue #secondaryContent {
+  margin-top: 0px;
+}
+
+#venue #googads {
+  position: relative;
+}
+
+#image_set #partypics ul {
+  margin-left:-1em;
+}
+#region #freshpics_advertisement{
+	margin-top: -450px;
+}
+#region #banner {
+  margin-bottom:1em;
+}
+
+#search ul.photos li.with_thumb a, #search ul#top_pics li a{
+  margin-left: 3px;
+  float: left;
+}

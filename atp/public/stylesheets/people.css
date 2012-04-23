@@ -1,0 +1,71 @@
+/* - - - - - - - - - - - - - - - - - - - - -
+
+Title : AllTheParties Stylesheet
+Author : Lealea Design
+URL : http://www.lealea.net/
+
+Description : Personal Page Specific Style Sheet
+
+Created : Dec 6, 2006
+Modified : Dec 12, 2006
+
+- - - - - - - - - - - - - - - - - - - - - */
+
+#people #primaryContent {
+width:480px;
+}
+
+#people #secondaryContent {
+float:right;
+width:475px;
+margin-left:30px;
+margin-top:-700px;
+}
+
+#people #topbar {
+margin-bottom:2em;
+}
+
+#people #actionlinks li {
+display:block;
+background:303A3E;
+color:#ffc;
+padding:.7em;
+}
+
+#people #actionlinks li a {
+padding:0;
+}
+
+#people .advertisement {
+margin-right:17px;
+_margin-right:0;
+}
+
+#friends {
+text-align:left;
+padding:1em 0;
+}
+#friends img {
+position:relative;
+top:.5em;
+margin-right:.5em;
+}
+#friends ul{
+width:350px;
+height:100px;
+margin:1em 0;
+}
+
+#friends ul li {
+list-style-type:none;
+display:block;
+padding:.25em 0 .5em .25em;
+border-top:1px solid #20282B;
+width:135px;
+margin-right:1em;
+float:left;
+}
+#friends ul li a{
+color:#A9C9E9;
+}

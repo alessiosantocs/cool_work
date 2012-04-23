@@ -1,0 +1,36 @@
+<%% @<%=table%> = <%=table.camelize.constantize%>.blank %>
+<%%= form_tag(nil, { :method => 'post', :id => "create_form", :autocomplete => "off", :onsubmit => "submitNew(); return false;" }) -%>
+	<% editable_columns = table.camelize.constantize.columns_hash.reject{|k,v| uneditable_columns.include?(k)}.collect{ |k,v| v } -%>
+  <% for column in editable_columns -%>
+  <p><%= column.human_name.capitalize -%>:<br /> 
+  	<%
+  		tag = { :name => nil, :type => nil, :html => '{}' }
+  		case column.type
+  			when :string
+  				tag[:name] = "text_field"
+  				tag[:html] = "{ :maxlength => #{column.limit}, :size => #{column.limit + 10} }"
+  			when :boolean
+  				tag[:name] = "check_box" 
+  				tag[:html] = "{}"
+  			when :datetime
+  				tag[:name] = "text_field"
+  				tag[:html] = "{ :maxlength => 12, :size => 24 }"
+  			when :float
+  				tag[:name] = "text_field"
+  				tag[:html] = "{ :maxlength => 12, :size => 24 }"
+  			when :text
+  				tag[:name] = "text_area"
+  				tag[:html] = "{ :rows => 20, :cols => 60 }"
+  			when :date
+  				tag[:name] = "text_field"
+  				tag[:html] = "{ :maxlength => 8, :size => 12 }"
+  			when :integer
+  				tag[:name] = "text_field"
+  				tag[:html] = "{ :maxlength => #{column.limit}, :size => #{column.limit+5} }"
+  		end 
+  	-%>
+  	<%%= <%= tag[:name] %> '<%= table %>', '<%= column.name %>', <%= tag[:html] %> -%>
+  </p>
+  <% end -%>
+	<div class="button-bar"><%%= submit_tag "Create" -%></div>
+<%%= end_form_tag -%>

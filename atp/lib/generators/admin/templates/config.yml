@@ -1,0 +1,289 @@
+billing_profile:
+  searchable: true
+  actions:
+    create: true
+    show: true
+    list: true
+  search:
+    conditions:
+    - full_name
+    show:
+    - full_name
+    order: full_name
+booking:
+  searchable: true
+  actions:
+    create: false
+    show: true
+    list: true
+  search:
+    conditions:
+    - contact_name
+    show:
+    - contact_name
+    order: contact_name
+city:
+  searchable: true
+  actions:
+    create: true
+    show: true
+    list: true
+  search:
+    conditions:
+    - full_name
+    - short_name
+    show:
+    - full_name
+    order: full_name
+confession:
+  searchable: true
+  actions:
+    create: false
+    show: true
+    list: true
+  search:
+    conditions:
+    - name
+    - title
+    show:
+    - name
+    order: name, created_on
+comment:
+  searchable: true
+  actions:
+    create: false
+    show: true
+    list: true
+  search:
+    conditions:
+    - comment
+    - title
+    show:
+    - title
+    order: created_at
+cover_image:
+  searchable: false
+  actions:
+    create: true
+    show: true
+    list: true
+  search:
+    conditions:
+    - name
+    show:
+    - name
+    order: name, created_on
+event:
+  searchable: true
+  actions:
+    create: false
+    show: true
+    list: true
+  search:
+    conditions:
+    - party_id
+    - hosted_by
+    show:
+    - hosted_by
+    order: events.search_date
+flyer:
+  searchable: false
+  actions:
+    create: true
+    show: true
+    list: true
+  search:
+    conditions:
+    - name
+    show:
+    - name
+    order: name, created_on
+guestlist:
+  searchable: true
+  actions:
+    create: false
+    show: true
+    list: true
+  search:
+    conditions:
+    - event_id
+    - full_name
+    show:
+    - full_name
+    order: full_name
+image:
+  searchable: true
+  actions:
+    create: true
+    show: true
+    list: true
+  search:
+    conditions:
+    - name
+    - caption
+    show:
+    - name
+    order: name, created_on
+image_set:
+  searchable: true
+  actions:
+    create: true
+    show: true
+    list: true
+  search:
+    conditions:
+    - obj_type
+    - obj_id
+    show:
+    - obj_type
+    order: obj_id, created_on
+item:
+  searchable: true
+  actions:
+    create: true
+    show: true
+    list: true
+  search:
+    conditions:
+    - name
+    show:
+    - name
+    order: name, created_on
+missed_connection:
+  searchable: true
+  actions:
+    create: false
+    show: true
+    list: true
+  search:
+    conditions:
+    - title
+    - location
+    show:
+    - title
+    order: title, created_on
+order:
+  searchable: true
+  actions:
+    create: false
+    show: true
+    list: true
+  search:
+    conditions:
+    - full_name
+    - cc_last4
+    show:
+    - total
+    order: created_on
+party:
+  searchable: true
+  actions:
+    create: true
+    show: true
+    list: true
+  search:
+    conditions:
+    - id
+    show:
+    - title
+    order: title, created_on
+profile:
+  searchable: true
+  actions:
+    create: false
+    show: true
+    list: true
+  search:
+    conditions:
+    - full_name
+    show:
+    - full_name
+    order: full_name
+region:
+  searchable: true
+  actions:
+    create: true
+    show: true
+    list: true
+  search:
+    conditions:
+    - name
+    show:
+    - name
+    order: name
+role:
+  searchable: true
+  actions:
+    create: true
+    show: true
+    list: true
+  search:
+    conditions:
+    - name
+    show:
+    - name
+    order: name
+service:
+  searchable: true
+  actions:
+    create: true
+    show:
+    - true
+    list: true
+  search:
+    conditions:
+    - business_name
+    - name
+    show:
+    - business_name
+    order: services.business_name, services.created_on
+site:
+  searchable: true
+  actions:
+    create: true
+    show: true
+    list: true
+  search:
+    conditions:
+    - full_name
+    - short_name
+    show:
+    - full_name
+    order: sites.full_name
+  list_link: "<li id=\"record_' + p.id + '\"> <a href=\"javascript:show('+ p.id +')\">'+p.short_name+', '+p.full_name +'</a></li>"
+user:
+  searchable: true
+  actions:
+    create: false
+    show: true
+    list: true
+  search:
+    conditions:
+    - username
+    - email
+    show:
+    - username
+    order: username, users.created_on
+  list_link: "<li id=\"record_' + p.id + '\" ' + (p.type=='Promoter'? \"class='promoter'\":\"\") + '> <a href=\"javascript:show('+ p.id +')\">'+p.username+', '+p.email+ (p.country=='us'? \"\": ', '+p.country)+'</a></li>"
+venue:
+  searchable: true
+  actions:
+    create: true
+    show: true
+    list: true
+  search:
+    conditions:
+    - name
+    - city
+    - state
+    show:
+    - name
+    order: venues.name, venues.created_on
+
+#Relationships in tables
+#city: region
+#party: venue
+#party: city
+#party: user
+#service: user
+#venue: user

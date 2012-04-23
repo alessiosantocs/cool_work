@@ -1,0 +1,29 @@
+#image_set #primaryContent {
+  float:left;
+  width:830px;
+}
+#image_set #secondaryContent {
+  width:120px;
+  float:right;
+  margin-top:0;
+}
+table{
+  width: 100%;
+}
+
+div#date_nav{
+  width: 100%;
+}
+
+table#date_nav td#date_before{
+  width: 10%;
+}
+
+table#date_nav td#date_after{
+  width: 10%;
+}
+
+table#date_nav td#archive{
+  vertical-align: top;
+  width:80%;
+}

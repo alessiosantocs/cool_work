@@ -1,0 +1,96 @@
+/* - - - - - - - - - - - - - - - - - - - - -
+
+Title : AllTheParties Stylesheet
+Author : Lealea Design
+URL : http://www.lealea.net/
+
+Description : City Page Specific Style Sheet
+
+Created : Dec 6, 2006
+Modified : Dec 14, 2006
+
+- - - - - - - - - - - - - - - - - - - - - */
+
+#header {
+	padding: 1.25em 0;
+}
+
+#header img {
+	border: 7px solid #20282B;
+	float: left;
+}
+
+#header p {
+	margin: 0;
+}
+
+#bd table {
+	width: 100%;
+}
+
+#bd table tr td{
+	font-size: 95%;
+}
+
+#freshpics {
+	width: 430px;
+	float: left;
+}
+
+#picdesc {
+	background: #4F5E6D url('/images/picframe.gif') no-repeat .5em;
+	padding: .5em 0 .5em 30px;
+	width: 410px;
+	font-weight: normal;
+}
+
+#freshpics ul li {
+	list-style-type: none;
+	display: block;
+	float: left;
+	margin-right: 3px;
+	margin-bottom: 5px;
+}
+
+#freshpics ul li img {
+	border: 2px solid #000;
+}
+
+#freshpics ul li a:hover {
+	border: 0;
+}
+
+#freshpics ul li a:hover img, #freshpics ul li#current a img {
+	border: 2px solid #4F5E6D;
+}
+
+#region .flyerads{
+	margin: 0 0 150px 0;
+}
+
+#region .flyerads h4 {
+	width: 760px;
+}
+
+#region .flyerads div {
+	padding-right: 10px;
+}
+
+div#recent_articles_parties_videos{
+	width:420px; 
+	height:350px; 
+	margin:0;
+}
+
+div#div_for_120x600{
+	float: right;
+	width: 124px;
+}
+
+.advertisement{
+	clear:  none;
+}
+
+table#region_show_main tr{
+	vertical-align: top;
+}

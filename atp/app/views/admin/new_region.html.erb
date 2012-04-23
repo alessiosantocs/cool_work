@@ -1,0 +1,13 @@
+<% @region = Region.blank %>
+<%= form_tag(nil, { :method => 'post', :id => "create_form", :autocomplete => "off", :onsubmit => "submitNew(); return false;" }) -%>
+	    <p>Short name:<br /> 
+  	  	<%= text_field 'region', 'short_name', { :maxlength => 3, :size => 13 } -%>
+  </p>
+    <p>Full name:<br /> 
+  	  	<%= text_field 'region', 'full_name', { :maxlength => 25, :size => 35 } -%>
+  </p>
+    <p>Active:<br /> 
+  	  	<%= check_box 'region', 'active', {} -%>
+  </p>
+  	<div class="button-bar"><%= submit_tag "Create" -%></div>
+<%= end_form_tag -%>

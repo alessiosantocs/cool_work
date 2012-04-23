@@ -1,0 +1,41 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+first:
+  id: 1
+  user_id: 5
+  business_name: Private Label Drinks LLC
+  category_id: 5
+  name: Rickey Henderson
+  email: Joey@neocon.com
+  phone: 718-678-3512
+  fax: 212-202-6164
+  url: www.loulou.com
+  address: PO Box 3244
+  city: New York
+  state: NY
+  postal_code: 10011
+  country: us
+  description: Deliver branded water bottles
+  image: false
+  published: true
+  created_on: <%= 3.days.ago.to_s :db %>
+  updated_on: <%= 1.days.ago.to_s :db %>
+second:
+  id: 2
+  user_id: 1
+  business_name: Good Times Inc.
+  category_id: 4
+  name: Angelika Houston
+  email: senorita@myspace.com
+  phone: 212-678-3512
+  fax: 
+  url: www.myspace.com/loveyou
+  address: PO Box 3244
+  city: New York
+  state: NY
+  postal_code: 10011
+  country: us
+  description: Fix Bar stands
+  image: false
+  published: true
+  created_on: <%= 31.days.ago.to_s :db %>
+  updated_on: <%= 1.days.ago.to_s :db %>

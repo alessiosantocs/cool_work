@@ -1,0 +1,7 @@
+<% @phrase = Phrase.blank %>
+<%= form_tag(nil, { :method => 'post', :id => "create_form", :autocomplete => "off", :onsubmit => "submitNew(); return false;" }) -%>
+	    <p>Term:<br /> 
+  	  	<%= text_field 'phrase', 'term', { :maxlength => 32, :size => 42 } -%>
+  </p>
+  	<div class="button-bar"><%= submit_tag "Create" -%></div>
+<%= end_form_tag -%>

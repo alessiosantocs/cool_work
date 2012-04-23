@@ -1,0 +1,19 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+first:
+  id: 1
+  short_name: atp
+  full_name: AllTheParties
+  url: www.alltheparties.com
+  active: true
+second:
+  id: 2
+  short_name: anc
+  full_name: AllNightclubs
+  url: www.allnightclubs.com
+  active: true
+third:
+  id: 3
+  short_name: alc
+  full_name: latino clubs
+  url: www.latclub.com
+  active: false

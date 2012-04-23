@@ -1,0 +1,19 @@
+<% @rating = Rating.blank %>
+<%= form_tag(nil, { :method => 'post', :id => "create_form", :autocomplete => "off", :onsubmit => "submitNew(); return false;" }) -%>
+	    <p>Rating:<br /> 
+  	  	<%= text_field 'rating', 'rating', { :maxlength => 11, :size => 16 } -%>
+  </p>
+    <p>Rateable type:<br /> 
+  	  	<%= text_field 'rating', 'rateable_type', { :maxlength => 15, :size => 25 } -%>
+  </p>
+    <p>Rateable:<br /> 
+  	  	<%= text_field 'rating', 'rateable_id', { :maxlength => 11, :size => 16 } -%>
+  </p>
+    <p>User:<br /> 
+  	  	<%= text_field 'rating', 'user_id', { :maxlength => 11, :size => 16 } -%>
+  </p>
+    <p>Created at:<br /> 
+  	  	<%= text_field 'rating', 'created_at', { :maxlength => 12, :size => 24 } -%>
+  </p>
+  	<div class="button-bar"><%= submit_tag "Create" -%></div>
+<%= end_form_tag -%>

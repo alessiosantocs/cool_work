@@ -1,0 +1,81 @@
+require 'rake'
+require 'rake/rdoctask'
+require 'rake/testtask'
+require 'code_statistics' 
+require 'fileutils'
+require 'rubygems'
+require 'merb'
+require MERB_FRAMEWORK_ROOT+'/merb_tasks'
+include FileUtils
+
+
+#desc "Packages up Merb."
+#task :default => [:package]
+
+desc "load merb_init.rb"
+task :merb_init do
+  require 'merb'
+  require File.dirname(__FILE__)+'/dist/conf/merb_init.rb'
+end  
+
+desc "Run schema morphing"
+task :schema => [:merb_init] do
+  require File.dirname(__FILE__)+'/dist/schema/schema1.rb'
+end
+
+task :uninstall => [:clean] do
+  sh %{sudo gem uninstall #{NAME}}
+end
+
+desc 'Run unit tests'
+Rake::TestTask.new('test_unit') do |t|
+  t.libs << 'test'
+  t.pattern = 'test/unit/*_test.rb'
+  t.verbose = true
+end
+
+desc 'Run functional tests'
+Rake::TestTask.new('test_functional') do |t|
+  t.libs << 'test'
+  t.pattern = 'test/functional/*_test.rb'
+  t.verbose = true
+end
+
+desc 'Run all tests'
+Rake::TestTask.new('test') do |t|
+  t.libs << 'test'
+  t.pattern = 'test/**/*_test.rb'
+  t.verbose = true
+end
+
+desc 'Run all tests, specs and finish with rcov'
+task :aok do
+  sh %{rake rcov}
+  sh %{rake spec}
+end
+
+##############################################################################
+# Statistics
+##############################################################################
+
+STATS_DIRECTORIES = [
+  %w(Code               lib/),
+  %w(Unit\ tests        test/unit),
+  %w(Functional\ tests  test/functional)
+].collect { |name, dir| [ name, "./#{dir}" ] }.select { |name, dir| File.directory?(dir) }
+
+desc "Report code statistics (KLOCs, etc) from the application"
+task :stats do
+  #require 'extra/stats'
+  verbose = true
+  CodeStatistics.new(*STATS_DIRECTORIES).to_s
+end
+
+##############################################################################
+# SVN
+##############################################################################
+
+desc "Add new files to subversion"
+task :svn_add do
+   system "svn status | grep '^\?' | sed -e 's/? *//' | sed -e 's/ /\ /g' | xargs svn add"
+end

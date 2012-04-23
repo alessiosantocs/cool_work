@@ -1,0 +1,67 @@
+admin_email: admin@fcgmedia.com
+welcome_email: welcome@fcgmedia.com
+lost_password_email: lostpassword@fcgmedia.com
+info_email: info@fcgmedia.com
+refund_email: refund@fcgmedia.com
+signature: Sam and Chris from FCG Media
+limit: 5
+days_free: 7
+pics_free: 0
+pics_left: 1
+country: us
+currency: US Dollars($)
+merb_server: http://www.fcgmedia.local:4000/utils
+trust_commerce:
+  custid: 599900
+  password: ojEgucs2
+price:
+  pics: 4999
+  days: 499
+  flyers: 1999
+image_server:
+  host: i2.fcgmedia.com
+  base_url: /system
+  path:  ./public/system
+  merb_path: ./dist/public/system
+  extension: .jpg
+image:
+  tiny:
+    width: 50
+    height: 50
+  small:
+    width: 100
+    height: 100
+  large:
+    width: 500
+    height: 500
+  flyer:
+    width: 120
+    height: 120
+  cover_image:
+    width: 740
+    height: 300
+  max:
+    width: 1600
+    height: 1600
+restricted_roles:
+  - Super Admin
+  - Admin
+  - Moderator
+rateable:
+  - Image
+  - Party
+  - Venue
+flaggable:
+  - Comment
+  - Image
+  - Msg
+faveable:
+  - ImageSet
+  - Party
+  - Profile
+  - Venue
+relationship_type:
+  - dates
+  - a serious relationship
+  - friends
+  - activity partners

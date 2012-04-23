@@ -1,0 +1,19 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+first:
+  id: 1
+  obj_type: Venue
+  obj_id: 56
+  user_id: 250
+  created_on: <%= 5.days.ago.to_s :db %>
+second:
+  id: 2
+  obj_type: Picture
+  obj_id: 5622
+  user_id: 2
+  created_on: <%= 15.days.ago.to_s :db %>
+third:
+  id: 3
+  obj_type: Party
+  obj_id: 563
+  user_id: 50
+  created_on: <%= 25.days.ago.to_s :db %>

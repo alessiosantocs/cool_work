@@ -1,0 +1,5 @@
+<% obj_type = vote.class.to_s.downcase %>
+Rate this <%= obj_type -%>: 
+<%= link_to 'Good Look', vote_for_url( :obj_type => obj_type, :obj_id => vote.id ), { :class => 'vote_for' } -%>
+(+ <%= vote.votes_for -%> / <%= vote.votes_against -%> -)
+<%= link_to 'Bad Look', vote_against_url( :obj_type => obj_type, :obj_id => vote.id ), { :class => 'vote_against' } -%>

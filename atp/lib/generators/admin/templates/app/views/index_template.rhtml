@@ -1,0 +1,381 @@
+<h1>Sections &gt;&gt; <span id="current_section">Home</span> <span id="create_action"> &gt;&gt; <a href="#" onclick="createItem(); return false;">New</a></span> </h1>
+<ul id="sections"></ul>
+
+<div class="banner">&nbsp;</div>
+
+<div id="search_box"></div>
+
+<div id="admin_status"></div>
+
+<div class="panel" id="list">
+	<fieldset>
+		<legend>Search Results</legend>
+		<ul id="listDetails"></ul>
+	</fieldset>
+</div>
+
+<div class="panel" id="show">
+	<fieldset>
+		<legend>Details</legend>
+		<div id="showDetails"></div>
+	</fieldset>
+</div>
+
+<div class="panel" id="create">
+	<fieldset>
+		<legend>Create</legend>
+		<div id="createDetails"></div>
+	</fieldset>
+</div>
+
+<script type="text/javascript" language="javascript">
+// <![CDATA[	
+	var DisplayRecord = Class.create();
+	DisplayRecord.prototype = {
+		initialize : function() {
+			$(show_rec_id).update('');
+			eval("recordStructure = ADMIN.def."+current_section);
+			this.render();
+		},
+		render: function(){
+			$H(recordStructure).each(function(k){
+				v = k[1];
+				if (/_id$/.test(v.name)){
+					related = true;
+					relation_model = v.name.gsub(/_id$/, '');
+					label = relation_model.gsub(/_/, ' ').capitalize();
+					current_id = current_section + "_" + relation_model;
+					eval('val = current_record.'+relation_model+'.attributes.name');
+					eval('val_hidden = current_record.attributes.' + v.name);
+					related = true;
+				} else {
+					current_id = current_section + "_" + v.name;
+					label = v.name.gsub(/_/, ' ').capitalize();
+					eval('val = current_record.attributes.' + v.name);
+					related = false;
+				}
+				current_value_div = current_id+"_value"; //value stored for inplace editor
+				url = url_for('update', { id: current_record.attributes.id, field: v.name });
+				ajaxOptions = {
+					onSuccess:function(r){
+						if (r.responseText.length > 0){ new Message( r.responseText, 'good'); }
+					},
+		    	onFailure: function(r) {
+						if (r.responseText.length > 0){ new Message( r.responseText); }
+			    }
+			  }
+				if (typeof val == null || val == 'null' || val == ''){ val = '&nbsp;'; }
+				$(show_rec_id).appendChild( $B('p', {id: current_id}, [
+					$B('b', label + ": "),
+					$B('br'),
+					$B('div', { id: current_value_div, title: 'Click to edit'}, val)
+				]));
+			  //reassign types if column in readonly array
+			  if (ADMIN.readonly_columns.include(v.name)){
+			  	type = 'readonly';
+			  } else if (related) {
+			  	type = 'relation';
+			  } else if (v.name == 'time_zone') {
+			  	type = 'time_zone';
+			  } else if (v.name == 'country') {
+			  	type = 'country';
+			  } else {
+			  	type = v.type;
+			  }
+	      switch (type) {
+	        case 'string':
+	        	new Ajax.InPlaceEditor(current_value_div, url, ajaxOptions); 
+	        	break;
+	        case 'text':
+			  		Object.extend(ajaxOptions, { rows: 10, cols: 40 });
+	        	new Ajax.InPlaceEditor(current_value_div, url, ajaxOptions); 
+	        	break;
+	        case 'role':
+			  		Object.extend(ajaxOptions, { collection: SD.roles, value: val });
+	        	new Ajax.InPlaceCollectionEditor(current_value_div, url , ajaxOptions ); 
+	        	break;
+	        case 'country':
+			  		Object.extend(ajaxOptions, { collection: SD.countries, value: val });
+	        	new Ajax.InPlaceCollectionEditor(current_value_div, url , ajaxOptions ); 
+	        	break;
+	        case 'time_zone':
+			  		Object.extend(ajaxOptions, { collection: SD.timezones, value: val });
+	        	new Ajax.InPlaceCollectionEditor(current_value_div, url , ajaxOptions ); 
+	        	break;
+	        case 'boolean':
+			  		Object.extend(ajaxOptions, { collection: SD.boolean, value: val });
+			  		new Ajax.InPlaceCollectionEditor(current_value_div, url , ajaxOptions );  
+			  		break;
+	        case 'relation':
+	        	//add editor class to displayed value element
+	        	Element.addClassName($(current_value_div), 'inPlaceEditor');
+	        	this.relation = {
+	        		id: relation_model,
+	        		value: val,
+	        		form: current_id+"_id",
+	        		hidden_id: relation_model+'_id',
+	        		hidden_value: val_hidden,
+	        		links: {
+	        			cancel: { id: relation_model+"_cancel" },
+	        			submit: { id: relation_model+"_submit"}
+	        		}
+	        	}
+						$(current_id).appendChild( $B('span', { id: this.relation.form, className: "relation_box"}, [
+							$B('input', {name: relation_model, type: 'text', id: this.relation.id , value: this.relation.value}),
+							$B('input', {name: this.relation.hidden_id, type: 'hidden', id: this.relation.hidden_id, value: this.relation.hidden_value}),
+							" ",
+							$B('input', {name: 'submit', type: 'submit', value: 'ok', id: this.relation.links.submit.id, onclick: "$('"+this.relation.form+"').hide(); Element.addClassName($('"+current_value_div+"'), 'inPlaceEditor');" }),
+							" ",
+							$B('a', {name: 'cancel', href: "#", id: this.relation.links.cancel.id, onclick: "$('"+this.relation.form+"').hide(); $('"+current_value_div+"').show(); return false;"}, "cancel"),
+							$B('div', {className: 'auto_complete', id: relation_model+'_auto_complete'})
+						]));
+						new Ajax.Autocompleter(relation_model, relation_model+"_auto_complete", url_for('search', { show: 'autocomplete', relation: relation_model }), {
+							minChars: 3, 
+							afterUpdateElement: function(element, selectedElement){
+								entity_parts = selectedElement.title.split(":");
+								elem = current_section+'_'+entity_parts[0]+"_value";
+								$(entity_parts[0]+'_id').value = entity_parts[1];
+							}
+						});
+						//if you click on value, show form
+	        	Event.observe(current_value_div, 'click', function(evt){
+	        		this.el = $(evt.target.id);
+	        		this.el.hide();
+	        		Element.removeClassName(this.el, 'inPlaceEditor');
+	        		this.fieldElement = $(this.el.id.replace(/_value$/, "_id"));
+	        		this.fieldElement.show();
+	        	});
+	        	//if you click on submit, send hidden value		
+	        	Event.observe(this.relation.links.submit.id, 'click', function(evt){
+	        		this.field = evt.target.id.replace(/_submit$/, "_id"); // created hidden id
+							Object.extend(ajaxOptions, { 
+								value: $(this.field).value,
+								field: this.field,
+								id: eval('current_record.attributes.id'),
+								onSuccess: function(){
+									current_value_div = (current_section+'_'+this.field).replace(/_id$/, "_value");
+									current_form_div = (current_section+'_'+this.field);
+									current_text_field = (this.field).replace(/_id$/, "");
+									$(current_value_div).update($(current_text_field).value);
+									$(current_value_div).show();
+									$(current_form_div).hide();
+								}
+							});
+							ping(url_for('update', ajaxOptions), ajaxOptions); 
+	        	});
+						
+			  		break;
+	        case 'readonly':
+	        default:        
+	      }
+			});
+			//hide all relation box (in place editors)
+			$$('.relation_box').each(function(el){ el.hide(); });
+			//show all :has_many relationships
+			// ADMIN.rel.city.has_many
+			eval("this.current_relations = ADMIN.rel."+current_section);
+			this.current_relations
+			$('show').appendChild($B('div', {id: 'relations'}, [
+				$B('b', "Has Many: "),
+				$B('br')
+			]));
+			ADMIN.rel.city.has_many
+		}
+	}
+	function list_recs(){
+		$W('listDetails','');
+		search_results.each(function(r){
+			new Insertion.Bottom('listDetails', listItem(r.attributes));
+		});
+		activate('list');
+	}
+	function show_rec(){
+		activate('show');
+		displayRec = new DisplayRecord();
+	}
+	function show(id){
+		current_record = search_results.find(function(r){ return r.attributes.id == id});
+		show_rec();
+	}
+	function activate(el){
+		$$(".panel").without(el).each(function(e){ e.hide(); });
+		$(el).show();
+	}
+	function search(){
+		if ($F('q').length < 3){
+			new Message( 'The query must at least be 3 characters long.');
+			return;
+		}
+		opt = {
+	    postBody: 'q='+$F('q'),
+			onSuccess:function(r){
+				eval('search_results='+r.responseText);
+				new Message( search_results.length+' Record(s) Found', 'good');
+				if (search_results.length == 1){
+					show(search_results[0].attributes.id);
+				} else {
+					list_recs();
+				}
+			}
+		}
+		new Ajax.CustomRequest(url_for('search'), opt);
+	}
+	function submitNew(form){
+		opt = {
+	    postBody: Form.serialize($('create_form')),
+			onSuccess:function(r){
+				new Message( 'New ' + current_section + ' created', 'good');
+				$('create_form').remove();
+			}
+		}
+		new Ajax.CustomRequest(url_for('new'), opt);
+	}
+	function changeSection(sec){
+		hideAllPanels();
+		current_section = sec;
+		createAllSections(sec);
+		if (!$('search_box').visible()){
+			$('search_box').show();
+		}
+		if (eval("ADMIN.act." + sec + ".create") == true){
+			$('create_action').show();
+		} else {
+			$('create_action').hide();
+		}
+		$("current_section").update(current_section.capitalize());
+		createSearchBox();
+		$('q').focus();
+	}
+	function url_for(action){
+		if (arguments.length == 2){
+			hash = arguments[1];
+		} else {
+			hash = {};
+		}
+		return "/admin/" + action + "?"+ $H(hash).merge({section: current_section}).toQueryString();
+	}
+	function hideAllPanels(){
+		$$(".panel").each(function(e){ e.hide(); });
+	}
+	var createAllSections = function(){
+		if (arguments.length > 0){
+			selectedSection = arguments[0];
+		} else {
+			selectedSection = null;
+		}
+		
+		$("sections").innerHTML = ADMIN.sec.collect(function(s){
+			if (selectedSection != s){
+				return "<a href='#' onclick='changeSection(\"" + s + "\"); return false;'>" + s + "</a>";
+			} else {
+				return s;
+			}
+		}).join(" :: ");
+	}
+	function findAllRelated(elements){
+		return elements.findAll(function(el){ 
+				return (/_id$/).test(el.id); 
+			});
+	}
+	function findAllCountries(elements){
+		return elements.findAll(function(el){ 
+				return (/_country$/).test(el.id); 
+			});
+	}
+	function findAllTimeZones(elements){
+		return elements.findAll(function(el){ 
+				return (/_time_zone$/).test(el.id); 
+			});
+	}
+	function createItem(){
+		new Ajax.CustomRequest(url_for('create'), {
+			onSuccess: function(r){
+				$('createDetails').update(r.responseText); 
+				activate('create');
+				ajaxOptions = {
+					onSuccess:function(r){
+						if (r.responseText.length > 0){ new Message( r.responseText, 'good'); }
+					},
+		    	onFailure: function(r) {
+						if (r.responseText.length > 0){ new Message( r.responseText); }
+			    }
+			  }
+				all_form_elements = Form.getElements('create_form');
+				related = findAllRelated(all_form_elements);
+				related.each(function(el){
+					el_split = el.id.split(/_/);
+					relation_model = el_split[el_split.length-2];
+					if (ADMIN.sec.include(relation_model)){
+						//give parent tag background highlight color
+						Element.addClassName($(el.id).up(), 'autocomplete_bg')
+						$(el.id).type = "hidden";
+						//create autocomplete
+						$(el.id).up().appendChild($B('div', {className: 'auto_complete', id: relation_model+'_auto_complete'}));
+						//create input text 
+						$(el.id).up().appendChild($B('input', {name: relation_model, type: 'text', maxlength: 128, size: 45, id: relation_model}));
+						new Ajax.Autocompleter(relation_model, relation_model+"_auto_complete", url_for('search', { show: 'autocomplete', relation: relation_model }), {
+							minChars: 3, 
+							afterUpdateElement: function(element, selectedElement){
+								entity_parts = selectedElement.title.split(":");
+								elem = current_section+'_'+entity_parts[0]+'_id';
+								$(elem).value = entity_parts[1];
+							}
+						});
+					}
+				});
+				country_form = findAllCountries(all_form_elements);
+				country_form.each(function(el){
+					if (ADMIN.sec.include(relation_model)){
+						relation_model = 'country';
+						//give parent tag background highlight color
+						Element.addClassName($(el.id).up(), 'autocomplete_bg')
+						//create autocomplete
+						$(el.id).type = "hidden";
+						$(el.id).up().appendChild($B('div', {className: 'auto_complete', id: relation_model+'_auto_complete'}));
+						//create input text 
+						$(el.id).up().appendChild($B('input', {name: relation_model, type: 'text', maxlength: 128, size: 45, id: relation_model}));
+						
+			  		Object.extend(ajaxOptions, { collection: SD.countries, value: val });
+	        	new Ajax.InPlaceCollectionEditor('country', url , ajaxOptions );
+					}
+				});
+				
+				/*
+	        case 'country':
+	        	break;
+	        case 'time_zone':
+			  		Object.extend(ajaxOptions, { collection: SD.timezones, value: val });
+	        	new Ajax.InPlaceCollectionEditor(current_value_div, url , ajaxOptions ); 
+	        	break;*/
+	        	
+				Form.focusFirstElement('create_form');
+			},
+			onLoading: function(){}
+		});
+	}
+	function createSearchBox(){
+    if ($('search_form')){
+    	$('search_form').remove();
+    }
+    $('search_box').appendChild( $B('form', { id: 'search_form', onsubmit: 'search(); return false;'}, [
+      $B('p', {}, [
+      	"Search: ",
+      	$B('input', { id: "q", maxlength: 65, name:"q", size:20, type:"text" }),
+      	" ",
+      	$B('input', { name: "commit", type: "submit", value:"Search" }),
+      	]),
+      $B('div', {className: 'auto_complete', id: 'q_auto_complete'})
+    ]));
+    new Ajax.Autocompleter("q", "q_auto_complete", url_for('search', { show: 'autocomplete' }), {'minChars':3});
+	}
+	//function ends
+	
+	if (!displayRec) { var displayRec = new Object(); };	
+	hideAllPanels();
+	$('create_action').hide();
+	$('search_box').hide();
+	var show_rec_id = 'showDetails';
+	createAllSections();
+	createSearchBox();
+// ]]>
+</script>

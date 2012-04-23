@@ -1,0 +1,40 @@
+<% @event = Event.blank %>
+<%= form_tag(nil, { :method => 'post', :id => "create_form", :autocomplete => "off", :onsubmit => "submitNew(); return false;" }) -%>
+	    <p>Happens at:<br /> 
+  	  	<%= text_field 'event', 'happens_at', { :maxlength => 12, :size => 24 } -%>
+  </p>
+    <p>Venue:<br /> 
+  	  	<%= text_field 'event', 'venue_id', { :maxlength => 10, :size => 15 } -%>
+  </p>
+    <p>Search date:<br /> 
+  	  	<%= text_field 'event', 'search_date', { :maxlength => 8, :size => 12 } -%>
+  </p>
+    <p>Image sets count:<br /> 
+  	  	<%= text_field 'event', 'image_sets_count', { :maxlength => 3, :size => 8 } -%>
+  </p>
+    <p>Picture uploaded:<br /> 
+  	  	<%= check_box 'event', 'picture_uploaded', {} -%>
+  </p>
+    <p>Comments allowed:<br /> 
+  	  	<%= check_box 'event', 'comments_allowed', {} -%>
+  </p>
+    <p>Hosted by:<br /> 
+  	  	<%= text_field 'event', 'hosted_by', { :maxlength => 75, :size => 85 } -%>
+  </p>
+    <p>Party:<br /> 
+  	  	<%= text_field 'event', 'party_id', { :maxlength => 10, :size => 15 } -%>
+  </p>
+    <p>Synopsis:<br /> 
+  	  	<%= text_area 'event', 'synopsis', { :rows => 20, :cols => 60 } -%>
+  </p>
+    <p>Photographer:<br /> 
+  	  	<%= text_field 'event', 'photographer_id', { :maxlength => 10, :size => 15 } -%>
+  </p>
+    <p>Active:<br /> 
+  	  	<%= check_box 'event', 'active', {} -%>
+  </p>
+    <p>Picture upload time:<br /> 
+  	  	<%= text_field 'event', 'picture_upload_time', { :maxlength => 12, :size => 24 } -%>
+  </p>
+  	<div class="button-bar"><%= submit_tag "Create" -%></div>
+<%= end_form_tag -%>

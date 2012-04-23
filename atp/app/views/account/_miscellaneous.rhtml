@@ -1,0 +1,16 @@
+<legend>Additional Information</legend>
+<% if promoter? or photographer? %>
+<p id="company_name">
+	<label for="user_company_name">Company Name:</label>
+	<%= text_field "user", "company_name", {"size" => 25, "maxlength" => 75 } %>
+</p>
+<% end %>
+<p>
+	<label for="user_mobile">Mobile:</label>
+	<%= select("user", "mobile_carrier", User.mobile_carriers, { :include_blank => true }) %> <%= text_field "user", "mobile", {"size" => 22, "maxlength" => 15 } %> <span class="small">For receiving the latest news via text messages</span>
+</p>
+
+<p>
+	<label for="user_sex">Sex:</label>
+	<%= select("user", "sex", User.sex, { :include_blank => true }) %>
+</p>

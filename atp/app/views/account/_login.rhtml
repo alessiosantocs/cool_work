@@ -1,0 +1,11 @@
+<p><label>Username:</label><%= text_field "user", "username", :size => 20, :maxlength => 75, :tabindex=>1 %></p>
+
+<p><label>Password:</label><%= password_field "user", "password", :size => 12, :tabindex=>2 %></p>
+
+<p><label>Remember Username and Password</label><%= check_box "cookie", "remember_me", :tabindex=>3 %></p>
+
+<p><label>&nbsp;</label><%= submit_tag "LOGIN", :tabindex=>4 %></p>
+
+<p><%= link_to "Not a member? Sign up now", { :action=>'create' }, :class => 'stronger' %> | <%= link_to "Forgot Password?", {:action => 'lost_password'} %></p>
+
+<input type="hidden" id="md5" name="md5" value="0" />

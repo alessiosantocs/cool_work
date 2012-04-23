@@ -1,0 +1,54 @@
+<html>
+  <head>
+    <title>Interstitial</title>
+    <script type="text/javascript" language="javascript">
+    // <![CDATA[
+    function doInterstitial(newURL, time) {
+          var links = document.getElementsByTagName('a');
+          for( var i=0; i<links.length; i++) {
+              var oldURL = links[i].href;
+              links[i].href = newURL + '?oldURL=' + oldURL + '&timer=' + time;
+          }
+    }
+    //doInterstitial('ad.html', 2000)
+    function parseGetVars() {
+      var args = new Array();
+      var query = window.location.search.substring( 1 );
+      if( query ) {
+       var strList = query.split( '&' );
+       for( str in strList ) {
+         var parts = strList[ str ].split( '=' );
+         args[ unescape( parts[ 0 ] ) ] = unescape( parts[ 1 ] );
+       }
+     }
+      return args;
+    }
+    
+    function addEvent(obj, evType, fn, useCapture){
+      if (obj.addEventListener){
+        obj.addEventListener(evType, fn, useCapture);
+        return true;
+      } else if (obj.attachEvent){
+        var r = obj.attachEvent("on"+evType, fn);
+        return r;
+      } else {
+        alert("Handler could not be attached");
+      }
+    }    
+    var get = parseGetVars();
+    var oldURL = get['oldURL'];
+    var timer = get['timer'];
+    addEvent(window, 'load', function() { 
+      window.setTimeout('location.replace(\''+oldURL+'\')', get['timer'])
+    }, false);
+    // ]]>
+    </script>
+  </head>
+  <body>
+    <script type="text/javascript">
+    // <![CDATA[
+      document.write('<p><a href="#" onclick="window.location=\''+oldURL+'\';return(false);">Skip (will redirect to page in '+ parseInt(timer/1000) +' seconds).</a></p>');
+    // ]]>
+    </script>
+  </body>
+</html>

@@ -1,0 +1,61 @@
+<% @user = User.blank %>
+<%= form_tag(nil, { :method => 'post', :id => "create_form", :autocomplete => "off", :onsubmit => "submitNew(); return false;" }) -%>
+	    <p>Allow admin mails:<br /> 
+  	  	<%= check_box 'user', 'allow_admin_mails', {} -%>
+  </p>
+    <p>Your desc:<br /> 
+  	  	<%= text_area 'user', 'your_desc', { :rows => 20, :cols => 60 } -%>
+  </p>
+    <p>Site:<br /> 
+  	  	<%= text_field 'user', 'site_id', { :maxlength => 5, :size => 10 } -%>
+  </p>
+    <p>Postal code:<br /> 
+  	  	<%= text_field 'user', 'postal_code', { :maxlength => 9, :size => 19 } -%>
+  </p>
+    <p>Company name:<br /> 
+  	  	<%= text_field 'user', 'company_name', { :maxlength => 75, :size => 85 } -%>
+  </p>
+    <p>Email messages allowed:<br /> 
+  	  	<%= check_box 'user', 'email_messages_allowed', {} -%>
+  </p>
+    <p>Relationship status:<br /> 
+  	  	<%= text_field 'user', 'relationship_status', { :maxlength => 22, :size => 32 } -%>
+  </p>
+    <p>Username:<br /> 
+  	  	<%= text_field 'user', 'username', { :maxlength => 75, :size => 85 } -%>
+  </p>
+    <p>Country:<br /> 
+  	  	<%= text_field 'user', 'country', { :maxlength => 2, :size => 12 } -%>
+  </p>
+    <p>Match desc:<br /> 
+  	  	<%= text_area 'user', 'match_desc', { :rows => 20, :cols => 60 } -%>
+  </p>
+    <p>Image flag:<br /> 
+  	  	<%= check_box 'user', 'image_flag', {} -%>
+  </p>
+    <p>Sex:<br /> 
+  	  	<%= text_field 'user', 'sex', { :maxlength => 1, :size => 11 } -%>
+  </p>
+    <p>Mobile:<br /> 
+  	  	<%= text_field 'user', 'mobile', { :maxlength => 15, :size => 25 } -%>
+  </p>
+    <p>Deleted:<br /> 
+  	  	<%= check_box 'user', 'deleted', {} -%>
+  </p>
+    <p>Time zone:<br /> 
+  	  	<%= text_field 'user', 'time_zone', { :maxlength => 45, :size => 55 } -%>
+  </p>
+    <p>Full name:<br /> 
+  	  	<%= text_field 'user', 'full_name', { :maxlength => 75, :size => 85 } -%>
+  </p>
+    <p>Image:<br /> 
+  	  	<%= text_field 'user', 'image_id', { :maxlength => 10, :size => 15 } -%>
+  </p>
+    <p>Email:<br /> 
+  	  	<%= text_field 'user', 'email', { :maxlength => 65, :size => 75 } -%>
+  </p>
+    <p>Location:<br /> 
+  	  	<%= text_field 'user', 'location', { :maxlength => 45, :size => 55 } -%>
+  </p>
+  	<div class="button-bar"><%= submit_tag "Create" -%></div>
+<%= end_form_tag -%>

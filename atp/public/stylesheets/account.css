@@ -1,0 +1,9 @@
+ul li ul li{
+	padding-left: 30px;
+}
+ul li ul li.last{
+	padding-bottom: 20px;
+}
+ul#manage_links li{
+	padding-left: 15px;
+}

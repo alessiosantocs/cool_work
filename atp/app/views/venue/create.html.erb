@@ -1,0 +1,44 @@
+<%= error_messages_for 'venue' %>
+<% form_tag(venue_create_path, { :method => 'post', :id => "new_venue_form", :autocomplete => "off" }) do -%>
+	<%= hidden_field 'venue', 'id' -%>
+  <p>
+  	<label for="venue_name">Name:</label>
+  	<%= text_field 'venue', 'name', { :maxlength => 45, :size => 25, :class=>"second_venue" } -%>
+  </p>
+
+	<p>
+		<label>Country:</label>
+		<%= select('venue', 'country', @countries) %>
+	</p>
+
+  <p id="div_postal_code_form">
+  	<label for="venue_postal_code">Zip /Postal Code:</label>
+  	<%= text_field 'venue', 'postal_code', :size => 12, :maxlength => 9 %>
+  </p>
+	
+  <p>
+  	<label for="venue_address">Address:</label>
+  	<%= text_field 'venue', 'address', { :maxlength => 75, :size => 25 } -%>
+  </p>
+	
+  <p>
+  	<label for="venue_cross_street">Cross street:</label>
+  	<%= text_field 'venue', 'cross_street', { :maxlength => 45, :size => 25 } -%>
+  </p>
+
+	<div id="city_state" style="display:none">
+		<p><label for='venue_city_name'>City/Town:</label> <%= text_field 'venue', 'city_name', "size" => 24, "maxlength" => 35 %></p>
+		<p><label for='venue_state'>State/Province:</label> <%= text_field 'venue', 'state', "size" => 15, "maxlength" => 20 %></p>
+		<p><label for='venue_time_zone'>Time Zone: </label><span id="timezoneSelect"></span></p>
+	</div>
+	
+  <p>
+  	<label for="venue_phone">Phone:</label>
+  	<%= text_field 'venue', 'phone', { :maxlength => 15, :size => 12 } -%>
+  </p>
+
+	<p>
+		<label>&nbsp;</label>
+		<%= submit_tag "Create" -%>
+	</p>
+<% end %>

@@ -1,0 +1,29 @@
+<% comment_comment_default = "Type your comment here." %>
+<form id="comment_form">
+  <div id="commentStatus" style="display:none;">&nbsp;</div>
+	<%= text_area 'comment', 'comment', { :cols => 60, :rows => 8, :value => "Type your comment here." } -%>
+	<input type="submit" name="submit" value="Post My Comment" class="button" />
+  <input type="reset" value="&nbsp;Clear&nbsp;" class="button" />
+  <span id='new_comment_spinner' class='spinner' style="display:none;"></span>
+	<%= hidden_field 'comment', 'commentable_type' -%>
+	<%= hidden_field 'comment', 'commentable_id' -%>
+	<%= hidden_field 'comment', 'parent_id' -%>
+</form>
+<script type="text/javascript" language="javascript">
+// <![CDATA[
+  Event.addBehavior({
+    "form#comment_form:submit": function(event) {
+      var status = FCG.message.init('commentStatus');
+    	if ((/<%= comment_comment_default %>/).test($F("comment_comment"))){
+    	  status.set("Please enter a comment.");
+  			new Effect.Fade('new_comment_spinner', { duration:1 });
+    	  return false;
+    	}
+      Comment.Create.loading(); Comment.Create.post(); return false;
+    },
+    "#comment_comment:focus": function(event) {
+        if (this.value == '<%= comment_comment_default %>') this.value ='';
+    }
+  });
+// ]]>
+</script>

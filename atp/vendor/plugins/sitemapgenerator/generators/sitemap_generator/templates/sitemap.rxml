@@ -1,0 +1,15 @@
+xml.instruct!
+xml.urlset "xmlns" => "http://www.google.com/schemas/sitemap/0.84" do
+  xml.url do
+    xml.loc         "http://#{@host}/<%= table_name -%>"
+    xml.lastmod     w3c_date(@<%= table_name -%>.first.updated_at)
+    xml.changefreq  "<%= frequency -%>"
+  end
+  @<%= table_name %>.each do |<%= table_name.singularize -%>|
+    xml.url do
+      xml.loc         "http://#{@host}/<%= table_name -%>/#{<%=table_name.singularize-%>.id}"
+      xml.lastmod     w3c_date(<%= table_name.singularize -%>.updated_at)
+      xml.changefreq  "<%= frequency -%>"
+    end
+  end
+end

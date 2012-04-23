@@ -1,0 +1,52 @@
+<% @service = Service.blank %>
+<%= form_tag(nil, { :method => 'post', :id => "create_form", :autocomplete => "off", :onsubmit => "submitNew(); return false;" }) -%>
+	    <p>Name:<br /> 
+  	  	<%= text_field 'service', 'name', { :maxlength => 45, :size => 55 } -%>
+  </p>
+    <p>City:<br /> 
+  	  	<%= text_field 'service', 'city', { :maxlength => 35, :size => 45 } -%>
+  </p>
+    <p>Postal code:<br /> 
+  	  	<%= text_field 'service', 'postal_code', { :maxlength => 12, :size => 22 } -%>
+  </p>
+    <p>Business name:<br /> 
+  	  	<%= text_field 'service', 'business_name', { :maxlength => 45, :size => 55 } -%>
+  </p>
+    <p>Published:<br /> 
+  	  	<%= check_box 'service', 'published', {} -%>
+  </p>
+    <p>Url:<br /> 
+  	  	<%= text_field 'service', 'url', { :maxlength => 128, :size => 138 } -%>
+  </p>
+    <p>Country:<br /> 
+  	  	<%= text_field 'service', 'country', { :maxlength => 2, :size => 12 } -%>
+  </p>
+    <p>Category:<br /> 
+  	  	<%= text_field 'service', 'category_id', { :maxlength => 3, :size => 8 } -%>
+  </p>
+    <p>Description:<br /> 
+  	  	<%= text_area 'service', 'description', { :rows => 20, :cols => 60 } -%>
+  </p>
+    <p>Phone:<br /> 
+  	  	<%= text_field 'service', 'phone', { :maxlength => 15, :size => 25 } -%>
+  </p>
+    <p>Fax:<br /> 
+  	  	<%= text_field 'service', 'fax', { :maxlength => 15, :size => 25 } -%>
+  </p>
+    <p>User:<br /> 
+  	  	<%= text_field 'service', 'user_id', { :maxlength => 10, :size => 15 } -%>
+  </p>
+    <p>Address:<br /> 
+  	  	<%= text_field 'service', 'address', { :maxlength => 50, :size => 60 } -%>
+  </p>
+    <p>Image:<br /> 
+  	  	<%= check_box 'service', 'image', {} -%>
+  </p>
+    <p>Email:<br /> 
+  	  	<%= text_field 'service', 'email', { :maxlength => 50, :size => 60 } -%>
+  </p>
+    <p>State:<br /> 
+  	  	<%= text_field 'service', 'state', { :maxlength => 30, :size => 40 } -%>
+  </p>
+  	<div class="button-bar"><%= submit_tag "Create" -%></div>
+<%= end_form_tag -%>

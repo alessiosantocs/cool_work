@@ -1,0 +1,13 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+first:
+  id: 1
+  name: New York City
+  active: true
+second:
+  id: 2
+  name: Houston
+  active: false
+third:
+  id: 3
+  name: Las Vegas
+  active: true

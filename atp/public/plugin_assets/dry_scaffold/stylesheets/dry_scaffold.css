@@ -1,0 +1,566 @@
+/*  
+ DryScaffoldGenerator version 3.1.0
+ (c) 2006 Richard White <rrwhite@gmail.com>
+ 
+ DryScaffoldGenerator is freely distributable under the terms of an MIT-style license.
+ 
+ For details, see the DryScaffoldGenerator web site: http://www.DryScaffold.com/
+*/
+
+.dry-scaffold form,
+.dry-scaffold table,
+.dry-scaffold p,
+.dry-scaffold div,
+.dry-scaffold fieldset {
+	margin: 0;
+	padding: 0;
+	font-weight: normal;
+	font-family: verdana, sans-serif;
+}
+
+.dry-scaffold {
+	margin: 5px 0;
+}
+
+.dry-scaffold table {
+	width: 100%;
+}
+
+.dry-scaffold a {
+	color: #06c;
+	text-decoration: none;
+}
+
+.dry-scaffold a:visited {
+	color: #06c;
+	text-decoration: none;
+}
+
+.dry-scaffold a:hover {
+	background: #ff8;
+	text-decoration: none;
+}
+
+/* Header Styling
+   ======================== */
+
+.dry-scaffold-header {
+	background: #005CB8;
+	position: relative;
+	color: #eee;
+	font-weight: normal;
+	font-size: 12px;
+}
+
+.dry-scaffold-header h2 {
+	color: #eee;
+	padding: 2px 5px 4px 5px;
+	margin: 0;
+	font-weight: normal;
+	font-size: 17px;
+}
+
+.dry-scaffold-header div.actions a {
+	color: #fff;
+	font-weight: bold;
+	font-size: 14px;
+	letter-spacing: -1px;
+	text-decoration: none;
+	padding: 1px 2px 1px 19px;
+}
+
+.dry-scaffold-header div.actions a:hover {
+	color: #ff8;
+	background: #333;
+	text-decoration: none;
+}
+
+.dry-scaffold-header div.actions {
+	position: absolute;
+	right: 5px;
+	top: 3px;
+	text-align: right;
+}
+
+.dry-scaffold-header div.create a {
+	color: #fff;
+	background: url(/plugin_assets/dry_scaffold/images/add.gif) 1px 50% no-repeat;
+	font-weight: bold;
+	font-size: 14px;
+	letter-spacing: -1px;
+	text-decoration: none;
+	padding: 1px 2px 1px 19px;
+}
+
+.dry-scaffold-header div.create a:hover {
+	background: #333 url(/plugin_assets/dry_scaffold/images/add.gif) 1px 50% no-repeat;
+	color: #ff8;
+	text-decoration: none;
+}
+
+.dry-scaffold-header div.create {
+	right: 5px;
+	top: 4px;
+	text-align: left;
+}
+
+/* Header Styling : Nested
+   ======================== */
+
+.dry-scaffold .dry-scaffold {
+	margin: 2px 5px;
+}
+
+.dry-scaffold .dry-scaffold .dry-scaffold-header h2 {
+	font-size: 13px;
+}
+
+.dry-scaffold .dry-scaffold .dry-scaffold-header div.actions a {
+	font-weight: bold;
+	font-size: 11px;
+	padding: 0 2px 1px 17px;
+}
+
+.dry-scaffold .dry-scaffold .dry-scaffold-header div.actions {
+	top: 2px;
+}
+
+/* Table Column Headers
+   ============================= */
+
+.dry-scaffold th {
+	font-size: 11px;
+	background: #555;
+	text-align: left;
+	border-right: solid 1px #333;
+	color: #ddd;
+}
+
+.dry-scaffold th.actions {
+	border-left: none;
+}
+
+.dry-scaffold th a,
+.dry-scaffold th p {
+	font-weight: bold;
+	font-size: 11px;
+	display: block;
+	background: #555;
+}
+
+.dry-scaffold th a {
+	color: #fff;
+	padding: 2px 15px 2px 5px;
+}
+
+.dry-scaffold th p {
+	color: #eee;
+	padding: 2px 5px;
+}
+
+.dry-scaffold th a:hover {
+	background: #000;
+	color: #ff8;
+	text-decoration: none;
+}
+
+.dry-scaffold th.sorted {
+	background: #333;
+}
+
+.dry-scaffold th div.like_by{
+	line-height: 2;
+}
+
+.dry-scaffold th div.sort_by{
+}
+
+.dry-scaffold th div.sort_by div.sub {
+	font-size: 9px;
+}
+
+.dry-scaffold th div.sort_by a.asc,
+.dry-scaffold th div.sort_by a.asc:hover {
+	background: #333 url(/plugin_assets/dry_scaffold/images/arrow_up.gif) right 50% no-repeat;
+}
+
+.dry-scaffold th div.sort_by a.desc,
+.dry-scaffold th div.sort_by a.desc:hover {
+	background: #333 url(/plugin_assets/dry_scaffold/images/arrow_down.gif) right 50% no-repeat;
+}
+
+.dry-scaffold th.loading a,
+.dry-scaffold th.loading a:hover {
+	background: #333 url(/plugin_assets/dry_scaffold/images/indicator-small.gif) right 50% no-repeat;
+}
+
+/* Table Body Styling
+   ============================= */
+
+.dry-scaffold td {
+	padding: 5px 4px;
+	color: #333;
+	font-size: 11px;
+	background-color: #E6F2FF;
+	border-bottom: solid 1px #C5DBF7;
+	border-left: solid 1px #C5DBF7;
+}
+.dry-scaffold td.edit {
+	border-right: solid 1px #ccc;
+}
+.dry-scaffold tr.even td.crud,
+.dry-scaffold td.crud {
+	border: none;
+}
+.dry-scaffold td.actions {
+	border-right: solid 1px #ccc;
+}
+
+.dry-scaffold tr.even td {
+	background-color: #fff;
+	border-left: solid 1px #ddd;
+}
+
+.dry-scaffold tr td.sorted {
+	background-color: #B9DCFF;
+	border-bottom: solid 1px #AFD0F5;
+}
+
+.dry-scaffold tr.even td.sorted {
+	background-color: #E6F2FF;
+	border-bottom: solid 1px #AFD0F5;
+}
+
+.dry-scaffold td.empty {
+	color: #999;
+	text-align: center;
+}
+
+/* Table Actions (Edit, Delete) Styling
+   ============================= */
+
+.dry-scaffold td.actions {
+padding: 0;
+}
+
+.dry-scaffold td.actions table {
+float: right;
+width: auto;
+margin-right: 5px;
+}
+
+.dry-scaffold td.actions table td {
+border: none;
+text-align: right;
+padding: 0 2px;
+}
+
+.dry-scaffold td.actions a {
+font-weight: bold	;
+font-size: 11px;
+letter-spacing: -1px;
+padding: 2px;
+line-height: 16px;
+}
+
+/* dry-scaffold Footer Styling 
+   ========================== */
+
+.dry-scaffold .dry-scaffold-footer {
+text-align: right;
+background: #005CB8;
+padding: 3px 5px 2px 5px;
+border-bottom: none;
+color: #ccc;
+font-weight: bold;
+font-size: 12px;
+}
+
+.dry-scaffold-footer a {
+color: #fff;
+text-decoration: none;
+letter-spacing: 0;
+padding: 0 2px;
+margin: 0 -2px;
+font-weight: bold;
+font-size: 12px;
+}
+
+.dry-scaffold-footer a:hover {
+	background: #000;
+	color: #ff8;
+	text-decoration: none;
+}
+
+.dry-scaffold-footer .next {
+margin-left: 0;
+padding-left: 5px;
+border-left: solid 1px #ccc;
+}
+
+.dry-scaffold-footer .previous {
+margin-right: 0;
+padding-right: 5px;
+border-right: solid 1px #ccc;
+}
+
+/* Messages 
+   ========================= */
+
+.dry-scaffold .messages-container,
+.dry-scaffold .dry-scaffold .messages-container{
+padding: 0;
+margin: 0 7px;
+border: none;
+}
+
+.dry-scaffold .empty-message {
+background: #e8e8e8;
+padding: 4px;
+text-align: center;
+color: #666;
+}
+
+.dry-scaffold .message {
+font-size: 11px;
+font-weight: bold;
+padding: 5px 20px 5px 21px;
+color: #333;
+position: relative;
+margin: 2px 7px;
+line-height: 12px;
+}
+
+.dry-scaffold td .message a {
+position: absolute;
+right: 10px;
+top: 4px;
+padding: 0;
+font-weight: bold;
+font-size: 11px;
+letter-spacing: -1px;
+}
+
+.dry-scaffold .messages-container .message {
+margin: 0;
+}
+
+.dry-scaffold .error-message {
+border-left: solid 5px #f66;
+background: #fbb url(/plugin_assets/dry_scaffold/images/error.gif) 2px 3px no-repeat;
+}
+
+.dry-scaffold .warning-message {
+border-left: solid 5px #ff6;
+background: #ffb url(/plugin_assets/dry_scaffold/images/warning.gif) 2px 3px no-repeat;
+}
+
+.dry-scaffold .info-message {
+border-left: solid 5px #66f;
+background: #bbf url(/plugin_assets/dry_scaffold/images/information.gif) 2px 3px no-repeat;
+}
+
+* html .dry-scaffold .messages-container .message {
+background-position: 7px 3px;
+}
+
+/* Error Styling 
+   ========================== */
+
+.dry-scaffold #errorExplanation {
+background: #fcc;
+margin: 2px 7px;
+border: solid 1px #f66;
+float: left;
+}
+
+.dry-scaffold fieldset {
+clear: both;
+}
+
+.dry-scaffold #errorExplanation h2 {
+padding: 2px 5px 3px 20px;
+color: #333;
+font-size: 11px;
+margin: 0;
+letter-spacing: 0;
+background: #f66 url(/plugin_assets/dry_scaffold/images/error.gif) 2px 1px no-repeat;
+}
+
+.dry-scaffold #errorExplanation ul {
+margin: 0;
+padding: 0 2px 4px 25px;
+list-style: disc;
+}
+
+.dry-scaffold #errorExplanation p {
+font-size: 11px;
+padding: 2px 5px;
+margin: 0;
+}
+
+.dry-scaffold #errorExplanation ul li {
+font-weight: bold	;
+font-size: 11px;
+letter-spacing: -1px;
+margin: 0;
+padding: 0;
+background: transparent;
+}
+
+.dry-scaffold .fieldWithErrors input {
+border: solid 1px #f00;
+}
+
+/* Loading Indicators
+   ============================== */
+
+.dry-scaffold .loading-indicator {
+vertical-align: bottom;
+margin: 0;
+}
+
+.dry-scaffold .dry-scaffold-header .loading-indicator,
+.dry-scaffold .update .loading-indicator,
+.dry-scaffold .create .loading-indicator {
+vertical-align: bottom;
+margin-bottom: 3px;
+}
+
+/* Form Styling 
+   ============================== */
+
+.dry-scaffold div.edit,
+.dry-scaffold div.new {
+background: #DAFFCD;
+padding: 4px;
+border: solid 1px #7FcF00;
+}
+
+.dry-scaffold .dry-scaffold td.edit,
+.dry-scaffold .dry-scaffold td.new {
+	border-right: solid 1px #ccc;
+}
+
+.dry-scaffold div.show {
+	background: #ffb;
+	padding: 4px;
+	border: solid 1px #DDDF37;
+}
+
+.dry-scaffold div.show_field {
+	background: #fff;
+	border: solid 1px #DDDF37;
+	padding: 2px;
+}
+   
+.dry-scaffold td.child {
+background: #eee;
+padding: 14px;
+border-bottom: solid 1px #C5DBF7;
+border-left: solid 1px #C5DBF7;
+border-top: none;
+}
+   
+.dry-scaffold .submit {
+font-weight: bold;
+font-size: 14px;
+letter-spacing: 0;
+margin: 0;
+margin-top: 5px;
+}
+
+.dry-scaffold fieldset {
+border: none;
+}
+
+.dry-scaffold label.required{
+font-weight: bold;
+}
+
+.dry-scaffold label.example {
+font-size: 11px;
+color: #888;
+}
+
+.dry-scaffold h4 {
+padding: 2px;
+margin: 0;
+text-transform: none;
+color: #1F7F00;
+letter-spacing: -1px;
+font-weight: bold;
+font-size: 16px;
+}
+
+.dry-scaffold p.form-footer a {
+font-weight: bold	;
+font-size: 14px;
+letter-spacing: 0;
+}
+
+.dry-scaffold p {
+clear: both;
+}
+
+.dry-scaffold div.row {
+clear: both;
+float: none;
+padding: 2px;
+margin-left: 5px;
+}
+
+.dry-scaffold .row div.form-element {
+float: left;
+margin-right: 10px;
+margin-bottom: 2px;
+}
+
+.dry-scaffold .row div.form-element-left {
+float: left;
+width: 20%;
+margin:0;
+margin-top:5px;
+text-align: right;
+}
+
+.dry-scaffold .row div.form-element-right {
+float: right;
+width: 79%;
+text-align: left;
+margin:0;
+}
+
+.dry-scaffold .row div.space-line {
+clear: both; 
+}
+
+.dry-scaffold input.text-input,
+.dry-scaffold select {
+font-size: 16px;
+font-weight: bold;
+letter-spacing: -1px;
+border: solid 1px #1F7F00;
+}
+
+.dry-scaffold .form-element input {
+padding: 1px;
+}
+
+.dry-scaffold textarea {
+height: 65px;
+font-size: 12px;
+padding: 1px;
+border: solid 1px #1F7F00;
+}
+
+/* IE hacks
+   ==================================== */
+   
+* html .dry-scaffold-header {
+height: 1%;
+}   
+
+* html .dry-scaffold td .messages-container {
+border-top: solid 1px #DAFFCD;
+}

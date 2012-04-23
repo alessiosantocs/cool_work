@@ -1,0 +1,135 @@
+<script type="text/javascript" language="javascript">
+// <![CDATA[
+D.addOnLoad(function() {
+  if (App.cities && ID("city_drop_down")){
+    var menu = new dijit.Menu({ style: "display: none;"}), menuItem;
+    
+    D.forEach(App.cities, function(c){
+      var city = c.city;
+      menuItem = new dijit.MenuItem({
+        label: city.full_name,
+        onClick: function(){ document.location = App.protocol + city.short_name + "." + App.baseDomain; }
+      });
+      menu.addChild(menuItem);
+    });
+
+    var button = new dijit.form.DropDownButton({
+      label: App.subDomain().toUpperCase() || "Select A City.",
+      name: "programmatic2",
+      dropDown: menu,
+      id: App.getNewId()
+    });
+    
+    ID("city_drop_down").appendChild(button.domNode);
+  }
+});
+// ]]>
+</script>
+
+<div class="padded">
+	<div class="yui-u first">
+		<h1 id="logo">
+		  <span id="city_drop_down"></span>
+		  <a href="http://www.alltheparties.com">AllTheParties: The Best Source of Parties Online</a>
+		</h1> 
+	</div>
+	<div class="yui-u">
+		<ul id="usermenu">
+      <li id="magazine"><a href="http://mag.alltheparties.com">ATP The Mag</a></li>
+      <% unless @region.nil? %>
+      <li class="region"><a href="/"><%= @region.short_name.upcase %> Home</a></li>
+      <li class="region"><a href="/parties">Parties</a></li>
+      <li class="region"><a href="/pictures">Pictures</a></li>
+      <% end %>
+      <li class="booking"><a href="http://booking.fcgmedia.com">Book Your Favorite Artist/DJ</a></li>
+      <li class="celebrate"><a href="http://celebrate.fcgmedia.com">VIP Reservations at Your Favorite Club</a></li>
+      <% if logged_in? %>
+      <li><a href="/account/manage">Manage Account</a></li>
+      <li><a href="/account/logout">Logout</a></li>
+      <% else %>
+      <li id="login"><a href="/account/login">Login</a></li>
+      <li id="signup"><a href="/account/create">Sign Up Now</a></li>
+      <li id="forgot_password"><a href="/account/lost_password">Forgot Password?</a></li>
+      <li id="user"></li>
+      <% end %>
+    </ul>
+	</div>
+</div>
+
+<div class="yui-g padded" id="banner">
+  <% if controller.controller_name == "search" %>
+    <%= render_ad "728x90_homepage" %>
+  <% else %>
+    <%= render_ad("728x90_ros") unless controller.controller_name == "admin" %>
+  <% end %>
+</div>
+
+<% if 1 == 2 %>
+<div id="wrap">
+  <div id="dash">
+    <h1 id="logo"><a href="/">AllTheParties: The Best Source of Parties Online</a></h1>
+      <% if logged_in? %>
+        <ul id='usermenu'>
+          <li id="magazine"><a href="http://mag.alltheparties.com">ATP The Mag</a></li>
+          <li id="user">Hey <a href="/people/<%= session[:user][:username] %>"><%= session[:user][:username] %></a> <a href="#"><img src="/images/mail.gif" alt="mail" onclick="Msg.show();" return="" false="" height="10" width="14"></a></li>
+          <li><a href="/account/manage">Manage Account</a></li>
+          <li><a href="/account/logout">Logout</a></li>
+          <li id="board"><a onclick="Auth.toggle_dashboard(); return false;" href="/account/dashboard">Dashboard</a></li>
+          <li id="city_drop_down" class="last"></li>
+        </ul>
+        
+      <% else  %>
+      <form action="/account/login" id="login" method="post">
+        <input name="username" id="username" maxlength="20" size="12" value="Username" type="text"><input name="url" id="url" value="" type="hidden"><input name="password" id="password" maxlength="20" size="12" value="Password" type="password"> <%= check_box "cookie", "remember_me", :tabindex=>3 %> Remember <input name="submit" value="Login" type="submit"></form>
+        <ul id="usermenu">
+          <li id="magazine"><a href="http://mag.alltheparties.com">ATP The Mag</a></li>
+          <li id="signup"><a href="/account/create">Sign Up Now</a></li>
+          <li id="city_drop_down" class="last"></li>
+        </ul>
+        <script type="text/javascript" language="javascript">
+        // <![CDATA[
+        Event.addBehavior({
+          "form#login": function(event) {
+            if (Cookie.get("login")) {
+          	  cook = Cookie.get("login").split("|");
+          	  $('username').value = cook[0];
+          	  $('password').value = cook[1];
+          	  $('cookie_remember_me').checked = true
+          	}
+          },
+          "form#login username:focus": function(event) {
+            if (this.value=='Username')
+              this.value='';
+          },
+          "form#login password:focus": function(event) {
+            if (this.value=='Password')
+              this.value='';
+          },
+          "form#login:submit": function(event) {
+            $('url').value = document.location;
+            //Auth.logout();
+            return L_process_and_hash();
+          }
+        });
+        function L_process_cookie() {
+        	if ($('cookie_remember_me').checked == true && $F('username') != '') { 
+        	  Cookie.set('login', $F('username') + "|" + $F('password'), 365);
+        	}
+        	else { 
+        	  Cookie.erase('login', '/', ''); 
+        	}
+        }
+        function L_process_and_hash(){
+        	$('username').value = $('username').value.trim();
+        	$('password').value = $('password').value.trim();
+        	L_process_cookie();
+        	return true;
+        }
+        // ]]>
+        </script>
+      <% end %>
+    <%= searchbox unless controller.controller_name == "search" %>
+    <div id="dash-content"></div>
+  </div> <!-- dash -->
+</div> <!-- wrap -->
+<% end %>

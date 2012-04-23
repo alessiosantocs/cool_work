@@ -1,0 +1,13 @@
+<div id="primaryContent">
+  <% form_tag(account_update_url(:sub_action => params[:sub_action] ), { :method=>"post", :id => "update_user_form" }) do %>
+  <fieldset>
+  	<%= if ['roles','location','password','mail_preference','email_address','miscellaneous'].include?(params[:sub_action])
+  				render :partial => params[:sub_action]
+  		end -%>
+  	  <p>
+  	  	<label>&nbsp;</label>
+  	  	<%= submit_tag "Update" %> | <a href="#" onclick="history.back(); return false;" class="faux_button">Cancel</a>
+  	  </p>
+  </fieldset>
+  <% end %>
+</div>

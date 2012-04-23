@@ -1,0 +1,35 @@
+#AWS authentication
+access_key: '0ZNQ3KC6J3W7P7T4V382'
+secret_key: '4PZqvIfegpq4BW/U+t4tZCjnYCj5Wqsay/2gCEKT'
+account: '7231-8707-7384'
+key_path: '/User/onyekwelu/.ec2/'
+keypair_name: 'atp-capazon-key'
+
+#s3 Related
+image_bucket: "fcgmedia_ami" #where are your ec2 AMI images stored#
+
+#ec2 Related
+url: 'ec2-67-202-1-56.z-2.compute-1.amazonaws.com'
+
+# Users on Server:
+user: 'deploy' #this user should initially be 'ec2admin' to login the first time to the instance
+user_password: 'password' 
+user_secondary: 'frstclan'
+user_secondary_password: 'Ifeobu'
+
+#database
+db_adapter: 'mysql'
+db_user: 'ieventus_user' #should match your database.yml
+db_password: 'ieventus' #should match your database.yml
+
+# SVN Repository
+svn_user: 'sam'
+svn_password: 'Inca495_bled'
+repository: 'http://clandestine.svn.engineyard.com/atp/trunk' 
+
+# options:
+application: 'atp'
+server: 'mongrel' #options: add mongrel and lighttpd configurations later
+mode: 'production'
+#cache: 'cache/www.quizical.net/landing/' #optional. For s3cache plugin
+use_ssl: false

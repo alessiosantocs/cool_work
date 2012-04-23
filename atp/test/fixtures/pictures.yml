@@ -1,0 +1,28 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+first:
+  id: 1
+  event_id: 1
+  file_name: '00'
+  caption: Run-DMC in Tavern, Southampton
+  position: 1
+  comments_allowed: false
+  created_on: <%= 5.days.ago.to_s :db %>
+  updated_on: <%= Time.now - 10330 %>
+second:
+  id: 2
+  event_id: 1
+  file_name: '01'
+  caption: Run-DMC in Tavern, Southampton
+  position: 1
+  comments_allowed: false
+  created_on: <%= 5.days.ago.to_s :db %>
+  updated_on: <%= Time.now - 10330 %>
+third:
+  id: 3
+  event_id: 1
+  file_name: '02'
+  caption: Run-DMC in Tavern, Southampton
+  position: 1
+  comments_allowed: false
+  created_on: <%= 5.days.ago.to_s :db %>
+  updated_on: <%= Time.now - 10330 %>

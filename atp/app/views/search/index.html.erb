@@ -1,0 +1,44 @@
+<% cache(:action => "index") do %>
+  <%
+    @cover_images = CoverImage.active.collect{|c| c.image.link('cover_image') }
+    @top_pics = Stat.most_views_by_count(SITE, 1.day.ago, SETTING["www"]["top_pics"])
+  %>
+<div class="yui-g padded">
+	<div class="yui-u first">
+    <%= cover_image_script @cover_images %>
+	</div>
+	<div class="yui-u">
+    <%= render_ad "336x280_homepage" %>
+	</div>
+</div>
+
+<div class="yui-g padded">
+	<div class="yui-u first">
+	  <h1>Video Player</h1>
+    <%= main_video_player %>
+	</div>
+	<div class="yui-u">
+    <h1><a href="http://mag.alltheparties.com">ATP The Mag Articles</a></h1>
+    <%= show_latest_news(7) %>
+	</div>
+</div>  
+
+<div class="yui-g center padded" id="list_of_cities">
+  Cities: <%= region_list %>
+</div>
+
+<div class="yui-g padded" id="photo_section">
+	<div class="yui-u first">
+		<h1>Recent Photos</h1>
+		<%= site_photos(SETTING["www"]["thumbnails"]) -%>
+	</div>
+	<div class="yui-u">
+	  <h1>Top 10 Viewed Photos</h1>
+	  <ul id="top_pics">
+		<% @top_pics.each do |st| %>
+    <li><%= stat_image(st) %></li>
+    <% end %>
+    </ul>
+	</div>
+</div>
+<% end %>

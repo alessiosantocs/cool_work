@@ -1,0 +1,19 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+first:
+  id: 1
+  user_id: 33
+  name: Salvatore Renzo
+  title: I don't know why I love you
+  location: Nell's in the bathroom
+  story: Make me wanna scream
+  published: true
+  created_on: <%= 1.days.ago.to_s :db %>
+second:
+  id: 2
+  user_id: 1
+  name: Rico Suave
+  title: We've got what you want
+  location: Show Nightclub entrance line
+  story: Make me wanna scream... It seems that the news from the outside world is a bit hazy, at best.
+  published: false
+  created_on: <%= 40.days.ago.to_s :db %>

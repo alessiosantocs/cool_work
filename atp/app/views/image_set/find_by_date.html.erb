@@ -1,0 +1,33 @@
+<% cache(:year => params[:year], :month => params[:month], :day => params[:day]) do -%>
+<% @latest_pictures = Event.image_sets_by_date(@city_ids, { :year => params[:year], :month => params[:month], :day => params[:day], :limit => 30 }) -%>
+<div id="primaryContent">
+  <h3>Pictures from <%= date_string(@this_date) %></h3>
+  
+  <table id='date_nav'>
+    <tr>
+      <td id="date_before"><%= event_image_set_by_date(@this_date - 1.day) %></td>
+      <td id="archive"><%= render :partial => "archive", :locals => { :time => @this_date } %></td>
+      <td id="date_after"><%= event_image_set_by_date(@this_date + 1.day) unless @this_date + 1.day >= Time.now %></td>
+    </tr>
+  </table>
+  
+  <% unless @latest_pictures.nil? %>
+  <table>
+    <% @latest_pictures.each do |e| %>
+    <tr valign="top">
+      <td width="104"><%= event_thumbnail(e) -%></td>
+      <td width="806"><%= "#{e.party.title} at #{e.venue.name}" %><br /><%= h e.synopsis %></td>
+    </tr>
+    <% end %>
+  </table>
+  <% else %>
+  <p>No Events Yet.</p>
+  <% end %>
+</div>  <!-- primaryContent -->
+
+<div id="secondaryContent">
+  <div id="googads">
+      <%= inhouse_ads('120x120') -%>
+  </div>
+</div>  <!-- secondaryContent -->
+<% end -%>

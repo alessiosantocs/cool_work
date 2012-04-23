@@ -1,0 +1,61 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+first:
+  id: 1
+  user_id: 2
+  full_name: Jisha Obukwelu
+  address: '4 South Pinehurst Avenue #4F'
+  city: New York
+  state: NY
+  country: us
+  postal_code: 10033
+  phone: 917-674-5655
+  total: 9.00
+  cc_type: Visa
+  cc_last4: '0123'
+  payment_status: Completed
+  void_confirmation_number:
+  ip_address: 192.12.11.1
+  response:
+  notes:
+  created_on: <%= 12.days.ago.to_s :db %>
+  updated_on: <%= Time.now - 10330 %>
+another:
+  id: 2
+  user_id: 3
+  full_name: Krazy Bonze
+  address: '4 South Pinehurst Avenue #4F'
+  city: New York
+  state: NY
+  country: us
+  postal_code: 10033
+  phone: 917-674-5655
+  total: 300.00
+  cc_type: Mast
+  cc_last4: '1234'
+  payment_status: Pending
+  void_confirmation_number:
+  ip_address: 192.12.11.1
+  response:
+  notes:
+  created_on: <%= 2.days.ago.to_s :db %>
+  updated_on: <%= Time.now - 130 %>
+third:
+  id: 3
+  user_id: 1
+  full_name: Samuel  Obukwelu
+  address: '4 South Pinehurst Avenue #4F'
+  city: New York
+  state: NY
+  country: us
+  postal_code: 10033
+  phone: 917-674-5655
+  total: 45.00
+  cc_type: Amex
+  cc_last4: '8901'
+  payment_status: Completed
+  void_confirmation_number:
+  ip_address: 19.192.44.52
+  response:
+  notes:
+  created_on: <%= 5.days.ago.to_s :db %>
+  updated_on: <%= Time.now - 1030 %>

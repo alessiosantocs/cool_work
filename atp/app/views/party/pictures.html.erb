@@ -1,0 +1,102 @@
+<% 
+	event_select_options = [["Select an Event", 0]] + @party.past_events(0,5).collect {|e| [ date_string(e.local_time), e.id ] }
+	unless @event.nil?
+  	@event.hosted_by = nil if @event.hosted_by.length == 0 rescue ''
+  	@event.synopsis = nil if @event.synopsis.length == 0 rescue ''
+  	pictures = (@event.image_sets.length == 0 ? [] : @event.image_sets)
+  end
+%>
+<div id="primaryContent">
+  <h1>Event Pictures for <%= "#{@party.title} at #{@party.venue.name}" -%></h1>
+  <p class="left"><span class="stronger">Picture Sets Remaining</span>: <span id="picture_sets_remaining"><%= @party.pics_left %></span></p>  
+  <p><%= select("event", "id", event_select_options, { :style => "width:250px;"}) %></p>
+  
+  <% unless params[:event_id].nil? %>
+  <% if @event.picture_uploaded or @party.pics_left > 0 %>
+  <div id="event_tools">
+    <h3><a href="#" id="switch_event_info" class="switch">+</a> Edit Event Synopsis and Host Information</h3>
+    <% form_tag(event_path({ :action => "update", :id => @event.id}), { :method=>"post", :id => "event_form", :style => "display:none" })  do %>
+      <p id="event_status" style="display:none"></p>
+  		<p>Hosted by:<br />
+  			<%= text_field 'event', 'hosted_by', { :size => 48, :maxlength => 75 } -%></p>
+  		<p>Synopsis:<br />
+  			<%= text_area 'event', 'synopsis', { :cols => 80, :rows => 4 } -%></p>
+  		<p><%= check_box 'event', 'comments_allowed' -%> Comments Allowed</p>
+  		<input id="event_id" type="hidden" name="id" />
+  		<div class="button-bar"><%= submit_tag "Update" -%></div>
+  	<% end %>
+  	<div id="event_loading" class="loading" style="display:none;"></div>
+  	
+  	<h3><a href="#" id="switch_upload" class="switch">+</a> Upload Images</h3>
+  	<div id="upload_images" style="display:none">
+  	  <% form_tag(event_path({ :action => "upload", :id => @event.id}), { :method=>"post", :id => "upload_form", :multipart=> true }) do %>
+      <p><input name="file" type="file" id="file" /> <input name="commit" type="submit" value="Upload" /></p>
+			<h3>Please Read</h3>
+			<ul>
+				<li>The maximum number of pictures for each gallery is 20.</li>
+				<li>The maximum file size is <span class="dark">2 Megabytes</span>.</li>
+				<li>To create a &quot;.zip file&quot;, download <a href="http://www.winzip.com/">Winzip for PCs</a> or <a href="http://www.maczipit.com/">ZipIt for the Apple Computers</a>.</li>
+				<li>To upload your pictures, they need to be compressed into <i>one .zip file</i>.</li>
+				<li>Any pictures deemed inappropriate will be subject to removal.</li>
+				<li>There will be no promotional logo, image, or text on any of the pictures.</li>
+				<li>The optimal picture dimensions are 640x480 or 480x640 at 72 dpi. You can go to <a href="http://www.irfanview.com/download_sites.htm" target="_blank">www.IrfanView.com</a> and download its image editing program. Use any image editing program to rotate and reduce the size of all your pictures.</li>
+				<li>Any pictures deemed inappropriate will be subject to removal.</li>
+			</ul>
+      <% end %>
+      <div id="uploading" style="display:none;"><%= image_tag "ajax-loader.gif" %></div>
+  	</div>
+	  
+  	<h3><a href="#" id="switch_arrange_images" class="switch">+</a> Arrange Images</h3>
+  	<div id="current_images" style="display:none">
+    	<p id="action_status" style="display:none"></p>
+    	<ul id="image_set">
+    	  <% pictures.each do |img| %>
+    	  <li id='image_set_<%= img.id %>'><%= event_image(img) %></li>
+    	  <% end %>
+    	</ul>
+  	</div>
+  	<% else %>
+  	<h1>To upload pictures, you can <%= link_to "purchase picture sets", order_a_party_url(:id=> @event.party_id) -%>.</h1>
+  	<% end %>
+  </div>
+  <script type="text/javascript" language="javascript">
+  // <![CDATA[
+    var current_event=<%= params[:event_id].to_i %>;
+    <% unless pictures.empty? %>
+    sorting = true;
+  	setTimeout(sort_or_not, 25);
+  	<% end %>
+  // ]]>
+  </script>
+  
+    <% unless @event.nil? %>
+    <h3><a href="#" id="switch_update_images" class="switch">+</a> Caption/Delete/Allow Comments on Images</h3>
+  	<div id="update_images" style="display:none">
+      <% form_tag(url_for({:controller=> "image_set", :action => "update_images", :obj_id => @event.id, :obj_type => @event.class}), { :method=>"post", :id => "update_form" }) do %>
+      <p id="update_status" style="display:none"></p>
+      <table id="image_set2">
+        <tr valign="bottom">
+          <th>Delete</th>
+          <th>Image</th>
+          <th>Caption</th>
+          <th>Comments Allowed</th>
+        </tr>
+        <tbody>
+          <% pictures.each do |img| %>
+          <tr id='image_set2_<%= img.id %>'>
+            <td><%= check_box 'delete', img.id -%></td>
+            <td><%= event_image(img) %></td>
+            <td><%= text_field 'caption', img.id, {:value=> img.image.caption, :size => 48, :maxlength => 75 } -%></td>
+            <td><%= check_box 'comments_allowed', img.id, { :checked => img.comments_allowed } -%></td>
+          </tr>
+          <% end %>
+        </tbody>
+      </table>
+      <p><input name="commit" type="submit" value="Update" /> </p>
+      <% end %>
+      <div id="updating" style="display:none;"><%= image_tag "ajax-loader.gif" %></div>
+    </div>
+    <% end %>
+  <% end %>
+</div>
+<ul><li></li></ul>

@@ -1,0 +1,30 @@
+<div id="primaryContent">
+  <h1>Manage</h1>
+  <ul id="manage_links">
+  	<% if promoter? or photographer? %>
+  	<li>Parties
+  		<ul>
+  			<% if promoter? %><li><%= link_to 'Create a new party', {:action => 'create', :controller => 'party', :id => nil } -%></li><% end %>
+  			<li class="last"><%= link_to 'Manage Parties and Event Pictures', {:action => 'manage', :controller => 'party', :id => nil } -%></li>
+  		</ul>
+  	</li>
+  	<% end %>
+	
+  	<li>Favorites
+  		<ul>
+  			<li><%= link_to 'View/Edit Faves', { :controller => 'fave', :action => 'list' } -%></li>
+  		</ul>
+  	</li>
+	
+  	<li>Update Registration Information
+  		<ul>
+  			<li><%= link_to 'Location and Time Zone', {:action => 'update', :sub_action => 'location', :id => nil } -%></li>
+  			<li><%= link_to 'Email Address', {:action => 'update', :sub_action => 'email_address', :id => nil } -%></li>
+  			<li><%= link_to 'Password', {:action => 'update', :sub_action => 'password', :id => nil } -%></li>
+  			<li><%= link_to 'Mailing Preference', {:action => 'update', :sub_action => 'mail_preference', :id => nil } -%></li>
+  			<li><%= link_to 'Roles', {:action => 'update', :sub_action => 'roles', :id => nil } -%> (Only if want to promote parties or upload photos for a promoter or nightclub)</li>
+  			<li class="last"><%= link_to 'Additional Information', {:action => 'update', :sub_action => 'miscellaneous', :id => nil } -%></li>
+  		</ul>
+  	</li>
+  </ul>
+</div>

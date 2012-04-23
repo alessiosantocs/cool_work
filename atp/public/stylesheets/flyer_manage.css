@@ -1,0 +1,26 @@
+ul#flyer_types li{
+  float: left;
+  margin: 0 150px;
+  text-align: center;
+  margin-right: 5px;
+}
+
+ul#flyer_types li.current{
+  border: 3px solid #f1f1f1;
+}
+ul#flyer_types li h3{
+  border-bottom: 1px solid #FFF;
+  padding-bottom: 3px;
+}
+
+ul#flyer_types li img{
+  margin: 3px;
+}
+
+/*
+FIXME: Make the forms go below the flyers
+*/
+
+div#secondaryContent{
+  clear: both;
+}

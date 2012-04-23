@@ -1,0 +1,21 @@
+<%= number_with_precision(asset.rating, 2) %>/5 Stars<br />
+<ul class='star-rating'>
+  <li class='current-rating' style='width:<%= (asset.rating * 24).to_i -%>px;'>
+        Currently <%= number_with_precision(asset.rating, 1) %>/5 Stars.
+      </li>
+  <li>
+      <%= link_to( "1", rate_url(:obj_type=> asset.class.to_s, :obj_id => asset.id, :rating => 1), :class => 'one-star', :name => '1 star out of 5') %>
+  </li>
+  <li>
+      <%= link_to( "2", rate_url(:obj_type=> asset.class.to_s, :obj_id => asset.id, :rating => 2), :class => 'two-stars', :name => '2 star out of 5') %>
+  </li>
+  <li>
+      <%= link_to( "3", rate_url(:obj_type=> asset.class.to_s, :obj_id => asset.id, :rating => 3), :class => 'three-stars', :name => '3 star out of 5') %>
+  </li>
+  <li>
+      <%= link_to( "4", rate_url(:obj_type=> asset.class.to_s, :obj_id => asset.id, :rating => 4), :class => 'four-stars', :name => '4 star out of 5') %>
+  </li>
+  <li>
+      <%= link_to( "5", rate_url(:obj_type=> asset.class.to_s, :obj_id => asset.id, :rating => 5), :class => 'five-stars', :name => '5 star out of 5') %>
+  </li>
+</ul>

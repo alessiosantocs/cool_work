@@ -1,0 +1,55 @@
+<% @booking = Booking.blank %>
+<%= form_tag(nil, { :method => 'post', :id => "create_form", :autocomplete => "off", :onsubmit => "submitNew(); return false;" }) -%>
+	    <p>Size:<br /> 
+  	  	<%= text_field 'booking', 'size', { :maxlength => 4, :size => 9 } -%>
+  </p>
+    <p>Open bar:<br /> 
+  	  	<%= check_box 'booking', 'open_bar', {} -%>
+  </p>
+    <p>Catering:<br /> 
+  	  	<%= check_box 'booking', 'catering', {} -%>
+  </p>
+    <p>Resolved:<br /> 
+  	  	<%= check_box 'booking', 'resolved', {} -%>
+  </p>
+    <p>Contact phone:<br /> 
+  	  	<%= text_field 'booking', 'contact_phone', { :maxlength => 15, :size => 25 } -%>
+  </p>
+    <p>Notes:<br /> 
+  	  	<%= text_area 'booking', 'notes', { :rows => 20, :cols => 60 } -%>
+  </p>
+    <p>Contact date:<br /> 
+  	  	<%= text_field 'booking', 'contact_date', { :maxlength => 12, :size => 24 } -%>
+  </p>
+    <p>Bottle service:<br /> 
+  	  	<%= check_box 'booking', 'bottle_service', {} -%>
+  </p>
+    <p>Party date:<br /> 
+  	  	<%= text_field 'booking', 'party_date', { :maxlength => 8, :size => 12 } -%>
+  </p>
+    <p>Contact email:<br /> 
+  	  	<%= text_field 'booking', 'contact_email', { :maxlength => 45, :size => 55 } -%>
+  </p>
+    <p>User:<br /> 
+  	  	<%= text_field 'booking', 'user_id', { :maxlength => 11, :size => 16 } -%>
+  </p>
+    <p>Party type:<br /> 
+  	  	<%= text_field 'booking', 'party_type', { :maxlength => 2, :size => 7 } -%>
+  </p>
+    <p>Party:<br /> 
+  	  	<%= text_field 'booking', 'party_id', { :maxlength => 11, :size => 16 } -%>
+  </p>
+    <p>Budget:<br /> 
+  	  	<%= text_field 'booking', 'budget', { :maxlength => 6, :size => 11 } -%>
+  </p>
+    <p>Contact name:<br /> 
+  	  	<%= text_field 'booking', 'contact_name', { :maxlength => 45, :size => 55 } -%>
+  </p>
+    <p>Car service:<br /> 
+  	  	<%= check_box 'booking', 'car_service', {} -%>
+  </p>
+    <p>Resolved on:<br /> 
+  	  	<%= text_field 'booking', 'resolved_on', { :maxlength => 12, :size => 24 } -%>
+  </p>
+  	<div class="button-bar"><%= submit_tag "Create" -%></div>
+<%= end_form_tag -%>

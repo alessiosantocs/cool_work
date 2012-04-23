@@ -1,0 +1,120 @@
+/* - - - - - - - - - - - - - - - - - - - - -
+Title : AllTheParties Stylesheet
+Author : Lealea Design
+URL : http://www.lealea.net/
+Description : Home Page Specific Style Sheet
+Created : Dec 14, 2006
+Modified : Dec 14, 2006
+- - - - - - - - - - - - - - - - - - - - - */
+/*---------------------home page structure---------------------*/
+#search #bd ul {
+  margin-top:0.5em;
+}
+
+#search #bd ul li {
+  list-style-type:none;
+  font-size:100%;
+}
+
+#search div#magazine{
+  width: 100%;
+  color: #CCC;
+  border-top: 1px solid #CCC;
+  padding: 3px 2px;
+  text-align: left;
+}
+
+/*---------------------News---------------------*/
+#search #list_of_cities{
+	font-size: 125%;
+	text-align: center;
+}
+/*---------------------News---------------------*/
+#search div#news{
+  font-size: 100%;
+  color: #000;
+  background-color: #FFF;
+  padding: 0 3px;
+  margin-bottom: 10px;
+  border: 1px solid #BC8500;
+}
+#search div#news h1{
+  color: #000;
+  padding: 0;
+  margin: 0;
+}
+#search div#news a{
+  color: #0B22B1;
+}
+#search div#news ul{
+  margin: 0;
+  padding: 0;
+}
+
+/*---------------------Recent Photos---------------------*/
+#search div#photo_section ul.photos li.with_thumb > a, #search div#photo_section ul#top_pics li > a{
+  float: left;
+  margin: 3px;
+  padding: 0;
+  width: 100px;
+}
+
+#search div#photo_section ul.photos li.with_thumb img, #search div#photo_section ul#top_pics li img{
+  border: 1px solid #CCC;
+}
+
+#search div#photo_section ul.photos li.with_thumb > span, #search div#photo_section ul#top_pics li > span{
+  margin-left: 5px;
+  width: 310px;
+}
+#search div#photo_section ul.photos li, #search div#photo_section ul#top_pics li{
+  padding:0;
+}
+
+#search div#photo_section ul.photos li.with_thumb, #search div#photo_section ul#top_pics li{
+  height: 108px;
+  margin-bottom: 8px;
+}
+/*---------------------top photos---------------------*/
+#search div#photo_section ul#top_pics li{
+  float:left;
+  width: 100%;
+}
+
+#search h2 {
+background:0;
+text-align:left;
+color:#A9C9E9;
+font-family:Arial,sans-serif;
+font-size:2em;
+text-transform:none;
+}
+#search h2 a {
+color:#A9C9E9;
+}
+
+#search p {
+margin:0;
+}
+
+#search #topbar {
+height:150px;
+}
+
+#search #topbar ul {
+margin:0 auto;
+width:575px;
+padding-top:2em;
+}
+
+#search #topbar ul li {
+list-style-type:none;
+float:left;
+width:125px; height:90px;
+padding:0 2em;
+border-right:1px dashed #999;
+}
+
+#dash ul .last, #search #primaryContent ul .last, #search #topbar .last {
+border-right:0;
+}

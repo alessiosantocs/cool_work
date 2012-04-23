@@ -1,0 +1,22 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+first:
+  id: 1
+  name: Days
+  description: Advertise to our audience of hundreds of thousands of visitors
+  price: 3
+  active: true
+  created_on: <%= 4.years.ago.to_s :db %>
+second:
+  id: 2
+  name: Pictures
+  description: Get those pictures to promote your event. Advertise to our audience of hundreds of thousands of visitors
+  price: 35
+  active: true
+  created_on: <%= 5.months.ago.to_s :db %>
+third:
+  id: 3
+  name: Email
+  description: Get the word to the inbox of our users. Advertise to our audience of hundreds of thousands of visitors
+  price: 50
+  active: true
+  created_on: <%= 25.days.ago.to_s :db %>

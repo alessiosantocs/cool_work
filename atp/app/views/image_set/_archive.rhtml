@@ -1,0 +1,14 @@
+<% time ||= 1.day.ago %>
+<% form_tag("/pictures", {:id=> "archive_form"}) do %>
+<p>Select the date you wish to see: <br /><%= select_date(time, :start_year => Time.now.year - 5, :end_year => Time.now.year, :order => [:month, :day, :year]) %> 
+<%= button_to_function "submit", "", {:id =>"send_date" } %></p>
+<% end %>
+<script type="text/javascript" language="javascript">
+// <![CDATA[
+Event.addBehavior({
+	"form #send_date:click" : function() {
+		document.location = "/pictures/"+$F('date_year')+"/"+$F('date_month')+"/"+$F('date_day');
+	}
+});
+// ]]>
+</script>

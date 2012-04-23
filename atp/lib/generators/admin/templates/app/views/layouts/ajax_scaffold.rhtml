@@ -1,0 +1,11 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+<head>
+  <title><%= table.pluralize -%></title>
+  <%%= ajax_scaffold_includes %>
+</head>
+<body>
+   <%%= yield %>
+  <%= render :partial => 'layouts/shared/tooltip_dialog_notice'%>
+</body>
+</html>

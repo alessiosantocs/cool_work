@@ -1,0 +1,40 @@
+<% @image = Image.blank %>
+<%= form_tag(nil, { :method => 'post', :id => "create_form", :autocomplete => "off", :onsubmit => "submitNew(); return false;" }) -%>
+	    <p>Name:<br /> 
+  	  	<%= text_field 'image', 'name', { :maxlength => 24, :size => 34 } -%>
+  </p>
+    <p>Size:<br /> 
+  	  	<%= text_field 'image', 'size', { :maxlength => 10, :size => 15 } -%>
+  </p>
+    <p>Extension:<br /> 
+  	  	<%= text_field 'image', 'extension', { :maxlength => 12, :size => 22 } -%>
+  </p>
+    <p>Url:<br /> 
+  	  	<%= text_field 'image', 'url', { :maxlength => 128, :size => 138 } -%>
+  </p>
+    <p>Caption:<br /> 
+  	  	<%= text_field 'image', 'caption', { :maxlength => 75, :size => 85 } -%>
+  </p>
+    <p>Server:<br /> 
+  	  	<%= text_field 'image', 'server', { :maxlength => 25, :size => 35 } -%>
+  </p>
+    <p>Height:<br /> 
+  	  	<%= text_field 'image', 'height', { :maxlength => 4, :size => 9 } -%>
+  </p>
+    <p>Comments allowed:<br /> 
+  	  	<%= check_box 'image', 'comments_allowed', {} -%>
+  </p>
+    <p>User:<br /> 
+  	  	<%= text_field 'image', 'user_id', { :maxlength => 10, :size => 15 } -%>
+  </p>
+    <p>Path:<br /> 
+  	  	<%= text_field 'image', 'path', { :maxlength => 128, :size => 138 } -%>
+  </p>
+    <p>Parent:<br /> 
+  	  	<%= text_field 'image', 'parent_id', { :maxlength => 11, :size => 16 } -%>
+  </p>
+    <p>Width:<br /> 
+  	  	<%= text_field 'image', 'width', { :maxlength => 4, :size => 9 } -%>
+  </p>
+  	<div class="button-bar"><%= submit_tag "Create" -%></div>
+<%= end_form_tag -%>

@@ -1,0 +1,118 @@
+<% cache do %>
+  <% 
+    @new_parties = Party.recent_parties_by_city(@city_ids, {:limit => 5})
+    @cover_images = CoverImage.by_cities(@city_ids).collect{|c| c.image.link('cover_image') }
+    @fresh_pictures = Event.latest_image_sets(@city_ids, {:limit => 12})
+  %>
+
+<script type="text/javascript" language="javascript">
+// <![CDATA[
+D.require("dijit.layout.TabContainer");
+D.require("dijit.layout.ContentPane");
+D.addOnLoad(function(){
+  D.style("recent_articles_parties_videos", {visibility: "visible"});
+});
+// ]]>
+</script>
+<table id="region_show_main">
+  <tr>
+    <td width="50%">
+      <!-- cover shot -->
+      <%= cover_image_script @cover_images %>
+    </td>
+    <td width="50%">
+      <!-- tabbed content -->
+      <div id="recent_articles_parties_videos" dojoType="dijit.layout.TabContainer" style="visibility:hidden;">
+        <div dojoType="dijit.layout.ContentPane" title="Latest Parties"> 
+          <div id="latest_parties">
+            <table>
+              <thead>
+                <tr>
+                  <th>Date</th>
+                  <th>Next Party</th>
+                  <th>Venue</th>
+                </tr>
+              </thead>
+              <tbody>
+              <% unless @new_parties.nil? %>
+                <% @new_parties.each do |p| %>
+                <% url = party_path(p) %>
+                <tr>
+                  <td><a class="party" href="<%= url %>"><%= date_string(p.event.local_time) %></a></td>
+                  <td><a class="party" href="<%= url %>" title="<% p.title %>" class="party_title"><%= p.title.maxlength(24) %></a></td>
+                  <td><a class="party" href="<%= venue_path(p.venue) %>" class="venue_name"><%= p.venue.name.maxlength(12) %></a></td>
+                </tr>
+                <% end %>
+              <% end %>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div dojoType="dijit.layout.ContentPane" title="Recent Articles"> 
+          <%= show_latest_news(15) %>
+        </div>
+        <div dojoType="dijit.layout.ContentPane" title="Video Player"> 
+          <%= main_video_player %>
+        </div>
+      </div>
+    </td>
+  </tr>
+  <tr>
+    <td colspan="2">
+      <table>
+        <tr>
+          <td colspan="2">
+            <!-- 120x120 banners -->
+            <div class="flyerads">
+              <h4>Flyer Ads</h4>
+              <%= inhouse_ads("120x120", "frontpage", 5) -%>
+            </div>
+          </td>
+          <td rowspan="2"> 
+            <!-- vertical banner  -->
+            <div id="div_for_120x600">
+              <%= render_ad("120x600_ros") %>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <!-- pictures -->
+            <div id="freshpics">
+              <h1><a href="/pictures">Fresh Pictures</a></h1>
+              <p id="picdesc">Roll over image for more info</p>
+              <% unless @fresh_pictures.nil? %>
+              <ul>
+                <% @fresh_pictures.each do |e| %>
+                <li><%= event_thumbnail(e) -%></li>
+                <% end %>
+              </ul>
+              <% end %>
+            </div>
+          </td>
+          <td>
+            <!-- 338x280 banner -->
+            <div class="advertisement">
+          		<h4>Advertisement</h4>
+              <%= render_ad("336x280_frontpage") -%>
+              <p>To advertise, call Chris at <strong>347-558-4020</strong> or email <a href="mailto:ccampbell@firstclandestine.com">ccampbell@firstclandestine.com</a></p>
+          	</div>
+          </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>
+<script type="text/javascript" language="javascript">
+// <![CDATA[
+  Event.addBehavior({
+  	"a.event_link:mouseover" : function() { 
+  		$('picdesc').update(this.title.truncate(55, "..."));
+  	},
+  	"a.event_link:mouseout" : function() { 
+  		$('picdesc').update('Roll over image for more info');
+  	}
+  });
+// ]]>
+</script>
+<% end %>

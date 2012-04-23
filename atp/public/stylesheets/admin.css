@@ -1,0 +1,38 @@
+div#instructions{
+  border: 1px solid #FFF;
+  padding: 3px;
+}
+
+ul#results{
+  border-top: 1px solid #f1f1f1;
+}
+
+.active_0, .active_-1{
+  text-decoration: line-through;
+}
+
+li.active_0, li.active_-1, li.active_1{
+  cursor: pointer;
+}
+#party{
+  border-left: 1px solid #FFF;
+  border-right: 1px solid #FFF;
+  padding:3px;
+}
+table tr td div#image_set p{
+  padding: 2px 3px;
+  border-bottom: 1px solid #CCCCCC;
+}
+
+table tr td div#image_set p span{
+  font-weight: bolder;
+  float: right;
+  cursor: pointer;
+}
+.flag-low{
+  background-color: #FEA904;
+  color: #000000;
+}
+.flag-high{
+  background-color: #C91111;
+}

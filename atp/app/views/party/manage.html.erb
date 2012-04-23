@@ -1,0 +1,18 @@
+<div id="primaryContent">
+  <h1>Manage All Parties</h1>
+  <h3><%= link_to "Create a new party", {:action => 'create'} %></h3>
+  <% if params[:active].to_s == 'false' %>
+  <h2><a href="?active=true" class="subtab">Active</a></h2>
+    <h2><a href="?active=false">Inactive</a></h2>
+  <% else %>
+    <h2><a href="?active=false" class="subtab">Inactive</a></h2>
+    <h2><a href="?active=true">Active</a></h2>
+  <% end %>
+  <div id="parties">
+  <% if @parties.size > 0 %>
+  	<%= render :partial => "party/party_managed", :collection => @parties  -%>
+  <% else %>
+  	<span class="stronger">None</span>
+  <% end%>
+  </div>
+</div>

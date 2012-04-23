@@ -1,0 +1,13 @@
+<% @fave = Fave.blank %>
+<%= form_tag(nil, { :method => 'post', :id => "create_form", :autocomplete => "off", :onsubmit => "submitNew(); return false;" }) -%>
+	    <p>Obj type:<br /> 
+  	  	<%= text_field 'fave', 'obj_type', { :maxlength => 12, :size => 22 } -%>
+  </p>
+    <p>Obj:<br /> 
+  	  	<%= text_field 'fave', 'obj_id', { :maxlength => 10, :size => 15 } -%>
+  </p>
+    <p>User:<br /> 
+  	  	<%= text_field 'fave', 'user_id', { :maxlength => 10, :size => 15 } -%>
+  </p>
+  	<div class="button-bar"><%= submit_tag "Create" -%></div>
+<%= end_form_tag -%>

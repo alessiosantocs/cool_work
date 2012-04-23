@@ -1,0 +1,11 @@
+dl{
+	clear: both;
+	border: 2px #FFF solid;
+	margin: 0 0 3px 0;
+  min-height: 130px;
+}
+
+dl dt div.flyer{
+  float: left;
+  clear: both;
+}

@@ -1,0 +1,215 @@
+set :user,         "frstclan"# "frstclan"
+set :password,     "Ifeobu5"
+set :svn_user,     "sam"
+set :svn_password, "Inca495_bled"
+set :production_database,'frstclan_prod'
+set :stage_database, 'frstclan_stage'
+set :mysql_user_prod, 'frstclan_prod'
+set :mysql_pass_prod, 'nk3fripr2r9' #hosted at mysql50-4
+set :mysql_user_stage, 'frstclan_stage'
+set :mysql_pass_stage, 'ODaYZPCqojCq'
+set :keep_releases, 30
+set :checkout, "export"
+set :application, 'frstclan'
+# 
+default_run_options[:pty] = true
+set :shared_dir, "shared"
+set :repository,  "git@github.com:joemocha/atp.git"
+set :branch, "master"
+set :scm, :git
+set :copy_exclude, [".git", ".gitignore", "log/*", "tmp/*"]
+set :deploy_via, :copy #:export
+set :copy_cache, false
+set :chmod755, %w(app config db lib public vendor script tmp public/dispatch.cgi public/dispatch.fcgi public/dispatch.rb)
+
+ssh_options[:forward_agent] =  true
+ssh_options[:keys] =  "/Users/onyekwelu/.ssh/id_rsa"
+# ssh_options[:auth_methods] = %w(password keyboard-interactive)
+
+case ENV['DEPLOY']
+  # when "production"  
+  #   role :web, "65.74.171.253:8024"
+  #   role :app, "65.74.171.253:8023", :no_release => true, :no_symlink => true
+  #   role :app, "65.74.171.253:8024"
+  #   role :db,  "65.74.171.253:8024", :primary => true
+  # when "staging"
+  #   role :web,   "65.74.171.253:8025"
+  #   role :app,   "65.74.171.253:8025"
+  #   role :db,    "65.74.171.253:8025", :primary => true
+  when "production"
+    role :web, "209.251.185.179:7001"
+    role :app, "209.251.185.179:7000", :no_release => true, :no_symlink => true
+    role :app, "209.251.185.179:7001"
+    role :db,  "209.251.185.179:7001", :primary => true
+  when "staging"
+    role :web, "209.251.185.139:7000"
+    role :app, "209.251.185.139:7000"
+    role :db,  "209.251.185.139:7000", :primary => true
+end
+
+set :deploy_to, "/data/#{application}"
+set :deploy_to_worker, "/mnt/#{application}"
+
+# Dir['vendor/plugins/*/recipes'].each do |plugin| 
+#   load_paths << plugin 
+# end
+
+load 'deploy' if respond_to?(:namespace) # cap2 differentiator
+load 'config/deploy'
+
+namespace :deploy do
+  task :restart, :roles => [:app] do
+    restart_mongrel_cluster
+  end
+  
+  task :start, :roles => [:app] do
+    start_mongrel_cluster
+  end
+  
+  task :stop, :roles => [:app] do
+    stop_mongrel_cluster
+  end
+end
+
+namespace :imgq do
+  desc "see if image script is running"
+  task :check, :roles => [:app], :only => { :no_release => true } do
+    run "ps aux | egrep '(PID|image_queue)'"
+  end
+  
+  desc "run image script"
+  task :start, :roles => [:app], :only => { :no_release => true } do
+    run "cd #{deploy_to}/current && nohup ruby #{deploy_to}/current/image_queue.rb > /dev/null"
+  end
+  
+  desc "show recent uploads"
+  task :recent, :roles => [:app], :only => { :no_release => true } do
+    run "tail -n 3000 #{deploy_to}/current/nohup.out | egrep '(event)' -C 1"
+  end
+  
+  desc "show uploaded files to be processed"
+  task :uploaded, :roles => [:app], :only => { :no_release => true } do
+    puts "Uploaded Files"
+    run "ls -l #{deploy_to}/current/public/system/upload"
+    puts "Files being processed"
+    run "ls -l #{deploy_to}/current/public/system/scratch"
+  end
+end
+
+namespace :img do
+  desc "Drop images from site"
+  task :drop, :roles => [:app], :only => { :no_release => true } do
+    rails_env = fetch(:rails_env, "production")
+    imgids = ENV["ID"] || []
+    abort "ID is missing!" if imgids.empty?
+    run "cd #{deploy_to}/current && ./script/runner -e #{rails_env} 'imgs=ImageSet.find(#{imgids}); imgs.kind_of?(Array) ? imgs.each{|i| i.destroy } : imgs.destroy'"
+  end
+end
+
+namespace :move2s3 do
+  # desc "Move Images and Files to S3"
+  # task :default => [:backup_and_upload, :verify_with_starfish], :roles => [:image] do
+  #   
+  # end
+  
+  #Backup and copy original DB to staging server
+  task :backup_and_upload, :roles => [:db] do
+    puts "Doing the DB thing...."
+    clonedb_prod_to_stage
+  end
+  
+  #Kicks off Starfish 4 times with verify_with_starfish.rb
+  task :verify_images_exist, :roles => [:image] do
+    puts "Doing the verify_images_exist thing...."
+    path = "#{deploy_to}/current"
+    put "verify_with_starfish.rb", "#{path}/verify_with_starfish.rb", :mode => 0700
+    run_file = "nohup starfish #{path}/verify_with_starfish.rb &"
+    method(:fork).call { system(run_file) }
+    sleep(30)
+    3.times do
+      method(:fork).call { system(run_file) }
+    end
+  end
+end
+
+namespace :ec2 do
+  @ec2_config ||= YAML::load(ERB.new(IO.read("config/aws.yml")).result)
+  @root_ssh = login = "ssh -i #{@ec2_config['keypair_name']} root@#{@ec2_config['url']}"
+  
+  task :stats do
+    run "cd #{deploy_to}/current && tail -n 10 ./zzmv_imgset.txt.log && cat nohup.out"
+  end
+  
+  task :copy_db  do
+    #clonedb_prod_to_stage
+    puts "Doing the DB thing...."
+    puts ENV['DEPLOY']
+    run "ls -al #{deploy_to}/"
+  end
+  
+  task :install_rails do
+    system "#{@root_ssh} 'gem i -r -v=2.1.1 rails --include-dependencies'"
+    system "#{@root_ssh} 'gem i -r feed-normalizer --include-dependencies'"
+  end
+  
+  # task :grant_db do
+  #   run "mysql -e “GRANT ALL PRIVILEGES ON *.atp TO #{user}@localhost IDENTIFIED BY ‘today’” -u#{user} -p#{password}"
+  # end
+  # task :install_starfish do
+  #   system "#{@root_ssh} 'gem i -r starfish --include-dependencies'"
+  # end
+  # 
+  # task :create_sym_links do
+  #   system "#{@root_ssh} 'mkdir /data && ln -s #{deploy_to_worker} #{deploy_to} && chown -R #{u}:#{u} #{deploy_to_worker}'"
+  # end
+  # 
+  # task :create_user do
+  #   u = user
+  #   login = "ssh -i #{@ec2_config['keypair_name']} root@#{@ec2_config['url']}"
+  #   puts "The password is #{password}"
+  #   create_sym_links
+  #   authorized_key = File.open("#{ENV["HOME"]}/.ssh/id_rsa.pub"){|l| l.read }
+  #   system "#{login} 'groupadd #{u} && useradd -g #{u} #{u} && passwd #{u} && mkdir /home/#{u}/.ssh'"
+  #   #system "#{login} '(cd /home/#{u}/.ssh; ssh-keygen -t rsa)'"
+  #   system "cat #{ENV["HOME"]}/.ssh/id_rsa.pub | #{login} 'cat >> /home/#{u}/.ssh/authorized_keys'"
+  #   puts "First Login: ssh #{u}@#{@ec2_config['url']}"
+  #   puts "Secondly: cd .ssh; ssh-keygen -t rsa"
+  # end
+  # 
+  # task :rmuser do
+  #   u = user
+  #   system "ssh -i #{@ec2_config['keypair_name']} root@#{@ec2_config['url']} 'userdel #{u}'"
+  #   system "ssh -i #{@ec2_config['keypair_name']} root@#{@ec2_config['url']} 'groupdel #{u}'"
+  # end
+  
+  desc "Install gems"
+  task :install_gems do
+    # in case gem update fails, it trys again
+    begin
+      gem_plugin.install 'rails', :source => "http://gems.rubyforge.org", :version => '1.22' # sudo gem install rails --include-dependencies
+    rescue
+      retry
+    end
+
+    gem_plugin.select 'hpricot', :version => '0.6', :platform => 'ruby'
+    gem_plugin.install 'feed-normalizer'
+
+    # uncomment to install pre-releases and rc1,2 candidates
+    # sudo gem install mongrel --source=http://mongrel.rubyforge.org/releases/ --include-dependencies
+    # sudo gem install mongrel_cluster --include-dependencies  
+    gem_plugin.select 'mongrel', :version => '1.0.1', :platform => 'ruby'
+    gem_plugin.install 'mongrel_cluster', :version => '1.0.2'
+
+    gem_plugin.select 'rcov', :version => '0.8.0.2', :platform => 'ruby'
+    gem_plugin.install 'net-ssh capistrano termios rmagick RedCloth BlueCloth tzinfo money sparklines aws-s3 amazon-ec2 mini_magick ruby-openid'
+  end
+end
+
+# wget http://curl.haxx.se/download/curl-7.19.0.tar.gz
+# wget http://www.codemonkey.org.uk/projects/git-snapshots/git/git-latest.tar.gz
+# export LD_LIBRARY_PATH=/usr/local/lib 
+# sudo ldconfig
+desc "Clear cache in tmp folder"
+task :clear_cache, :roles => [:app, :db], :only => { :primary => true } do
+  run "rm -rf #{deploy_to}/current/tmp/cache/*"
+end

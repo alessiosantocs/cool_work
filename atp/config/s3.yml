@@ -1,0 +1,5 @@
+aws_access_key: '0ZNQ3KC6J3W7P7T4V382'
+aws_secret_access_key: '4PZqvIfegpq4BW/U+t4tZCjnYCj5Wqsay/2gCEKT'
+bucket_base_name: 'atp'
+options:
+  use_ssl: false #set it to true or false

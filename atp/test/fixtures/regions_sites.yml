@@ -1,0 +1,10 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+nyc_in_atp:
+  region_id: 1
+  site_id: 1
+vegas_in_anc:
+  region_id: 3
+  site_id: 2
+nyc_in_anc:
+  region_id: 1
+  site_id: 2

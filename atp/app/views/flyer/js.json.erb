@@ -1,0 +1,2 @@
+var flyers = <%= @flyers.collect{|p| { :url => party_url(p, params[:domain]), :src => p.current_flyer.image.link('flyer') } unless p.current_flyer.image.nil? }.to_json %>;
+render_ads(flyers,<%= params[:n] -%>,'<%= @orient -%>');

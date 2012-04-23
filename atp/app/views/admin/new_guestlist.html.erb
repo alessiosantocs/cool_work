@@ -1,0 +1,16 @@
+<% @guestlist = Guestlist.blank %>
+<%= form_tag(nil, { :method => 'post', :id => "create_form", :autocomplete => "off", :onsubmit => "submitNew(); return false;" }) -%>
+	    <p>Event:<br /> 
+  	  	<%= text_field 'guestlist', 'event_id', { :maxlength => 10, :size => 15 } -%>
+  </p>
+    <p>Number of guests:<br /> 
+  	  	<%= text_field 'guestlist', 'number_of_guests', { :maxlength => 3, :size => 8 } -%>
+  </p>
+    <p>User:<br /> 
+  	  	<%= text_field 'guestlist', 'user_id', { :maxlength => 10, :size => 15 } -%>
+  </p>
+    <p>Full name:<br /> 
+  	  	<%= text_field 'guestlist', 'full_name', { :maxlength => 45, :size => 55 } -%>
+  </p>
+  	<div class="button-bar"><%= submit_tag "Create" -%></div>
+<%= end_form_tag -%>

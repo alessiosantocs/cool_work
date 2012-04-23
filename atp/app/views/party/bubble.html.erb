@@ -1,0 +1,7 @@
+<p><%= h @party.title %> at <%= h @party.venue.name %></p>
+<% if @party.pictures.size > 0 %>
+<div id="picture_list">
+	<p><span class="stronger">Recent Pictures:</span> <%= @party.pictures.collect{|e| event_image_set_link(e) }.join(', ') -%></p>
+</div>
+<%= render :partial => "party/image_set", :locals => {:event => @party.event } -%>
+<% end %>

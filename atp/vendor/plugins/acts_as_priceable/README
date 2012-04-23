@@ -1,0 +1,83 @@
+= acts_as_priceable
+Mar. 6 2006 - Orya, orya@orya.co.uk
+
+Installation:
+
+1. script/plugin install acts_as_priceable
+
+2. script/generate priceable_migration add_priceable_tables
+
+3. rake migrate
+
+== About:
+This plugin allows you to make any model "priceable". This means each record of your model will be associated with zero or more different prices in different currencies. You can easily use this for single currencies also. Currencies are cached along with currency code and currency symbol.
+
+== Examples:
+1. SINGLE CURRENCY EXAMPLE: You sell cars and accessories on your website in USD only.
+
+    # models
+    class Car < ActiveRecord::Base
+      acts_as_priceable
+    end
+
+    class Accessory < ActiveRecord::Base
+      acts_as_priceable
+    end
+
+    # Put this line in your environment
+    Pricing.default_currency = :usd
+
+    # Example controller code
+    car = Car.find_first
+    car.price = 6700
+
+    accessory = Accessory.find_first
+    accessory.price = 2.99
+    accessory.price.to_s # => "$2.99"
+
+    order_total = car.price + accessory.price # returns Price object containing currency
+    order_total.to_s # => "$6,702.99"
+
+2. MULTIPLE CURRENCIES: You're a major distributor of spoons in the US and UK. You have different prices for each spoon, and specific prices for different currencies of the same spoon.
+
+    Pricing.default_currency = :usd
+
+    spoon = Spoon.find :first
+
+    spoon.price = Price.create(:currency => :gbp, :amount => 24.45)
+    spoon.price = Price.create(:currency => :usd, :amount => 32.00)
+
+    spoon.price :gbp # Returns GBP price object of 24.45
+    spoon.price(:gbp).to_s # => "£24.45"
+    spoon.price(:usd).to_s # => "$32.00"
+
+    Spoon.with_currency_scope(Currency[:gbp]) do
+      Spoon.find(:all) # Returns all spoons that have associated GBP prices
+      Spoon.find(:first, :conditions => "type='plastic'") # Returns plastic spoons with GBP prices
+    end
+
+    Spoon.with_currency_scope do
+      Spoon.find(:first) # Returns first spoon with associated default (USD in this case) price
+    end
+
+== Tips:
+It's handy to set Pricing.default_currency in your environment file.
+
+You can set Pricing.default_currency based on something and then display only items for that currency.. e.g.
+  def before_filter
+    Pricing.default_currency = session['currency'] || :usd
+  end
+
+  def list_products
+    @products = Product.with_currency_scope { Product.find_all }
+  end
+
+So now you can show a page in a particular currency based on what you've stored in the session.
+
+== Acknowledgments:
+Trevor Squires, creator of acts_as_enumerate plugin from which I borrowed code/concept for caching
+Rick Olson, creator of many plugins, for migration generation stuff.
+David Heinemeier Hansson, creator of acts_as_tagabble, from which I modeled the polymorphism after.
+
+== License:
+MIT

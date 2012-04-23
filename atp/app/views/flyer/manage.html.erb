@@ -1,0 +1,55 @@
+<script type="text/javascript" language="javascript">
+// <![CDATA[
+  flyer_upload_url = "<%= url_for(:controller=>"flyer", :action=>"upload", :id=> params[:id]) %>";
+  function upload (type) {
+    $('for_image_form').show();
+    f = $("image_form");
+    f.show();
+    f.action = flyer_upload_url + "?type=" + type;    
+    $('file_images').focus();
+  }
+  Event.addBehavior({
+    'ul#flyer_types li a.change:click' : function(e) {
+      upload(this.rel); 
+      return false;
+    }
+  });
+// ]]>
+</script>
+
+<div id="primaryContent">
+  <h1>Flyers For <%= party_link(@party) %></h1>
+  
+  <ul id="flyer_types">
+    <li class="current">
+      <h3>Current</h3>
+      <%= @party.current_flyer.nil? ? img_na('flyer') : show_img(@party.current_flyer.image, 'flyer') -%>
+    </li>
+    
+    <li class="this_week">
+      <h3>This week only</h3>
+      <%= @party.event.flyer.nil? ? img_na('flyer') : show_img(@party.event.flyer.image, 'flyer') -%>
+      <p><a href="#" class="change" rel="Event">Change</a> | <%= link_to 'Delete', flyer_connect_url(:event_id => @party.event.id, :id=>@party.id , :action=>"drop"),  :confirm => "Are You Sure?" -%></p>
+    </li>
+    
+    <li class="default">
+      <h3>Default</h3>
+      <%= @party.flyer.nil? ? img_na('flyer') : show_img(@party.flyer.image, 'flyer') -%>
+      <p><a href="#" class="change" rel="Party">Change</a> | <%= link_to 'Delete', flyer_connect_url(:id=>@party.id , :action=>"drop"),  :confirm => "Are You Sure?" -%></p>
+    </li>
+  </ul>
+</div>
+
+<div id="secondaryContent">
+  <div id="for_image_form" style="display:none;">
+    <% form_tag(nil, { :method=>"post", :id => "image_form", :multipart=> true }) do %>
+    <fieldset>
+    	<legend>Upload Image</legend>
+    	<div id="upload_form">
+  			<%= file_field 'file', 'images', { :style => "width:200px;" } -%>
+  			<p><%= submit_tag "Upload" -%></p>
+    	</div>
+    </fieldset>
+    <% end %>
+  </div>
+</div>

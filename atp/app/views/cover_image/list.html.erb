@@ -1,0 +1,50 @@
+<h1>Show cover images</h1>
+<h2><%= link_to('create', url_for(:controller => 'cover_image', :action => 'create')) -%></h2>
+<form id="list_form">
+	<p>Criteria: 
+		<%= select 'cover_image', 'active', [['active', 1],['inactive', 0]] -%>
+		<%= select 'cover_image', 'site_id', Site.active.collect {|s| [ s.full_name, s.id ] } -%>
+		<span id="cover_image_city_id_div"><%= select 'cover_image', 'city_id', {} -%></span>
+  </p>
+  <ul id="cover_images"></ul>
+</form>
+<script type="text/javascript" language="javascript">
+// <![CDATA[
+  Event.addBehavior({
+    "#cover_image_site_id:change": function(event) {
+      populate_city();getCoverImages();
+    },
+    "#cover_image_active:change": function(event) {
+      getCoverImages();
+    },
+    "#cover_image_city_id:change": function(event) {
+      getCoverImages();
+    }
+  });
+	SD.sites = <%= Site.active.collect{ |s| [ s.id, s.full_name, s.regions.collect{|r| r.cities.collect{|c| [c.id, c.full_name]} }] }.to_json -%>;
+	function populate_city(){
+		rec = SD.sites.find(function(r){ return r[0] == $F('cover_image_site_id') });
+		if ($('cover_image_city_id')){
+			Element.remove('cover_image_city_id');
+		}
+		city_array = rec[2].collect(function(e){ return e[0] })
+		createSelect('cover_image_city_id', 'cover_image[city_id]', '', city_array, 'cover_image_city_id_div')
+		setTimeout(function(){ $('cover_image_city_id').selectedIndex = 0; }, 50);
+	}
+	function getCoverImages(){
+		new Ajax.CustomRequest("<%= url_for(:controller => 'cover_image', :action => "find") -%>", { 
+			postBody: Form.serialize('list_form'), 
+			onSuccess:function(r){
+				$('cover_images').update(r.responseText);
+				if (r.responseText.trim().length > 1){
+					new Message("New Pictures Found.", 'good');
+				} else {
+					new Message("No Pictures Found.", 'bad');
+				}
+			}
+		} )
+	}
+	populate_city();
+	setTimeout(getCoverImages, 250);
+// ]]>
+</script>

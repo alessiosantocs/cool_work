@@ -1,0 +1,25 @@
+<% @comment = Comment.blank %>
+<%= form_tag(nil, { :method => 'post', :id => "create_form", :autocomplete => "off", :onsubmit => "submitNew(); return false;" }) -%>
+	    <p>Commentable type:<br /> 
+  	  	<%= text_field 'comment', 'commentable_type', { :maxlength => 15, :size => 25 } -%>
+  </p>
+    <p>Title:<br /> 
+  	  	<%= text_field 'comment', 'title', { :maxlength => 50, :size => 60 } -%>
+  </p>
+    <p>Commentable:<br /> 
+  	  	<%= text_field 'comment', 'commentable_id', { :maxlength => 11, :size => 16 } -%>
+  </p>
+    <p>User:<br /> 
+  	  	<%= text_field 'comment', 'user_id', { :maxlength => 11, :size => 16 } -%>
+  </p>
+    <p>Comment:<br /> 
+  	  	<%= text_field 'comment', 'comment', { :maxlength => 255, :size => 265 } -%>
+  </p>
+    <p>Parent:<br /> 
+  	  	<%= text_field 'comment', 'parent_id', { :maxlength => 11, :size => 16 } -%>
+  </p>
+    <p>Created at:<br /> 
+  	  	<%= text_field 'comment', 'created_at', { :maxlength => 12, :size => 24 } -%>
+  </p>
+  	<div class="button-bar"><%= submit_tag "Create" -%></div>
+<%= end_form_tag -%>

@@ -1,0 +1,68 @@
+<div id="topbar">
+  <div id="action">
+    <h1><%= h @venue.name %></h1>
+    <h2>Venue Action</h2>
+    <ul id="actionlinks">
+        <li><%= fave_link(@venue, 'Add to Faves') -%></li>
+    </ul>
+
+    <div id="yahoomap">
+      <div id="venue_map" style="width:120px; height:120px;"></div>
+    </div>
+    <%= map_location('venue_map', @venue) -%>
+    
+    <div id="timeplace">
+      <p>
+        <strong>Address</strong><br/>
+        <%= venue_link(@venue) %><br/>
+        <%= h @venue.address %><br/>
+        <%= h @venue.city_name %>, <%= h @venue.state %> <%= h @venue.postal_code %>
+      </p>
+    </div>
+  </div>
+
+  <div class="flyerads">
+    <h4>Flyer Ads</h4>
+    <%= inhouse_ads("120x120", "venue", 3) %>
+  </div>
+</div><!-- topbar -->
+
+<div id="primaryContent">
+  <div id="latest-parties">
+    <h1>Events at <%= @venue.name %></h1>
+    <% unless @venue.active_events.empty? %>
+    <table>
+      <thead>
+        <tr><th>Date</th><th>Next Party</th><th>Music</th><th>Dress Code</th><th>Age Limit</th></tr>
+      </thead>
+      <tbody>
+      <% @venue.active_events.each do |event| %>
+        <tr>
+        	<td><%= date_string(event.local_time) -%></td>
+        	<td><%= party_link(event.party) -%></td>
+        	<td><%= h event.party.music %></td>
+        	<td><%= Party.dress_code["#{event.party.dress_code}"] %></td>
+        	<td><%= Party.age["#{event.party.age_male}"] %>/<%= Party.age["#{event.party.age_female}"] %></td>
+        </tr>
+      <% end %>
+      </tbody>
+    </table>
+    <% else %>
+    <p>No Events at this time.</p>
+    <% end %>
+  </div>
+
+  <% if @venue.pictures.size > 0  %>
+  <h1>Recent Party Pics</h1>
+  <div id="partypics">
+    <% images = @venue.pictures(0, 15).collect{|e| content_tag("li", event_thumbnail(e) + "<p>#{date_string(e.local_time)}</p>") }.join(' ')%>
+    <%= render :partial => "layouts/shared/image_nav", :locals => { :images => images } -%>
+  </div>
+  <% end %>
+</div><!-- primaryContent -->
+
+<div id="secondaryContent">
+  <div id="googads">
+      <%= render_ad("120x600_ros") %>
+  </div>
+</div><!-- secondaryContent -->

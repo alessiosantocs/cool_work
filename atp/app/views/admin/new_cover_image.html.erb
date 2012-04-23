@@ -1,0 +1,16 @@
+<% @cover_image = CoverImage.blank %>
+<%= form_tag(nil, { :method => 'post', :id => "create_form", :autocomplete => "off", :onsubmit => "submitNew(); return false;" }) -%>
+	    <p>Site:<br /> 
+  	  	<%= text_field 'cover_image', 'site_id', { :maxlength => 10, :size => 15 } -%>
+  </p>
+    <p>City:<br /> 
+  	  	<%= text_field 'cover_image', 'city_id', { :maxlength => 10, :size => 15 } -%>
+  </p>
+    <p>Image:<br /> 
+  	  	<%= text_field 'cover_image', 'image_id', { :maxlength => 10, :size => 15 } -%>
+  </p>
+    <p>Active:<br /> 
+  	  	<%= check_box 'cover_image', 'active', {} -%>
+  </p>
+  	<div class="button-bar"><%= submit_tag "Create" -%></div>
+<%= end_form_tag -%>

@@ -1,0 +1,51 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <meta http-equiv="Content-Type" content="application/xhtml+xml; charset=UTF-8" />
+  <meta name="verify-v1" content="PD0ufcLS1GeArA6f/r0hCIg7ZewpptkF5dsOeyngUH0=" />
+	<% unless @region.nil? %>
+  <link rel="alternate" type="application/rss+xml" title="Latest Parties for <%= @region.full_name %>" href="http://feeds.feedburner.com/<%= SITE.short_name.downcase %>_<%= @region.short_name %>_parties">
+	<% end %>
+  <%= server_time %>
+  <%= javascript_constants %>
+  <%= dojo_by_cdn %>
+  <%= google_ajax_library %>
+  <%= stylesheet_link_tag "application" %>
+	<%= stylesheet_link_tag "lightbox", "carousel", "themes/default" %>
+  <%= stylesheet_auto_link_tags %>
+  <%= javascript_include_tag "lowpro", "application", "lightbox", "carousel", "window" %>
+  <%= javascript_auto_link_tags %>
+	<!--[if IE]>
+  <link rel="stylesheet" type="text/css" href="/stylesheets/ie.css" />
+  <![endif]-->
+	<%= get_map_system if @show_map == true -%>
+  <%= google_admanager_header%>
+	<%= yield :head %>
+	<title><%= @page_title %> :: <%= SITE.full_name %></title>
+</head>
+<body id="party" class="tundra">
+  <div id="doc3">
+    
+    <div id="hd">
+    	<%= render :partial => "layouts/shared/dash" %>
+  	  <center><%= render_ad "720x90_ros" %></center>
+      <%= render_flash -%>
+    </div><!-- hd -->
+  	
+    <div id="bd">
+      <div id="yui-main">
+         
+         <%= @content_for_layout -%>
+      </div>
+    </div><!-- bd -->
+    
+    <div id="ft">
+      <%= render :partial => 'layouts/shared/footer'%>
+    </div><!-- ft -->
+  </div>
+  <%= render :partial => 'layouts/shared/tooltip_dialog_notice'%>
+	<%= traffic_tracker %>
+	<%= openx_widget %>
+</body>
+</html>

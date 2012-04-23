@@ -1,0 +1,33 @@
+<legend>Update Location</legend>
+		<p>
+			<label>Country:</label>
+			<%= select('user', 'country', @countries) %>
+		</p>
+
+		<div id="city_state">
+			<p><label for='user_city'>City/Town:</label> <%= text_field 'user', 'city', "size" => 24, "maxlength" => 35 %></p>
+			<p><label for='user_state'>State/Province:</label> <%= text_field 'user', 'state', "size" => 15, "maxlength" => 20 %></p>
+			<p><label for='user_time_zone'>Time Zone: </label><span id="timezoneSelect"></span></p>
+		</div>
+		
+	  <p id="div_postal_code_form">
+	  	<label for="user_postal_code">Zip /Postal Code:</label>
+	  	<%= text_field 'user', 'postal_code', "size" => 12, "maxlength" => 9 %>
+	  </p>
+<script type="text/javascript" language="javascript">
+// <![CDATA[
+	createSelect('user_time_zone', 'user[time_zone]', '<%= @user.time_zone %>', SD.timezones, 'timezoneSelect');
+	Event.addBehavior({
+    "body": function(event) {
+			if ($F('user_postal_code').length==5){ get_zip_data(); }
+			zip_action();
+    },
+    "#user_country:change": function(event) {
+      zip_action();
+    },
+    "#user_postal_code:change": function(event) {
+      get_zip_data();
+    }
+  });
+// ]]>
+</script>

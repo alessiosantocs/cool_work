@@ -1,0 +1,9 @@
+<% if list.size > 0 %>
+<div id="picture_list">
+  <p class="prev"><a href="#">Previous Pic</a></p>
+  <p class="next"><a href="#">Next Pic</a></p>
+  <!-- <a href="#"><img src="/images/prev.gif" width="25" height="136" style="float:left;" alt="previous" /></a> -->
+	<ul><%= list.collect{|e| content_tag("li", event_thumbnail(e) + "<p>#{date_string(e.local_time)}</p>") }.join(' ') -%></ul>
+  <!-- <a href="#"><img src="/images/next.gif" width="25" height="136" style="float:right;" alt="next" /></a> -->
+</div>
+<% end %>

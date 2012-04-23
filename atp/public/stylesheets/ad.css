@@ -1,0 +1,12 @@
+#primaryContent {
+  float:left;
+  width:100%;
+}
+
+#primaryContent table{
+  width:100%;
+}
+
+#primaryContent form p select{
+  font-size: 100%;
+}

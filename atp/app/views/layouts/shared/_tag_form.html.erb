@@ -1,0 +1,16 @@
+<script type="text/javascript">Tag.url='<%= tag_create_url(:obj_id=> obj.id, :obj_type=> obj.class.to_s, :only_path => true ) -%>';</script>
+
+<form id="tags_form" style="display:none;">
+	<p>Tags: <%= text_field 'tags', 'tag_list', { :maxlength => 128, :size => 15 } -%> <%= submit_tag "Tag This" -%> <span id='new_tags_spinner' class='spinner' style="display:none;"></span></p>
+</form>
+<script type="text/javascript" language="javascript">
+// <![CDATA[
+Event.addBehavior({
+  "form#tags_form:submit": function(event) {
+    Tag.loading(); 
+    Tag.post(); 
+    return false;
+  }
+});
+// ]]>
+</script>

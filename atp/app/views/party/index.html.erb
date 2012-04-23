@@ -1,0 +1,45 @@
+<% cache do %>
+  <% @parties = Party.recent_parties_by_city(@city_ids, { :limit => 170} ) %>
+  <div id="primaryContent">
+    <div id="latest_parties">
+      <h1>Upcoming Parties</h1>
+      <% unless @parties.nil? %>
+      <p class="right">weekly/<span class="purple">one-time</span></p>
+      <table>
+        <% current_date = nil %>
+        <% @parties.each do |party| %>
+        <% 
+        pictures = party.pictures(0,3)
+        if current_date.to_s == party.event.search_date.to_s
+          current_date_text = ""
+        else
+          current_date = party.event.search_date
+          current_date_text = event_image_set_by_date(party.event.local_time)
+        end
+        %>
+        <tr valign="top" class="freq_<%= party.recur %>">
+          <td class="date" id="party_<%= party.id -%>" name="party_<%= party.id -%>"><%= current_date_text %></td>
+          <td class="banner"><%= show_flyer(party.event, 'tiny') -%></td>
+          <td class="info"><%= time_string(party.event.local_time) -%>: <%= party_link party -%> 
+            <% if party.rsvp? %>
+              <a href="/rsvp/<%= party.id %>" title="RSVP Now" class="rsvp new_window">RSVP Now</a>
+            <% end %>
+            <% if pictures.size > 0 %>
+              <br /><span class="stronger">Recent Pics:</span> 
+              <%= pictures.collect{|e| event_image_set_link(e, e.local_time.month_day) }.join(', ') -%>
+            <% end %>
+          </td>
+        </tr>
+        <% end %>
+      </table>
+    <% else %>
+    <p>None Available Yet.</p>
+    <% end %>
+    </div>
+  </div><!-- primaryContent -->
+  <div id="secondaryContent">
+    <div id="googads">
+        <%= inhouse_ads("120x120", "parties", 3) -%>
+    </div>
+  </div><!-- secondaryContent -->
+<% end %>

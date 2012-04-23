@@ -1,0 +1,77 @@
+<script type="text/javascript" language="javascript">new Location({party_id: <%= @party.id %> });</script>
+<% cache do %>
+  <% event = (@party.event.id.nil? ? @party.events[0] : @party.event) %>
+  <%= render :partial => "party/top", :locals => { :event => event, :show_map => true } %>
+  <div id="primaryContent">
+    <% if @party.pictures.size > 0  %>
+    <h1>Recent Party Pics</h1>
+    <div id="partypics">
+      <% images = @party.pictures(0, 15).collect{|e| content_tag("li", event_thumbnail(e) + "<p>#{date_string(e.local_time)}</p>") }.join(' ')%>
+      <%= render :partial => "layouts/shared/image_nav", :locals => { :images => images } -%>
+    </div>
+    <% end %>
+    
+    <h1>Party Details</h1>
+    <div id="details">
+      <h2>Info</h2>
+      <ul>
+        <li>
+          <h3>Posted by:</h3>
+          <p><%= h @party.user.company_name -%> (<%= people_link(@party.user) %>)&nbsp;</p>
+        </li>
+        <li>
+          <h3>Hosted by:</h3>
+          <p><%= h @party.event.hosted_by || "Names not available" %>&nbsp;</p>
+        </li>
+      
+        <li>
+          <h3>Door Charge:</h3>
+          <p><% unless @party.door_charge.to_i == 0%><span class="money usd"><%= h @party.door_charge %></span><% else %>Free<% end %></p>
+        </li>
+      
+        <li>
+          <h3>Guestlist Charge:</h3>
+          <p><% unless @party.guestlist_charge.to_i == 0%><span class="money usd"><%= h @party.guestlist_charge %></span><% else %>Free<% end %></p>
+        </li>
+      
+        <li>
+          <h3>Patron's Age:</h3>
+          <p><%= Party.age["#{@party.age_female}"] %> (Ladies) / <%= Party.age["#{@party.age_male}"] %> (Guys)</p>
+        </li>
+        <li>
+          <h3>Dress Code:</h3>
+          <p><%= Party.dress_code["#{@party.dress_code}"] %>&nbsp;</p>
+        </li>
+        <li>
+          <h3>DJ/MC:</h3>
+          <p><%= h @party.dj || "Names not available" %>&nbsp;</p>
+        </li>
+        <li>
+          <h3>Music:</h3>
+          <p><%= h @party.music %>&nbsp;</p>
+        </li>
+        <li>
+          <h3>Description:</h3>
+          <p><%= h @party.description %>&nbsp;</p>
+        </li>
+      </ul>
+    </div>
+  </div><!-- primaryContent -->
+
+  <div id="secondaryContent">
+     <h1 id="rsvp">RSVP</h1>
+     <div class="flyerads" id="rsvp_div">
+       <%= rsvp_form @party, "party" %>
+     </div>
+     
+    <div id="googads">
+      <%= render_ad("120x600_ros") %>
+    </div>
+    
+    <h1>Map</h1>
+    <div class="flyerads">
+      <div id="venue_map" style="width:285px; height:438px;"></div>
+    </div>
+    <%= map_location('venue_map', @party.venue) -%>
+  </div><!-- secondaryContent -->
+<% end %>

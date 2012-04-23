@@ -1,0 +1,52 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+first:
+  id: 1
+  party_id: 1
+  venue_id: 1
+  event_datetime: <%= 15.days.from_now.to_s :db %>
+  search_date: <%= 15.days.from_now.to_s :db %>
+  pictures_exist: false
+  picture_count: 0
+  photographer_id: 
+  hosted_by: Jisha and Shiji
+  synopsis: Lovely People
+  flyer: false
+  comments_allowed: true
+  daylight_savings_time: false
+  active: true
+  created_on: <%= 5.days.ago.to_s :db %>
+  updated_on: <%= Time.now - 10330 %>
+second:
+  id: 2
+  party_id: 2
+  venue_id: 4
+  event_datetime: <%= 3.days.ago.to_s :db %>
+  search_date: <%= 3.days.ago.to_s :db %>
+  pictures_exist: true
+  picture_count: 25
+  photographer_id: 
+  hosted_by: Jay-Z and Beyonce
+  synopsis: Lovely People were in the building
+  flyer: false
+  comments_allowed: true
+  daylight_savings_time: false
+  active: false
+  created_on: <%= 5.days.ago.to_s :db %>
+  updated_on: <%= Time.now - 1020 %>
+third:
+  id: 3
+  party_id: 12
+  venue_id: 4
+  event_datetime: <%= 1.days.ago.to_s :db %>
+  search_date: <%= 1.days.ago.to_s :db %>
+  pictures_exist: true
+  picture_count: 85
+  photographer_id: 
+  hosted_by: Earth, Wind, and Fire
+  synopsis: Lovely People
+  flyer: true
+  comments_allowed: true
+  daylight_savings_time: false
+  active: false
+  created_on: <%= 15.days.ago.to_s :db %>
+  updated_on: <%= Time.now - 22100 %>

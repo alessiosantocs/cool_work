@@ -1,0 +1,37 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+first:
+  id: 1
+  user_id: 1
+  party_id: 55
+  venue_id: 1233
+  location: Nell's in the bathroom
+  connection_type: MF
+  connection_date: 2006-02-12
+  title: I don't know why I love you
+  story: Make me wanna scream
+  published: true
+  created_on: <%= 1.days.ago.to_s :db %>
+second:
+  id: 2
+  user_id: 5
+  party_id: 3
+  venue_id: 13
+  location: Show Nightclub entrance line
+  connection_type: FF
+  connection_date: 2001-04-30
+  title: We've got what you want
+  story: Make me wanna scream... It seems that the news from the outside world is a bit hazy, at best.
+  published: true
+  created_on: <%= 40.days.ago.to_s :db %>
+third:
+  id: 3
+  user_id: 1
+  party_id: 
+  venue_id: 
+  location: Show Nightclub entrance line
+  connection_type: FF
+  connection_date: 2002-11-30
+  title: That's that shit I'm talkin about
+  story: Make me wanna scream... It seems that the news from the outside world is a bit hazy, at best.
+  published: false
+  created_on: <%= 4.days.ago.to_s :db %>

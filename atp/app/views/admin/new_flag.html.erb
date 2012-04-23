@@ -1,0 +1,22 @@
+<% @flag = Flag.blank %>
+<%= form_tag(nil, { :method => 'post', :id => "create_form", :autocomplete => "off", :onsubmit => "submitNew(); return false;" }) -%>
+	    <p>Obj type:<br /> 
+  	  	<%= text_field 'flag', 'obj_type', { :maxlength => 24, :size => 34 } -%>
+  </p>
+    <p>Resolved:<br /> 
+  	  	<%= check_box 'flag', 'resolved', {} -%>
+  </p>
+    <p>Obj:<br /> 
+  	  	<%= text_field 'flag', 'obj_id', { :maxlength => 11, :size => 16 } -%>
+  </p>
+    <p>Inappropriate:<br /> 
+  	  	<%= check_box 'flag', 'inappropriate', {} -%>
+  </p>
+    <p>User:<br /> 
+  	  	<%= text_field 'flag', 'user_id', { :maxlength => 11, :size => 16 } -%>
+  </p>
+    <p>Spam:<br /> 
+  	  	<%= check_box 'flag', 'spam', {} -%>
+  </p>
+  	<div class="button-bar"><%= submit_tag "Create" -%></div>
+<%= end_form_tag -%>

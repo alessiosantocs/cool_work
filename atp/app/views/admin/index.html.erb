@@ -1,0 +1,12 @@
+<div id="primaryContent">
+  <%= menu_for_admin %>
+  <ul id="sections">
+    <li><%= link_to("Parties", admin_url(:action => "parties")) %></li>
+    <li><%= link_to("Cover Images", url_for(:controller => "cover_image", :action => "index")) %></li>
+    <% if ["joemocha", "newjeruz"].include?(self.current_user[:username]) %>
+      <li><%= link_to("Comments", admin_url(:action => "comments")) %></li>
+      <li><%= link_to("Mailing List", admin_url(:action => "mailing_list")) %></li>
+      <li><%= link_to("Reset User Password", admin_url(:action => "reset_password")) %></li>
+    <% end %>
+  </ul>
+</div>

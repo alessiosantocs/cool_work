@@ -1,0 +1,61 @@
+<% cache do %>
+<% @latest_pictures = Event.latest_image_sets(@city_ids, {:limit => 25}) %>
+<div id="primaryContent">
+  <div id="archive">
+    <%= render :partial => "archive" %>
+  </div>
+  <div id="other_city_pics">
+    <%= show_other_regional_pictures(@region.id) %>
+  </div>
+  <div id="latest_pictures">
+    <h3>Latest Pictures</h3>
+    <% unless @latest_pictures.nil? %>
+    <table>
+      <% current_date = nil %>
+      <% @latest_pictures.each do |e| %>
+      <%
+       if current_date.to_s == e.search_date.to_s
+        current_date_text = ""
+       else
+        current_date = e.search_date
+        current_date_text = event_image_set_by_date(e.local_time)
+       end
+      %>
+      <tr valign="top">
+        <td width="126"><%= current_date_text %></td>
+        <td width="104"><%= event_thumbnail(e) -%></td>
+        <td width="680"><%= event_image_set_link(e, "#{e.party.title} at #{e.venue.name}") %><br /><%= h e.synopsis %></td>
+      </tr>
+      <% end %>
+    </table>
+  <% else %>
+  <p>No Events Yet.</p>
+  <% end %>
+  </div>
+</div>  <!-- primaryContent -->
+
+<div id="secondaryContent">
+  <p>Show Top Pics for <a href="#" id="site_name" class="top_views" style="display:none"><%= SITE.full_name %></a> <a href="#" id="region_name" class="top_views"><%= @region.full_name %></a></p>
+  <div id="top25">
+    <div id="sitewide25">
+      <h1><%= SITE.full_name %>'s Top 25 Viewed</h1>
+      <% top25 = Stat.most_views_by_type(SITE, 1.day.ago, 25) %>
+      <ul>
+        <% top25.each do |img| %>
+        <li><%= event_image(img) %></li>
+        <% end %>
+      </ul>
+    </div>
+    
+    <div id="region10" style="display:none">
+      <h1><%= @region.full_name %>'s Top 10 Viewed</h1>
+      <% top10 = Stat.most_views_by_type(@region, 1.day.ago) %>
+      <ul>
+        <% top10.each do |img| %>
+        <li><%= event_image(img) %></li>
+        <% end %>
+      </ul>
+    </div>
+  </div>
+</div>  <!-- secondaryContent -->
+<% end %>

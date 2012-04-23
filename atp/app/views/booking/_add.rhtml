@@ -1,0 +1,93 @@
+<%= form_tag(url_for(:controller=>"booking", :action=>"add"), { :method=>"post", :id => "booking_form" }) %>
+<fieldset>
+	<legend>Plan Your Party</legend>
+	<table width="100%">
+		<tr valign="top">
+			<td width="20%">
+				<p>Type of Party:<br /><%= select "booking", "party_type", Booking.types.sort.collect {|k,v| [ v, k ] }, { :include_blank => true } %></p>
+				<p>Party date:<br /><%= date_select "booking", "party_date", :order => [ :month, :day, :year], :start_year => Time.now.year, :end_year => Time.now.year + 1 %></p>
+				<p>People in attendence:<br /><%= text_field "booking", "size", {"size" => 4, "maxlength" => 3 } %> Estimated</p>
+				<p>Budget:<br /><%= text_field "booking", "budget", {"size" => 8, "maxlength" => 6 } %></p>
+				
+			</td>
+			<td width="80%">
+				<p>Services:<br /><%= check_box "booking", "bottle_service" %> Bottle Service <%= check_box "booking", "catering" %> Catering <%= check_box "booking", "car_service" %> Car Service <%= check_box "booking", "open_bar" %> Open Bar</p>
+				<p>Additional Information: (Special Equipment, Wheelchair Access, etc)<br /><%= text_area "booking", "notes", { :cols => 30, :rows => 8 } %></p>
+			</td>
+		</tr>
+		<tr>
+			<td colspan="2">
+				<fieldset>
+					<legend>Contact Information</legend>
+					<table>
+						<tr>
+							<td><p>Name:<br /><%= text_field "booking", "contact_name", {"size" => 30, "maxlength" => 45 } %></p></td>
+							<td><p>Email:<br /><%= text_field "booking", "contact_email", {"size" => 30, "maxlength" => 45 } %></p></td>
+							<td><p>Phone:<br /><%= text_field "booking", "contact_phone", {"size" => 18, "maxlength" => 15 } %></p></td>
+						</tr>
+					</table>
+					<%= hidden_field 'booking', 'party_id', { :value => party_id } -%>
+				</fieldset>
+			</td>
+		</tr>
+	</table>
+	<%= submit_tag "Plan My Party Now" -%>
+</fieldset>
+<%= end_form_tag %>
+
+<p><span class='stronger'>Disclaimer:</span> This booking does not guarantee admission. The doorperson has the right to refuse admission.</p>
+
+<script type="text/javascript" language="javascript">
+// <![CDATA[
+  Event.addBehavior({
+    "form#booking_form:submit": function(event) {
+      book_this_party(this); return false;
+    }
+  });
+	function book_this_party(form){
+		//validate form
+		//celebration
+		if ($F('booking_party_type') < 1){
+			new Message('Type of party missing.'); 
+			$('booking_party_type').focus();
+			return false;
+		}
+		//size
+		if ($F('booking_size') < 1){
+			new Message('People in attendence is missing.'); 
+			$('booking_size').focus();
+			return false;
+		}
+		//contact_name
+		if ($F('booking_contact_name').length < 3){
+			new Message('Contact name is missing.'); 
+			$('booking_contact_name').focus();
+			return false;
+		}
+		//contact_email
+		if ($F('booking_contact_email').length < 7){
+			new Message('Contact email is missing.'); 
+			$('booking_contact_email').focus();
+			return false;
+		}
+		//contact_phone
+		if ($F('booking_contact_phone').length < 7){
+			new Message('Contact phone is missing.'); 
+			$('booking_contact_phone').focus();
+			return false;
+		}
+		new Ajax.CustomRequest(form.action, {
+			postBody: Form.serialize(form),
+			onLoading: function(){},
+			onSuccess: function(r){
+				new Message(r.responseText, 'good');
+			},
+			on400: function(r){
+				if (r.responseText.length > 0){ 
+					new Message(r.responseText); 
+				}
+			}
+		});
+	}
+// ]]>
+</script>

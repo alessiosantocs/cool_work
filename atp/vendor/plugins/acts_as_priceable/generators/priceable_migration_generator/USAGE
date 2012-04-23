@@ -1,0 +1,18 @@
+Description:
+	The priceable migration generator creates a migration which you can use to generate three tables:
+	
+		currencies - Contains currency name, code (e.g. USD), and symbol (e.g. $)
+		prices - This is where prices are stored
+		pricings - This is our join model that maps prices to any other model/table.
+	
+	Two default currencies are included by default: USD and GBP
+	
+	To add your own you can modify the migration, create a new migration, or update the database with additional values.
+	
+	Note: Since currencies are cached process-wide, you will have to restart your app for access to new currencies in the database.
+	
+Example:
+    ./script/generate priceable_migration add_priceable_tables
+
+    With 4 existing migrations, this will create an AddPriceableTables migration in the
+    file db/migrate/5_add_priceable_tables.rb

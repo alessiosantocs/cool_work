@@ -1,0 +1,29 @@
+<legend>Roles</legend>
+<p>Select your activities: <br />
+<% unless promoter? %>
+	<%= check_box "role", "promoter" %> 
+<% else %>
+	<%= hidden_field "role", "promoter", :value => 1 %> You are <span class="stronger">currently</span> 
+<% end %>
+promoting parties.<br />
+<% unless photographer? %>
+	<%= check_box "role", "photographer" %> 
+<% else %>
+	<%= hidden_field "role", "photographer", :value => 1 %>You are <span class="stronger">currently</span> 
+<% end %>
+offering photography services.
+</p>
+<p id="company_name">Company Name:<br /> <%= text_field "user", "company_name", {"size" => 35, "maxlength" => 75 } %></p>
+
+<script type="text/javascript" language="javascript">
+// <![CDATA[
+	Event.addBehavior({
+    "body": function(event) {
+			whatsYourRole();
+    },
+    "#role_promoter:change": function(event) {
+      whatsYourRole();
+    }
+  });
+// ]]>
+</script>

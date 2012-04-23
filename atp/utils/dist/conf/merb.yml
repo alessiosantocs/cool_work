@@ -1,0 +1,7 @@
+--- 
+:host: 0.0.0.0
+:memory_session: true
+:port: "4000"
+:allow_reloading: true
+#:daemonize: true
+#:cluster: 3

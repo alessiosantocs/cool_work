@@ -1,0 +1,37 @@
+<% @billing_profile = BillingProfile.blank %>
+<%= form_tag(nil, { :method => 'post', :id => "create_form", :autocomplete => "off", :onsubmit => "submitNew(); return false;" }) -%>
+	    <p>City:<br /> 
+  	  	<%= text_field 'billing_profile', 'city', { :maxlength => 25, :size => 35 } -%>
+  </p>
+    <p>Last 4 numbers:<br /> 
+  	  	<%= text_field 'billing_profile', 'last_4_numbers', { :maxlength => 4, :size => 9 } -%>
+  </p>
+    <p>Billingid:<br /> 
+  	  	<%= text_field 'billing_profile', 'billingid', { :maxlength => 6, :size => 16 } -%>
+  </p>
+    <p>Postal code:<br /> 
+  	  	<%= text_field 'billing_profile', 'postal_code', { :maxlength => 10, :size => 20 } -%>
+  </p>
+    <p>Country:<br /> 
+  	  	<%= text_field 'billing_profile', 'country', { :maxlength => 2, :size => 12 } -%>
+  </p>
+    <p>Phone:<br /> 
+  	  	<%= text_field 'billing_profile', 'phone', { :maxlength => 15, :size => 25 } -%>
+  </p>
+    <p>User:<br /> 
+  	  	<%= text_field 'billing_profile', 'user_id', { :maxlength => 10, :size => 15 } -%>
+  </p>
+    <p>Full name:<br /> 
+  	  	<%= text_field 'billing_profile', 'full_name', { :maxlength => 75, :size => 85 } -%>
+  </p>
+    <p>Address:<br /> 
+  	  	<%= text_field 'billing_profile', 'address', { :maxlength => 75, :size => 85 } -%>
+  </p>
+    <p>Position:<br /> 
+  	  	<%= text_field 'billing_profile', 'position', { :maxlength => 1, :size => 6 } -%>
+  </p>
+    <p>State:<br /> 
+  	  	<%= text_field 'billing_profile', 'state', { :maxlength => 25, :size => 35 } -%>
+  </p>
+  	<div class="button-bar"><%= submit_tag "Create" -%></div>
+<%= end_form_tag -%>

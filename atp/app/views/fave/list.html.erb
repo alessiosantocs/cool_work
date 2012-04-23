@@ -1,0 +1,74 @@
+<div id="primaryContent">
+  <h1>My Faves</h1>
+  <% form_tag("", :id => "fave_form") do %>
+  <ul>
+    <% SETTING["faveable"].each do |f| %>
+    <% txt = f == 'ImageSet' ? 'Image' : f %>
+    <li><%= radio_button("fave", "type", f, { :class => 'types' }) %> <%= txt.pluralize %></li>
+    <% end %>
+  <ul>
+  <% end -%>
+  <ul id="faves"></ul>
+</div>
+<script type="text/javascript" language="javascript">
+// <![CDATA[
+	Event.addBehavior({
+    ".types:click": function(event) {
+      get_fave_type(this.value);
+    },
+    "ul#faves": function(event) {
+      faves=<%= @faves.to_json %>;
+      render_faves();
+    }
+  });
+  $('fave_type_imageset').checked = true; //default fave
+  var current_type = "ImageSet";
+  function get_fave_type(type) {
+    current_type = type;
+    new Ajax.CustomRequest("/fave/list?type="+type+"&callback=render_faves", {
+			onLoading: function(){},
+			onSuccess: function(r){
+				eval(r.responseText);
+			},
+			on400: function(r) { 
+				if (r.responseText.length > 0){ new Message(r.responseText); } 
+			}
+		});
+  }
+  function render_faves(){
+    $W('faves','');
+    switch (current_type) {
+      case 'ImageSet':
+      	$A(faves).each(function(img){
+      		li = img.image
+      		link = li.url + li.name + '_small' + li.extension;
+      		$("faves").appendChild($B('li', [
+      		  build_redirect_link(img.section, img.obj_id, $B('img', { src: link , alt: li.caption || ''}) )
+      		]));
+      	});
+      	break;
+      case 'Party':
+      	$A(faves).each(function(link){
+      		$("faves").appendChild($B('li', [
+      		  build_redirect_link(link.section, link.obj_id, link.title )
+      		]));
+      	});
+      	break;
+      case 'Venue':
+      	$A(faves).each(function(link){
+      		$("faves").appendChild($B('li', [
+      		  build_redirect_link(link.section, link.obj_id, link.title )
+      		]));
+      	});
+      	break;
+      case 'Profile':
+      	$A(faves).each(function(link){
+      		$("faves").appendChild($B('li', [
+      		  build_redirect_link(link.section, link.obj_id, link.title )
+      		]));
+      	});
+      	break;
+    }
+  }
+// ]]>
+</script>

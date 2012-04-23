@@ -1,0 +1,16 @@
+var dz=document;
+dz.writeln("<!--AdRevolver code begin-->");
+dz.writeln("<SCRIPT language=\"JavaScript\" type=\"text/javascript\">");
+dz.writeln("<!--");
+dz.writeln("var rnd = Math.round(Math.random() * 10000000);");
+dz.writeln("function GetCookie(n){var m=document.cookie.match(new RegExp(\"(\"+n+\"=[^;]*)(;|$)\"));return m?m[1].split(\"=\")[1]:null;}function SetCookie(n,v){var av=SetCookie.arguments;var ac=av.length;var e=(ac>2)?av[2]:null;var p=(ac>3)?av[3]:null;document.cookie=n+\"=\"+escape(v)+((e==null)?\"\":(\"; expires=\"+e.toGMTString()))+((p==null)?\"\":(\"; path=\"+p));}d=document;w=window;var isPopEnabled=false;f=true;if(f){c=GetCookie(\"pop\");if(c==\"yes\"){f=false;isPopEnabled=true;}else if(c==\"no\"){f=false;}if(f){c=\"no\";try{o=w.open(\"\",\"\",\"height=1,width=1,status=no,toolbar=no,menubar=no,location=no\");w.focus();if(o!=null){isPopEnabled=true;c=\"yes\";o.close();o=null;}}catch(e){}SetCookie(\"pop\",c,new Date((new Date()).getTime()+86400000),\"/\");}}");
+dz.writeln("//-->");
+dz.writeln("<\/script>");
+dz.writeln("<SCRIPT language=\"JavaScript\" type=\"text/javascript\">");
+dz.writeln("<!--");
+dz.writeln("if (isPopEnabled) {");
+dz.writeln("document.writeln('<SCR'+'IPT language=JavaScript type=text/javascript src=\"http://media.adrevolver.com/adrevolver/banner?js&place=4508&cpy='+rnd+'\">');");
+dz.writeln("document.writeln('</SC'+'RIPT>');");
+dz.writeln("}");
+dz.writeln("//-->");
+dz.writeln("<\/script><!--AdRevolver code end-->");

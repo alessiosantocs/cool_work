@@ -1,0 +1,10 @@
+<% form_tag(comment_update_url(:action => "update"), { :method => 'post', :id => "comment_form", :autocomplete => "off" }) do -%>
+  <p>Comment:<br />
+    	<%= text_area 'comment', 'comment', { :rows => 8, :cols => 60 } -%>
+  </p>
+  <p><%= check_box 'delete', 'true' -%> Permanently Delete This Comment</p>
+  <p><%= check_box 'ignore', 'true' -%> Ignore flag on this Comment</p>
+  <%= hidden_field 'comment', 'id' -%>
+  <%= hidden_field 'flag', 'id' -%>
+	<div class="button-bar"><%= submit_tag "Update" -%></div>
+<% end -%>

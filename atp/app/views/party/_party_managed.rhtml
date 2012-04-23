@@ -1,0 +1,27 @@
+<% party = party_managed %>
+<% unless party.venue.city_id.nil? %>
+<dl id="party_<%= party.id -%>" name="party_<%= party.id -%>" class="party">
+	<dt>
+		<div class="flyer">
+			<%= show_img(party.current_flyer.image, 'flyer') unless party.current_flyer.nil? -%>
+		</div>
+		<%= party_link(party) -%><br /><%= party.days -%> days left / <%= party.pics_left -%> picture sets left
+	</dt>
+	<dd>
+		<% unless party.event.nil? %>Next Party: <%= date_string(party.event.local_time) -%> @ <%= party.time -%><br /><% end %>
+		<%= party.description -%><br />
+		Last 3 events: <%= party.past_events(0,3).collect{ |e| link_to(date_string(e.local_time), event_image_set_upload_path({ :id => party.id, :event_id => e.id})) }.join(', ') -%>
+		<ul>
+			<li><div class="highlight">Actions</div>
+				<ul style="display:inline;">
+					<li><%= link_to "Edit This Party", party_edit_url(:id=> party.id) -%></li>
+					<li><%= link_to "Update Flyers", flyer_manage_url(:id=> party.id) -%></li>
+					<% unless party.past_events.empty? %><li><%= link_to( "Upload, Edit, and Arrange Pictures", event_image_set_upload_url(:id => party.id) ) -%></li><% end %>
+					<li class="last"><%= link_to "Purchase Services", order_a_party_url(:id=> party.id) -%></li>
+				</ul></li>
+		</ul>
+	</dd>
+</dl>
+<% else %>
+<p><%= party.title %> at <%= party.venue.name %> doesn&amp;t have a region.</p>
+<% end %>

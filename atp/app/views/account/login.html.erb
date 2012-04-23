@@ -1,0 +1,7 @@
+<p><b>Welcome to <%= SITE.full_name %></b>, the community that helps those with a social life.<br /><%= link_to "Sign up now", { :action=>'create' }, :class => 'stronger' %>, if you are not a member.</p>
+<h1>Login</h1>
+<% form_tag({ :action =>"login" }, { :id=>"login_form" } ) do %>
+<div style="padding:1px 5px;">
+	<%= render :partial => 'login' %>
+</div>
+<% end %>

@@ -1,0 +1,15 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+first:
+  id: 1
+  event_id: 1
+  user_id: 1
+  full_name: Micheal Baxter
+  number_of_guests: 5
+  created_on: <%= Time.now - 5 %>
+second:
+  id: 2
+  event_id: 1
+  user_id: 3
+  full_name: Dexter Brady
+  number_of_guests: 2
+  created_on: <%= Time.now %>

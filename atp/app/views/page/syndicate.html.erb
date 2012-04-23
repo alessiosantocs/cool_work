@@ -1,0 +1,28 @@
+<% cache do %>
+<div id="primaryContent">
+  <p>There are other ways to keep up to date with us. RSS is a quick and easy way of reading the latest updates to your regular sites without using a browser.</p>
+  <blockquote>
+    <p>RSS (Really Simple Syndication) is an XML-based format for distributing and aggregating Web content (such as news headlines). Using RSS, Web content providers can easily create and disseminate feeds of data that include, for example, news links, headlines, and summaries. Other sites using RSS to deliver content to a wider audience include Christian Science Monitor and CNET News.com. (Source: <a href="http://news.yahoo.com/rss/">Yahoo.com</a>) </p>
+  </blockquote>
+  <p>All you need is a piece of software called an RSS Reader. We highly recommend using <a href="http://www.klipfarm.com/klipinfo.php?klip=2298">KlipFolio</a> <a target="_blank" href="http://www.klipfarm.com/klipinfo.php?klip=2298"><img src="/images/getKlip_b1.gif" alt="Get the Klip for <%= SITE.full_name %>" /></a> to be alerted of any new parties and posting of new pictures. Here are a couple of tools you can use to pickup our feeds.</p>
+
+  <ul>
+    <li>Online: <a href="http://www.bloglines.com/">Bloglines</a> </a></li>
+    <li>Windows: <a href="http://www.feeddemon.com/feeddemon/">Feed Demon</a></li>
+    <li>Mac 0S X: <a href="http://ranchero.com/netnewswire/">NetNewsWire</a></li>
+  </ul>
+  
+  <br clear="all" />
+  <h3>Select a news feed. All are RSS 1.0</h3>
+  <ul>
+    <li><b><%= SITE.full_name %></b>
+      <ul>
+        <% REGIONS.each do |r| %>
+        <li><img src="/images/xml.gif" alt="RSS Feed 1.0" width="36" height="14" vspace="1" hspace="1" border="0" /> <a href="http://feeds.feedburner.com/<%= SITE.short_name.downcase %>_<%= r.short_name %>_pictures">Recent Pictures for <%= r.full_name %></a></li>
+        <li><img src="/images/xml.gif" alt="RSS Feed 1.0" width="36" height="14" vspace="1" hspace="1" border="0" /> <a href="http://feeds.feedburner.com/<%= SITE.short_name.downcase %>_<%= r.short_name %>_parties">Latest Parties for <%= r.full_name %></a></li>
+        <% end %>
+      </ul>
+    </li>
+  </ul>
+</div>
+<% end %>

@@ -1,0 +1,138 @@
+<div id="primaryContent">
+  <%= menu_for_admin(true) %>
+  <h1>Parties</h1>
+  <form action="<%= admin_url(:action => "find_parties") %>" method="post" accept-charset="utf-8" id="parties_form">
+    <p><input type="text" name="query" value="" id="query" size="24"> <input type="submit" value="Find party"></p>
+    <div id="query_auto_complete" class="auto_complete"></div>
+  </form>
+  <p style="float:right">active/<span class="active_0">inactive</span> parties</p>
+  <ul id="results"></ul>
+  
+  <div id="instructions">Instructions: <p id="instructions_txt">Parties with ids you know (id: 301)... <br />Parties at strata posted by randyb (vn:strata user:randyb)... <br /> Parties titles that contain 'simple' and are in 10010 zip (title: simple zip:10010)</p></div>
+  
+  <div id="party" style="display:none;">
+    <%= render :partial => "party_form" %>
+  </div>
+</div>
+<script type="text/javascript" language="javascript">
+// <![CDATA[
+  $('query').value = "";
+  $('query').focus();
+  function populate_results(recs) {
+    $W("results", "");
+    var myTemplate = new Template("<li class='active_#{active} party' id='p_#{party_id}'>#{username}: #{party_title} @ #{venue_name}</li>");
+    var myTemplateVars = [];
+    recs.each(function(rec){
+      var party = rec.party;
+      myTemplateVars.push({username:party.user.username, party_title: party.title, party_id: party.id, venue_name: party.venue.name, active: party.active });
+    });
+    myTemplateVars.each( function(r){
+      txt=myTemplate.evaluate(r);
+      new Insertion.Bottom("results", txt);
+    });
+  }
+  
+  function populate_form(rec) {
+    var party = rec.party;
+    new Ajax.CustomRequest("/party/"+party.id+"/rsvp_form", { 
+      onSuccess: function(r2){ $("rsvp_code").value = r2.responseText; } 
+    });
+    
+	  $('party').show();
+	  
+	  for (var property in party){
+      // console.log("Looking for " + property);
+	    if ($("party_"+property)){
+        // console.log(property + " FOUND!");
+        //         console.log(property + " ("+ $("party_"+property).type +")= " + party[property]);
+	      switch ($("party_"+property).type) {
+	        case 'checkbox':
+	        	if (party[property] == "1"){
+	        	  $("party_"+property).checked = true;
+	        	}
+	        	break;
+	        case 'hidden':
+	          $("party_"+property).value = party[property];
+	          if (property == "user_id"){
+	            $("user_username").value = party.user.username;
+	          }
+	          break;
+	        default:
+	          $("party_"+property).value = party[property];
+	          break;
+	      }
+	    }
+	  }
+  }
+  
+  function fetchResultsFromServer() {
+    new Ajax.CustomRequest($('parties_form').action, {
+  		postBody: Form.serialize('parties_form'),
+  		onSuccess: function(r){
+  		  eval("FCG.data = " + r.responseText);
+  			if (FCG.data.length > 0){
+  			  //Clear old form
+      	  Form.reset('update_form');
+      	  $W("user_username_changed", "");
+  			  if (FCG.data.length == 1){
+  			    populate_form(FCG.data[0]);
+  			  } else {
+  			    $('party').hide();
+  			    populate_results(FCG.data);
+  			  }
+  			} else {
+  			  new Message("No parties found.");
+  			  $('party').hide();
+  			}
+  		},
+  		on400: function(r) { 
+  			if (r.responseText.length > 0){ new Message(r.responseText); } 
+  		}
+  	});
+  }
+  
+  new Ajax.Autocompleter('query', "query_auto_complete", '<%= admin_url(:action => "parties_autocomplete") %>', {minChars: 5});
+  
+  new Ajax.Autocompleter('user_username', "user_username_auto_complete", '/account/autocomplete?relation=party_user_id', {
+		minChars: 3, 
+		afterUpdateElement: function(element, selectedElement){
+			if (selectedElement.title == 'no match found'){
+				$("user_username").value = "No Match Found!";
+			} else {
+			  $W("user_username_changed", "Selected");
+			  new Effect.Pulsate("user_username_changed");
+				entity_parts = selectedElement.title.split(":");
+				if ($(entity_parts[0])){
+					$(entity_parts[0]).value = entity_parts[1];
+				}
+			}
+		}
+	});
+	
+	Event.addBehavior({
+	  "ul li.party:click" : function() {
+	    $("query").value = "id:"+ this.id.split("_").last();    
+  	  fetchResultsFromServer();
+  	  return false;
+	  },
+	  "form#update_form:submit" : function() {
+	    new Ajax.CustomRequest(this.action, {
+	      postBody: Form.serialize(this),
+    		onSuccess: function(r){
+    		  new Message(r.responseText, 'good');
+    		  $('party').hide();
+    		},
+    		on400: function(r) { 
+    			if (r.responseText.length > 0){ new Message(r.responseText); } 
+    		}
+    	});
+    	return false;
+	  },
+  	"form#parties_form:submit" : function() {
+  	  fetchResultsFromServer();
+  	  return false;
+  	}
+  });
+  
+// ]]>
+</script>
